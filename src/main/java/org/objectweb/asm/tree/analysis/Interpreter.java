@@ -27,12 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.objectweb.asm.tree.analysis;
+package org1.objectweb.asm.tree.analysis;
 
 import java.util.List;
 
-import org.objectweb.asm.Type;
-import org.objectweb.asm.tree.AbstractInsnNode;
+import org1.objectweb.asm.Type;
+import org1.objectweb.asm.tree.AbstractInsnNode;
 
 /**
  * A semantic bytecode interpreter. More precisely, this interpreter only

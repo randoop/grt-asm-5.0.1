@@ -27,12 +27,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.objectweb.asm.commons;
+package org1.objectweb.asm.commons;
 
-import org.objectweb.asm.Handle;
-import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
+import org1.objectweb.asm.Handle;
+import org1.objectweb.asm.Label;
+import org1.objectweb.asm.MethodVisitor;
+import org1.objectweb.asm.Opcodes;
 
 /**
  * A {@link MethodVisitor} that can be used to approximate method size.

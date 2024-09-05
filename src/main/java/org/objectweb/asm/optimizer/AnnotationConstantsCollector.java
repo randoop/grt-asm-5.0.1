@@ -27,11 +27,11 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.objectweb.asm.optimizer;
+package org1.objectweb.asm.optimizer;
 
-import org.objectweb.asm.AnnotationVisitor;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
+import org1.objectweb.asm.AnnotationVisitor;
+import org1.objectweb.asm.Opcodes;
+import org1.objectweb.asm.Type;
 
 /**
  * An {@link AnnotationVisitor} that collects the {@link Constant}s of the

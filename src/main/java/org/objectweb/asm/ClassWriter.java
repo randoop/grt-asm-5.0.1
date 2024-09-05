@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.objectweb.asm;
+package org1.objectweb.asm;
 
 /**
  * A {@link ClassVisitor} that generates classes in bytecode form. More
@@ -756,7 +756,7 @@ public class ClassWriter extends ClassVisitor {
         if (innerClasses == null) {
             innerClasses = new ByteVector();
         }
-        // §4.7.6 of the JVMS states "Every CONSTANT_Class_info entry in the
+        // ï¿½4.7.6 of the JVMS states "Every CONSTANT_Class_info entry in the
         // constant_pool table which represents a class or interface C that is
         // not a package member must have exactly one corresponding entry in the
         // classes array". To avoid duplicates we keep track in the intVal field
