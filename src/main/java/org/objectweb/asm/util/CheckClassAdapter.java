@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.objectweb.asm.util;
+package org1.objectweb.asm.util;
 
 import java.io.FileInputStream;
 import java.io.PrintWriter;
@@ -37,23 +37,23 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.objectweb.asm.AnnotationVisitor;
-import org.objectweb.asm.Attribute;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.FieldVisitor;
-import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
-import org.objectweb.asm.TypePath;
-import org.objectweb.asm.TypeReference;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.analysis.Analyzer;
-import org.objectweb.asm.tree.analysis.BasicValue;
-import org.objectweb.asm.tree.analysis.Frame;
-import org.objectweb.asm.tree.analysis.SimpleVerifier;
+import org1.objectweb.asm.AnnotationVisitor;
+import org1.objectweb.asm.Attribute;
+import org1.objectweb.asm.ClassReader;
+import org1.objectweb.asm.ClassVisitor;
+import org1.objectweb.asm.FieldVisitor;
+import org1.objectweb.asm.Label;
+import org1.objectweb.asm.MethodVisitor;
+import org1.objectweb.asm.Opcodes;
+import org1.objectweb.asm.Type;
+import org1.objectweb.asm.TypePath;
+import org1.objectweb.asm.TypeReference;
+import org1.objectweb.asm.tree.ClassNode;
+import org1.objectweb.asm.tree.MethodNode;
+import org1.objectweb.asm.tree.analysis.Analyzer;
+import org1.objectweb.asm.tree.analysis.BasicValue;
+import org1.objectweb.asm.tree.analysis.Frame;
+import org1.objectweb.asm.tree.analysis.SimpleVerifier;
 
 /**
  * A {@link ClassVisitor} that checks that its methods are properly used. More
@@ -93,9 +93,9 @@ import org.objectweb.asm.tree.analysis.SimpleVerifier;
  * insnNumber locals : stack):
  * 
  * <pre>
- * org.objectweb.asm.tree.analysis.AnalyzerException: Error at instruction 71: Expected I, but found .
- *   at org.objectweb.asm.tree.analysis.Analyzer.analyze(Analyzer.java:289)
- *   at org.objectweb.asm.util.CheckClassAdapter.verify(CheckClassAdapter.java:135)
+ * org1.objectweb.asm.tree.analysis.AnalyzerException: Error at instruction 71: Expected I, but found .
+ *   at org1.objectweb.asm.tree.analysis.Analyzer.analyze(Analyzer.java:289)
+ *   at org1.objectweb.asm.util.CheckClassAdapter.verify(CheckClassAdapter.java:135)
  * ...
  * remove()V
  * 00000 LinkedBlockingQueue$Itr . . . . . . . .  :

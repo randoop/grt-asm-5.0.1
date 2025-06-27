@@ -28,14 +28,14 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.objectweb.asm.commons;
+package org1.objectweb.asm.commons;
 
-import org.objectweb.asm.AnnotationVisitor;
-import org.objectweb.asm.Handle;
-import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.TypePath;
+import org1.objectweb.asm.AnnotationVisitor;
+import org1.objectweb.asm.Handle;
+import org1.objectweb.asm.Label;
+import org1.objectweb.asm.MethodVisitor;
+import org1.objectweb.asm.Opcodes;
+import org1.objectweb.asm.TypePath;
 
 /**
  * A {@link LocalVariablesSorter} for type mapping.

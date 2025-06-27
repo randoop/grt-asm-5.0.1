@@ -27,21 +27,21 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.objectweb.asm.optimizer;
+package org1.objectweb.asm.optimizer;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.objectweb.asm.AnnotationVisitor;
-import org.objectweb.asm.Attribute;
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.FieldVisitor;
-import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.TypePath;
-import org.objectweb.asm.commons.Remapper;
-import org.objectweb.asm.commons.RemappingClassAdapter;
+import org1.objectweb.asm.AnnotationVisitor;
+import org1.objectweb.asm.Attribute;
+import org1.objectweb.asm.ClassVisitor;
+import org1.objectweb.asm.FieldVisitor;
+import org1.objectweb.asm.Label;
+import org1.objectweb.asm.MethodVisitor;
+import org1.objectweb.asm.Opcodes;
+import org1.objectweb.asm.TypePath;
+import org1.objectweb.asm.commons.Remapper;
+import org1.objectweb.asm.commons.RemappingClassAdapter;
 
 /**
  * A {@link ClassVisitor} that renames fields and methods, and removes debug

@@ -27,13 +27,13 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.objectweb.asm.util;
+package org1.objectweb.asm.util;
 
-import org.objectweb.asm.AnnotationVisitor;
-import org.objectweb.asm.Attribute;
-import org.objectweb.asm.FieldVisitor;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.TypePath;
+import org1.objectweb.asm.AnnotationVisitor;
+import org1.objectweb.asm.Attribute;
+import org1.objectweb.asm.FieldVisitor;
+import org1.objectweb.asm.Opcodes;
+import org1.objectweb.asm.TypePath;
 
 /**
  * A {@link FieldVisitor} that prints the fields it visits with a

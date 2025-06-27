@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.objectweb.asm.xml;
+package org1.objectweb.asm.xml;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -54,8 +54,8 @@ import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamSource;
 
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassWriter;
+import org1.objectweb.asm.ClassReader;
+import org1.objectweb.asm.ClassWriter;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
@@ -93,12 +93,12 @@ import org.xml.sax.helpers.XMLReaderFactory;
  * 
  * <tr>
  * <td>Xalan interpeter</td>
- * <td>org.apache.xalan.processor.TransformerFactory</td>
+ * <td>org1.apache.xalan.processor.TransformerFactory</td>
  * </tr>
  * 
  * <tr>
  * <td>Xalan xsltc</td>
- * <td>org.apache.xalan.xsltc.trax.TransformerFactoryImpl</td>
+ * <td>org1.apache.xalan.xsltc.trax.TransformerFactoryImpl</td>
  * </tr>
  * </table>
  * </blockquote>

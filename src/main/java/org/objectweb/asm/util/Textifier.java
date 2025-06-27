@@ -27,22 +27,22 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.objectweb.asm.util;
+package org1.objectweb.asm.util;
 
 import java.io.FileInputStream;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.objectweb.asm.Attribute;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.Handle;
-import org.objectweb.asm.Label;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
-import org.objectweb.asm.TypePath;
-import org.objectweb.asm.TypeReference;
-import org.objectweb.asm.signature.SignatureReader;
+import org1.objectweb.asm.Attribute;
+import org1.objectweb.asm.ClassReader;
+import org1.objectweb.asm.Handle;
+import org1.objectweb.asm.Label;
+import org1.objectweb.asm.Opcodes;
+import org1.objectweb.asm.Type;
+import org1.objectweb.asm.TypePath;
+import org1.objectweb.asm.TypeReference;
+import org1.objectweb.asm.signature.SignatureReader;
 
 /**
  * A {@link Printer} that prints a disassembled view of the classes it visits.

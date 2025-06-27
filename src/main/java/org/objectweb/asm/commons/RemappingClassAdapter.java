@@ -28,14 +28,14 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.objectweb.asm.commons;
+package org1.objectweb.asm.commons;
 
-import org.objectweb.asm.AnnotationVisitor;
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.FieldVisitor;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.TypePath;
+import org1.objectweb.asm.AnnotationVisitor;
+import org1.objectweb.asm.ClassVisitor;
+import org1.objectweb.asm.FieldVisitor;
+import org1.objectweb.asm.MethodVisitor;
+import org1.objectweb.asm.Opcodes;
+import org1.objectweb.asm.TypePath;
 
 /**
  * A {@link ClassVisitor} for type remapping.
