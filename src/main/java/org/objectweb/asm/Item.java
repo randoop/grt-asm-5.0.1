@@ -28,6 +28,9 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org1.objectweb.asm;
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
  * A constant pool item. Constant pool items can be created with the 'newXXX'
@@ -108,6 +111,7 @@ final class Item {
     /**
      * Constructs an uninitialized {@link Item}.
      */
+    @SideEffectFree
     Item() {
     }
 
@@ -118,6 +122,7 @@ final class Item {
      * @param index
      *            index of the item to be constructed.
      */
+    @SideEffectFree
     Item(final int index) {
         this.index = index;
     }
@@ -130,6 +135,7 @@ final class Item {
      * @param i
      *            the item that must be copied into the item to be constructed.
      */
+    @SideEffectFree
     Item(final int index, final Item i) {
         this.index = index;
         type = i.type;
@@ -147,6 +153,7 @@ final class Item {
      * @param intVal
      *            the value of this item.
      */
+    @Impure
     void set(final int intVal) {
         this.type = ClassWriter.INT;
         this.intVal = intVal;
@@ -159,6 +166,7 @@ final class Item {
      * @param longVal
      *            the value of this item.
      */
+    @Impure
     void set(final long longVal) {
         this.type = ClassWriter.LONG;
         this.longVal = longVal;
@@ -171,6 +179,7 @@ final class Item {
      * @param floatVal
      *            the value of this item.
      */
+    @Impure
     void set(final float floatVal) {
         this.type = ClassWriter.FLOAT;
         this.intVal = Float.floatToRawIntBits(floatVal);
@@ -183,6 +192,7 @@ final class Item {
      * @param doubleVal
      *            the value of this item.
      */
+    @Impure
     void set(final double doubleVal) {
         this.type = ClassWriter.DOUBLE;
         this.longVal = Double.doubleToRawLongBits(doubleVal);
@@ -201,6 +211,7 @@ final class Item {
      * @param strVal3
      *            third part of the value of this item.
      */
+    @Impure
     void set(final int type, final String strVal1, final String strVal2,
             final String strVal3) {
         this.type = type;
@@ -240,6 +251,7 @@ final class Item {
      * @param bsmIndex
      *            zero based index into the class attribute BootrapMethods.
      */
+    @Impure
     void set(String name, String desc, int bsmIndex) {
         this.type = ClassWriter.INDY;
         this.longVal = bsmIndex;
@@ -259,6 +271,7 @@ final class Item {
      *            hashcode of the bootstrap method and the hashcode of all
      *            bootstrap arguments.
      */
+    @Impure
     void set(int position, int hashCode) {
         this.type = ClassWriter.BSM;
         this.intVal = position;
@@ -275,6 +288,7 @@ final class Item {
      * @return <tt>true</tt> if the given item if equal to this one,
      *         <tt>false</tt> otherwise.
      */
+    @Pure
     boolean isEqualTo(final Item i) {
         switch (type) {
         case ClassWriter.UTF8:

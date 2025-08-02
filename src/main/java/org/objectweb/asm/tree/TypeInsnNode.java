@@ -29,6 +29,9 @@
  */
 package org1.objectweb.asm.tree;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
 import java.util.Map;
 
 import org1.objectweb.asm.MethodVisitor;
@@ -57,6 +60,8 @@ public class TypeInsnNode extends AbstractInsnNode {
      *            the operand of the instruction to be constructed. This operand
      *            is an internal name (see {@link org1.objectweb.asm.Type}).
      */
+    @SideEffectFree
+    @Impure
     public TypeInsnNode(final int opcode, final String desc) {
         super(opcode);
         this.desc = desc;
@@ -69,21 +74,25 @@ public class TypeInsnNode extends AbstractInsnNode {
      *            the new instruction opcode. This opcode must be NEW,
      *            ANEWARRAY, CHECKCAST or INSTANCEOF.
      */
+    @Impure
     public void setOpcode(final int opcode) {
         this.opcode = opcode;
     }
 
+    @Pure
     @Override
     public int getType() {
         return TYPE_INSN;
     }
 
+    @Impure
     @Override
     public void accept(final MethodVisitor mv) {
         mv.visitTypeInsn(opcode, desc);
         acceptAnnotations(mv);
     }
 
+    @Impure
     @Override
     public AbstractInsnNode clone(final Map<LabelNode, LabelNode> labels) {
         return new TypeInsnNode(opcode, desc).cloneAnnotations(this);

@@ -29,6 +29,9 @@
  */
 package org1.objectweb.asm.tree;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
 import java.util.Map;
 
 import org1.objectweb.asm.MethodVisitor;
@@ -79,6 +82,8 @@ public class MethodInsnNode extends AbstractInsnNode {
      * @param desc
      *            the method's descriptor (see {@link org1.objectweb.asm.Type}).
      */
+    @SideEffectFree
+    @Impure
     @Deprecated
     public MethodInsnNode(final int opcode, final String owner,
             final String name, final String desc) {
@@ -103,6 +108,8 @@ public class MethodInsnNode extends AbstractInsnNode {
      * @param itf
      *            if the method's owner class is an interface.
      */
+    @SideEffectFree
+    @Impure
     public MethodInsnNode(final int opcode, final String owner,
             final String name, final String desc, final boolean itf) {
         super(opcode);
@@ -119,20 +126,25 @@ public class MethodInsnNode extends AbstractInsnNode {
      *            the new instruction opcode. This opcode must be INVOKEVIRTUAL,
      *            INVOKESPECIAL, INVOKESTATIC or INVOKEINTERFACE.
      */
+    @Impure
     public void setOpcode(final int opcode) {
         this.opcode = opcode;
     }
 
+    @Pure
     @Override
     public int getType() {
         return METHOD_INSN;
     }
 
+    @Impure
     @Override
     public void accept(final MethodVisitor mv) {
         mv.visitMethodInsn(opcode, owner, name, desc, itf);
     }
 
+    @SideEffectFree
+    @Impure
     @Override
     public AbstractInsnNode clone(final Map<LabelNode, LabelNode> labels) {
         return new MethodInsnNode(opcode, owner, name, desc, itf);

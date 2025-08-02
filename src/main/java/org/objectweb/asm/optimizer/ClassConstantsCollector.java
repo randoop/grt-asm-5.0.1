@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.optimizer;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import org1.objectweb.asm.AnnotationVisitor;
 import org1.objectweb.asm.Attribute;
 import org1.objectweb.asm.ClassVisitor;
@@ -47,11 +49,14 @@ public class ClassConstantsCollector extends ClassVisitor {
 
     private final ConstantPool cp;
 
+    @SideEffectFree
+    @Impure
     public ClassConstantsCollector(final ClassVisitor cv, final ConstantPool cp) {
         super(Opcodes.ASM5, cv);
         this.cp = cp;
     }
 
+    @Impure
     @Override
     public void visit(final int version, final int access, final String name,
             final String signature, final String superName,
@@ -78,6 +83,7 @@ public class ClassConstantsCollector extends ClassVisitor {
         cv.visit(version, access, name, signature, superName, interfaces);
     }
 
+    @Impure
     @Override
     public void visitSource(final String source, final String debug) {
         if (source != null) {
@@ -90,6 +96,7 @@ public class ClassConstantsCollector extends ClassVisitor {
         cv.visitSource(source, debug);
     }
 
+    @Impure
     @Override
     public void visitOuterClass(final String owner, final String name,
             final String desc) {
@@ -101,6 +108,7 @@ public class ClassConstantsCollector extends ClassVisitor {
         cv.visitOuterClass(owner, name, desc);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitAnnotation(final String desc,
             final boolean visible) {
@@ -114,6 +122,7 @@ public class ClassConstantsCollector extends ClassVisitor {
                 visible), cp);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitTypeAnnotation(int typeRef,
             TypePath typePath, String desc, boolean visible) {
@@ -127,12 +136,14 @@ public class ClassConstantsCollector extends ClassVisitor {
                 visible), cp);
     }
 
+    @Impure
     @Override
     public void visitAttribute(final Attribute attr) {
         // can do nothing
         cv.visitAttribute(attr);
     }
 
+    @Impure
     @Override
     public void visitInnerClass(final String name, final String outerName,
             final String innerName, final int access) {
@@ -149,6 +160,7 @@ public class ClassConstantsCollector extends ClassVisitor {
         cv.visitInnerClass(name, outerName, innerName, access);
     }
 
+    @Impure
     @Override
     public FieldVisitor visitField(final int access, final String name,
             final String desc, final String signature, final Object value) {
@@ -171,6 +183,7 @@ public class ClassConstantsCollector extends ClassVisitor {
                 signature, value), cp);
     }
 
+    @Impure
     @Override
     public MethodVisitor visitMethod(final int access, final String name,
             final String desc, final String signature, final String[] exceptions) {

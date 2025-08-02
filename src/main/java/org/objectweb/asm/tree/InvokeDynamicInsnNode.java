@@ -29,6 +29,9 @@
  */
 package org1.objectweb.asm.tree;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
 import java.util.Map;
 
 import org1.objectweb.asm.Handle;
@@ -74,6 +77,8 @@ public class InvokeDynamicInsnNode extends AbstractInsnNode {
      * @param bsmArgs
      *            the boostrap constant arguments.
      */
+    @SideEffectFree
+    @Impure
     public InvokeDynamicInsnNode(final String name, final String desc,
             final Handle bsm, final Object... bsmArgs) {
         super(Opcodes.INVOKEDYNAMIC);
@@ -83,17 +88,20 @@ public class InvokeDynamicInsnNode extends AbstractInsnNode {
         this.bsmArgs = bsmArgs;
     }
 
+    @Pure
     @Override
     public int getType() {
         return INVOKE_DYNAMIC_INSN;
     }
 
+    @Impure
     @Override
     public void accept(final MethodVisitor mv) {
         mv.visitInvokeDynamicInsn(name, desc, bsm, bsmArgs);
         acceptAnnotations(mv);
     }
 
+    @Impure
     @Override
     public AbstractInsnNode clone(final Map<LabelNode, LabelNode> labels) {
         return new InvokeDynamicInsnNode(name, desc, bsm, bsmArgs)

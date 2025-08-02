@@ -29,6 +29,9 @@
  */
 package org1.objectweb.asm.optimizer;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Pure;
 import org1.objectweb.asm.AnnotationVisitor;
 import org1.objectweb.asm.Attribute;
 import org1.objectweb.asm.FieldVisitor;
@@ -50,6 +53,7 @@ public class MethodOptimizer extends RemappingMethodAdapter implements Opcodes {
 
     private final ClassOptimizer classOptimizer;
 
+    @Impure
     public MethodOptimizer(ClassOptimizer classOptimizer, int access,
             String desc, MethodVisitor mv, Remapper remapper) {
         super(Opcodes.ASM5, access, desc, mv, remapper);
@@ -60,29 +64,34 @@ public class MethodOptimizer extends RemappingMethodAdapter implements Opcodes {
     // Overridden methods
     // ------------------------------------------------------------------------
 
+    @SideEffectFree
     @Override
     public void visitParameter(String name, int access) {
         // remove parameter info
     }
 
+    @Pure
     @Override
     public AnnotationVisitor visitAnnotationDefault() {
         // remove annotations
         return null;
     }
 
+    @Pure
     @Override
     public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
         // remove annotations
         return null;
     }
 
+    @Pure
     @Override
     public AnnotationVisitor visitTypeAnnotation(int typeRef,
             TypePath typePath, String desc, boolean visible) {
         return null;
     }
 
+    @Pure
     @Override
     public AnnotationVisitor visitParameterAnnotation(final int parameter,
             final String desc, final boolean visible) {
@@ -90,6 +99,7 @@ public class MethodOptimizer extends RemappingMethodAdapter implements Opcodes {
         return null;
     }
 
+    @SideEffectFree
     @Override
     public void visitLocalVariable(final String name, final String desc,
             final String signature, final Label start, final Label end,
@@ -97,22 +107,26 @@ public class MethodOptimizer extends RemappingMethodAdapter implements Opcodes {
         // remove debug info
     }
 
+    @SideEffectFree
     @Override
     public void visitLineNumber(final int line, final Label start) {
         // remove debug info
     }
 
+    @SideEffectFree
     @Override
     public void visitFrame(int type, int local, Object[] local2, int stack,
             Object[] stack2) {
         // remove frame info
     }
 
+    @SideEffectFree
     @Override
     public void visitAttribute(Attribute attr) {
         // remove non standard attributes
     }
 
+    @Impure
     @Override
     public void visitLdcInsn(Object cst) {
         if (!(cst instanceof Type)) {

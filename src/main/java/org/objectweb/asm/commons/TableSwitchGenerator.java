@@ -29,6 +29,7 @@
  */
 package org1.objectweb.asm.commons;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import org1.objectweb.asm.Label;
 
 /**
@@ -48,10 +49,12 @@ public interface TableSwitchGenerator {
      * @param end
      *            a label that corresponds to the end of the switch statement.
      */
+    @SideEffectFree
     void generateCase(int key, Label end);
 
     /**
      * Generates the code for the default switch case.
      */
+    @SideEffectFree
     void generateDefault();
 }

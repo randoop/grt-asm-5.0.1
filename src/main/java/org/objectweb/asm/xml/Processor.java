@@ -29,6 +29,9 @@
  */
 package org1.objectweb.asm.xml;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Pure;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -127,6 +130,7 @@ public class Processor {
 
     private int n = 0;
 
+    @SideEffectFree
     public Processor(final int inRepresenation, final int outRepresentation,
             final InputStream input, final OutputStream output,
             final Source xslt) {
@@ -137,6 +141,7 @@ public class Processor {
         this.xslt = xslt;
     }
 
+    @Impure
     public int process() throws TransformerException, IOException, SAXException {
         ZipInputStream zis = new ZipInputStream(input);
         final ZipOutputStream zos = new ZipOutputStream(output);
@@ -230,6 +235,7 @@ public class Processor {
         return i;
     }
 
+    @Impure
     private void copyEntry(final InputStream is, final OutputStream os)
             throws IOException {
         if (outRepresentation == SINGLE_XML) {
@@ -243,12 +249,14 @@ public class Processor {
         }
     }
 
+    @Impure
     private boolean isClassEntry(final ZipEntry ze) {
         String name = ze.getName();
         return inRepresentation == SINGLE_XML && name.equals(SINGLE_XML_NAME)
                 || name.endsWith(".class") || name.endsWith(".class.xml");
     }
 
+    @Impure
     private void processEntry(final ZipInputStream zis, final ZipEntry ze,
             final ContentHandlerFactory handlerFactory) {
         ContentHandler handler = handlerFactory.createContentHandler();
@@ -282,6 +290,8 @@ public class Processor {
         }
     }
 
+    @SideEffectFree
+    @Impure
     private EntryElement getEntryElement(final ZipOutputStream zos) {
         if (outRepresentation == SINGLE_XML) {
             return new SingleDocElement(zos);
@@ -319,6 +329,7 @@ public class Processor {
     // return factory;
     // }
 
+    @Impure
     private String getName(final ZipEntry ze) {
         String name = ze.getName();
         if (isClassEntry(ze)) {
@@ -335,6 +346,7 @@ public class Processor {
         return name;
     }
 
+    @Impure
     private static byte[] readEntry(final InputStream zis, final ZipEntry ze)
             throws IOException {
         long size = ze.getSize();
@@ -362,6 +374,7 @@ public class Processor {
      * 
      * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
+    @Impure
     protected void update(final Object arg, final int n) {
         if (arg instanceof Throwable) {
             ((Throwable) arg).printStackTrace();
@@ -372,6 +385,7 @@ public class Processor {
         }
     }
 
+    @Impure
     public static void main(final String[] args) throws Exception {
         if (args.length < 2) {
             showUsage();
@@ -423,6 +437,7 @@ public class Processor {
                 + " resources/sec");
     }
 
+    @Pure
     private static int getRepresentation(final String s) {
         if ("code".equals(s)) {
             return BYTECODE;
@@ -434,6 +449,7 @@ public class Processor {
         return 0;
     }
 
+    @Impure
     private static void showUsage() {
         System.err
                 .println("Usage: Main <in format> <out format> [-in <input jar>] [-out <output jar>] [-xslt <xslt fiel>]");
@@ -450,25 +466,30 @@ public class Processor {
     private static final class ProtectedInputStream extends InputStream {
         private final InputStream is;
 
+        @Impure
         ProtectedInputStream(final InputStream is) {
             this.is = is;
         }
 
+        @SideEffectFree
         @Override
         public final void close() throws IOException {
         }
 
+        @Impure
         @Override
         public final int read() throws IOException {
             return is.read();
         }
 
+        @Impure
         @Override
         public final int read(final byte[] b, final int off, final int len)
                 throws IOException {
             return is.read(b, off, len);
         }
 
+        @Impure
         @Override
         public final int available() throws IOException {
             return is.available();
@@ -487,6 +508,7 @@ public class Processor {
          * 
          * @return content handler
          */
+        @Impure
         ContentHandler createContentHandler();
 
     }
@@ -500,11 +522,13 @@ public class Processor {
 
         private final boolean optimizeEmptyElements;
 
+        @SideEffectFree
         SAXWriterFactory(final Writer w, final boolean optimizeEmptyElements) {
             this.w = w;
             this.optimizeEmptyElements = optimizeEmptyElements;
         }
 
+        @Impure
         public final ContentHandler createContentHandler() {
             return new SAXWriter(w, optimizeEmptyElements);
         }
@@ -518,13 +542,16 @@ public class Processor {
             ContentHandlerFactory {
         final OutputStream os;
 
+        @SideEffectFree
         ASMContentHandlerFactory(final OutputStream os) {
             this.os = os;
         }
 
+        @Impure
         public final ContentHandler createContentHandler() {
             final ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
             return new ASMContentHandler(cw) {
+                @Impure
                 @Override
                 public void endDocument() throws SAXException {
                     try {
@@ -549,6 +576,7 @@ public class Processor {
 
         private ContentHandler outputHandler;
 
+        @SideEffectFree
         TransformerHandlerFactory(final SAXTransformerFactory saxtf,
                 final Templates templates, final ContentHandler outputHandler) {
             this.saxtf = saxtf;
@@ -556,6 +584,7 @@ public class Processor {
             this.outputHandler = outputHandler;
         }
 
+        @Impure
         public final ContentHandler createContentHandler() {
             try {
                 TransformerHandler handler = saxtf
@@ -575,10 +604,12 @@ public class Processor {
             ContentHandlerFactory {
         private final ContentHandler subdocumentHandler;
 
+        @SideEffectFree
         SubdocumentHandlerFactory(final ContentHandler subdocumentHandler) {
             this.subdocumentHandler = subdocumentHandler;
         }
 
+        @Pure
         public final ContentHandler createContentHandler() {
             return subdocumentHandler;
         }
@@ -615,11 +646,13 @@ public class Processor {
          *            if set to <code>true</code>, short XML syntax will be used
          *            for empty elements
          */
+        @Impure
         SAXWriter(final Writer w, final boolean optimizeEmptyElements) {
             this.w = w;
             this.optimizeEmptyElements = optimizeEmptyElements;
         }
 
+        @Impure
         @Override
         public final void startElement(final String ns, final String localName,
                 final String qName, final Attributes atts) throws SAXException {
@@ -645,6 +678,7 @@ public class Processor {
             }
         }
 
+        @Impure
         @Override
         public final void endElement(final String ns, final String localName,
                 final String qName) throws SAXException {
@@ -664,6 +698,7 @@ public class Processor {
             }
         }
 
+        @Impure
         @Override
         public final void endDocument() throws SAXException {
             try {
@@ -675,6 +710,7 @@ public class Processor {
             }
         }
 
+        @Impure
         public final void comment(final char[] ch, final int off, final int len)
                 throws SAXException {
             try {
@@ -691,25 +727,32 @@ public class Processor {
             }
         }
 
+        @SideEffectFree
         public final void startDTD(final String arg0, final String arg1,
                 final String arg2) throws SAXException {
         }
 
+        @SideEffectFree
         public final void endDTD() throws SAXException {
         }
 
+        @SideEffectFree
         public final void startEntity(final String arg0) throws SAXException {
         }
 
+        @SideEffectFree
         public final void endEntity(final String arg0) throws SAXException {
         }
 
+        @SideEffectFree
         public final void startCDATA() throws SAXException {
         }
 
+        @SideEffectFree
         public final void endCDATA() throws SAXException {
         }
 
+        @Impure
         private final void writeAttributes(final Attributes atts)
                 throws IOException {
             StringBuffer sb = new StringBuffer();
@@ -728,6 +771,7 @@ public class Processor {
          *            string to encode.
          * @return encoded string
          */
+        @Impure
         private static final String esc(final String str) {
             StringBuffer sb = new StringBuffer(str.length());
             for (int i = 0; i < str.length(); i++) {
@@ -762,6 +806,7 @@ public class Processor {
             return sb.toString();
         }
 
+        @Impure
         private final void writeIdent() throws IOException {
             int n = ident;
             while (n > 0) {
@@ -775,6 +820,7 @@ public class Processor {
             }
         }
 
+        @Impure
         private final void closeElement() throws IOException {
             if (openElement) {
                 w.write(">\n");
@@ -819,6 +865,7 @@ public class Processor {
          *            to create {@link ContentHandler ContentHandler} instances
          *            for subdocuments.
          */
+        @Impure
         InputSlicingHandler(final String subdocumentRoot,
                 final ContentHandler rootHandler,
                 final ContentHandlerFactory subdocumentHandlerFactory) {
@@ -827,6 +874,7 @@ public class Processor {
             this.subdocumentHandlerFactory = subdocumentHandlerFactory;
         }
 
+        @Impure
         @Override
         public final void startElement(final String namespaceURI,
                 final String localName, final String qName,
@@ -846,6 +894,7 @@ public class Processor {
             }
         }
 
+        @Impure
         @Override
         public final void endElement(final String namespaceURI,
                 final String localName, final String qName) throws SAXException {
@@ -860,6 +909,7 @@ public class Processor {
             }
         }
 
+        @Impure
         @Override
         public final void startDocument() throws SAXException {
             if (rootHandler != null) {
@@ -867,6 +917,7 @@ public class Processor {
             }
         }
 
+        @Impure
         @Override
         public final void endDocument() throws SAXException {
             if (rootHandler != null) {
@@ -875,6 +926,7 @@ public class Processor {
             }
         }
 
+        @Impure
         @Override
         public final void characters(final char[] buff, final int offset,
                 final int size) throws SAXException {
@@ -924,6 +976,7 @@ public class Processor {
          * @param isXml
          *            TODO.
          */
+        @Impure
         OutputSlicingHandler(
                 final ContentHandlerFactory subdocumentHandlerFactory,
                 final EntryElement entryElement, final boolean isXml) {
@@ -933,6 +986,7 @@ public class Processor {
             this.isXml = isXml;
         }
 
+        @Impure
         @Override
         public final void startElement(final String namespaceURI,
                 final String localName, final String qName,
@@ -961,6 +1015,7 @@ public class Processor {
             }
         }
 
+        @Impure
         @Override
         public final void endElement(final String namespaceURI,
                 final String localName, final String qName) throws SAXException {
@@ -978,14 +1033,17 @@ public class Processor {
             }
         }
 
+        @SideEffectFree
         @Override
         public final void startDocument() throws SAXException {
         }
 
+        @SideEffectFree
         @Override
         public final void endDocument() throws SAXException {
         }
 
+        @Impure
         @Override
         public final void characters(final char[] buff, final int offset,
                 final int size) throws SAXException {
@@ -998,8 +1056,10 @@ public class Processor {
 
     private static interface EntryElement {
 
+        @Impure
         OutputStream openEntry(String name) throws IOException;
 
+        @Impure
         void closeEntry() throws IOException;
 
     }
@@ -1007,14 +1067,17 @@ public class Processor {
     private static final class SingleDocElement implements EntryElement {
         private final OutputStream os;
 
+        @SideEffectFree
         SingleDocElement(final OutputStream os) {
             this.os = os;
         }
 
+        @Pure
         public OutputStream openEntry(final String name) throws IOException {
             return os;
         }
 
+        @Impure
         public void closeEntry() throws IOException {
             os.flush();
         }
@@ -1024,16 +1087,19 @@ public class Processor {
     private static final class ZipEntryElement implements EntryElement {
         private ZipOutputStream zos;
 
+        @SideEffectFree
         ZipEntryElement(final ZipOutputStream zos) {
             this.zos = zos;
         }
 
+        @Impure
         public OutputStream openEntry(final String name) throws IOException {
             ZipEntry entry = new ZipEntry(name);
             zos.putNextEntry(entry);
             return zos;
         }
 
+        @Impure
         public void closeEntry() throws IOException {
             zos.flush();
             zos.closeEntry();

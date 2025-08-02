@@ -30,6 +30,8 @@
 
 package org1.objectweb.asm.commons;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import org1.objectweb.asm.Opcodes;
 import org1.objectweb.asm.signature.SignatureVisitor;
 
@@ -46,11 +48,15 @@ public class RemappingSignatureAdapter extends SignatureVisitor {
 
     private String className;
 
+    @SideEffectFree
+    @Impure
     public RemappingSignatureAdapter(final SignatureVisitor v,
             final Remapper remapper) {
         this(Opcodes.ASM5, v, remapper);
     }
 
+    @SideEffectFree
+    @Impure
     protected RemappingSignatureAdapter(final int api,
             final SignatureVisitor v, final Remapper remapper) {
         super(api);
@@ -58,12 +64,14 @@ public class RemappingSignatureAdapter extends SignatureVisitor {
         this.remapper = remapper;
     }
 
+    @Impure
     @Override
     public void visitClassType(String name) {
         className = name;
         v.visitClassType(remapper.mapType(name));
     }
 
+    @Impure
     @Override
     public void visitInnerClassType(String name) {
         String remappedOuter = remapper.mapType(className) + '$';
@@ -74,80 +82,94 @@ public class RemappingSignatureAdapter extends SignatureVisitor {
         v.visitInnerClassType(remappedName.substring(index));
     }
 
+    @Impure
     @Override
     public void visitFormalTypeParameter(String name) {
         v.visitFormalTypeParameter(name);
     }
 
+    @Impure
     @Override
     public void visitTypeVariable(String name) {
         v.visitTypeVariable(name);
     }
 
+    @Impure
     @Override
     public SignatureVisitor visitArrayType() {
         v.visitArrayType();
         return this;
     }
 
+    @Impure
     @Override
     public void visitBaseType(char descriptor) {
         v.visitBaseType(descriptor);
     }
 
+    @Impure
     @Override
     public SignatureVisitor visitClassBound() {
         v.visitClassBound();
         return this;
     }
 
+    @Impure
     @Override
     public SignatureVisitor visitExceptionType() {
         v.visitExceptionType();
         return this;
     }
 
+    @Impure
     @Override
     public SignatureVisitor visitInterface() {
         v.visitInterface();
         return this;
     }
 
+    @Impure
     @Override
     public SignatureVisitor visitInterfaceBound() {
         v.visitInterfaceBound();
         return this;
     }
 
+    @Impure
     @Override
     public SignatureVisitor visitParameterType() {
         v.visitParameterType();
         return this;
     }
 
+    @Impure
     @Override
     public SignatureVisitor visitReturnType() {
         v.visitReturnType();
         return this;
     }
 
+    @Impure
     @Override
     public SignatureVisitor visitSuperclass() {
         v.visitSuperclass();
         return this;
     }
 
+    @Impure
     @Override
     public void visitTypeArgument() {
         v.visitTypeArgument();
     }
 
+    @Impure
     @Override
     public SignatureVisitor visitTypeArgument(char wildcard) {
         v.visitTypeArgument(wildcard);
         return this;
     }
 
+    @Impure
     @Override
     public void visitEnd() {
         v.visitEnd();

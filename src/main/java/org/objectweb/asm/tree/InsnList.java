@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.tree;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
@@ -66,6 +68,7 @@ public class InsnList {
      * 
      * @return the number of instructions in this list.
      */
+    @Pure
     public int size() {
         return size;
     }
@@ -76,6 +79,7 @@ public class InsnList {
      * @return the first instruction in this list, or <tt>null</tt> if the list
      *         is empty.
      */
+    @Pure
     public AbstractInsnNode getFirst() {
         return first;
     }
@@ -86,6 +90,7 @@ public class InsnList {
      * @return the last instruction in this list, or <tt>null</tt> if the list
      *         is empty.
      */
+    @Pure
     public AbstractInsnNode getLast() {
         return last;
     }
@@ -102,6 +107,7 @@ public class InsnList {
      * @throws IndexOutOfBoundsException
      *             if (index &lt; 0 || index &gt;= size()).
      */
+    @Impure
     public AbstractInsnNode get(final int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
@@ -121,6 +127,7 @@ public class InsnList {
      *            an instruction.
      * @return <tt>true</tt> if the given instruction belongs to this list.
      */
+    @Pure
     public boolean contains(final AbstractInsnNode insn) {
         AbstractInsnNode i = first;
         while (i != null && i != insn) {
@@ -143,6 +150,7 @@ public class InsnList {
      *         to this list</i>. Use {@link #contains contains} to test if an
      *         instruction belongs to an instruction list or not.
      */
+    @Impure
     public int indexOf(final AbstractInsnNode insn) {
         if (cache == null) {
             cache = toArray();
@@ -156,6 +164,7 @@ public class InsnList {
      * @param mv
      *            the method visitor that must visit the instructions.
      */
+    @Impure
     public void accept(final MethodVisitor mv) {
         AbstractInsnNode insn = first;
         while (insn != null) {
@@ -169,6 +178,7 @@ public class InsnList {
      * 
      * @return an iterator over the instructions in this list.
      */
+    @Impure
     public ListIterator<AbstractInsnNode> iterator() {
         return iterator(0);
     }
@@ -178,6 +188,7 @@ public class InsnList {
      * 
      * @return an iterator over the instructions in this list.
      */
+    @Impure
     @SuppressWarnings("unchecked")
     public ListIterator<AbstractInsnNode> iterator(int index) {
         return new InsnListIterator(index);
@@ -188,6 +199,7 @@ public class InsnList {
      * 
      * @return an array containing all of the instructions in this list.
      */
+    @Impure
     public AbstractInsnNode[] toArray() {
         int i = 0;
         AbstractInsnNode elem = first;
@@ -209,6 +221,7 @@ public class InsnList {
      *            another instruction, <i>which must not belong to any
      *            {@link InsnList}</i>.
      */
+    @Impure
     public void set(final AbstractInsnNode location, final AbstractInsnNode insn) {
         AbstractInsnNode next = location.next;
         insn.next = next;
@@ -243,6 +256,7 @@ public class InsnList {
      *            an instruction, <i>which must not belong to any
      *            {@link InsnList}</i>.
      */
+    @Impure
     public void add(final AbstractInsnNode insn) {
         ++size;
         if (last == null) {
@@ -264,6 +278,7 @@ public class InsnList {
      *            an instruction list, which is cleared during the process. This
      *            list must be different from 'this'.
      */
+    @Impure
     public void add(final InsnList insns) {
         if (insns.size == 0) {
             return;
@@ -289,6 +304,7 @@ public class InsnList {
      *            an instruction, <i>which must not belong to any
      *            {@link InsnList}</i>.
      */
+    @Impure
     public void insert(final AbstractInsnNode insn) {
         ++size;
         if (first == null) {
@@ -310,6 +326,7 @@ public class InsnList {
      *            an instruction list, which is cleared during the process. This
      *            list must be different from 'this'.
      */
+    @Impure
     public void insert(final InsnList insns) {
         if (insns.size == 0) {
             return;
@@ -338,6 +355,7 @@ public class InsnList {
      *            the instruction to be inserted, <i>which must not belong to
      *            any {@link InsnList}</i>.
      */
+    @Impure
     public void insert(final AbstractInsnNode location,
             final AbstractInsnNode insn) {
         ++size;
@@ -364,6 +382,7 @@ public class InsnList {
      *            the instruction list to be inserted, which is cleared during
      *            the process. This list must be different from 'this'.
      */
+    @Impure
     public void insert(final AbstractInsnNode location, final InsnList insns) {
         if (insns.size == 0) {
             return;
@@ -394,6 +413,7 @@ public class InsnList {
      *            the instruction to be inserted, <i>which must not belong to
      *            any {@link InsnList}</i>.
      */
+    @Impure
     public void insertBefore(final AbstractInsnNode location,
             final AbstractInsnNode insn) {
         ++size;
@@ -420,6 +440,7 @@ public class InsnList {
      *            the instruction list to be inserted, which is cleared during
      *            the process. This list must be different from 'this'.
      */
+    @Impure
     public void insertBefore(final AbstractInsnNode location,
             final InsnList insns) {
         if (insns.size == 0) {
@@ -447,6 +468,7 @@ public class InsnList {
      * @param insn
      *            the instruction <i>of this list</i> that must be removed.
      */
+    @Impure
     public void remove(final AbstractInsnNode insn) {
         --size;
         AbstractInsnNode next = insn.next;
@@ -481,6 +503,7 @@ public class InsnList {
      *            if the instructions must be marked as no longer belonging to
      *            any {@link InsnList}.
      */
+    @Impure
     void removeAll(final boolean mark) {
         if (mark) {
             AbstractInsnNode insn = first;
@@ -501,6 +524,7 @@ public class InsnList {
     /**
      * Removes all of the instructions of this list.
      */
+    @Impure
     public void clear() {
         removeAll(false);
     }
@@ -510,6 +534,7 @@ public class InsnList {
      * before reusing same instructions list between several
      * <code>ClassWriter</code>s.
      */
+    @Impure
     public void resetLabels() {
         AbstractInsnNode insn = first;
         while (insn != null) {
@@ -529,6 +554,7 @@ public class InsnList {
 
         AbstractInsnNode remove;
 
+        @Impure
         InsnListIterator(int index) {
             if (index == size()) {
                 next = null;
@@ -539,10 +565,12 @@ public class InsnList {
             }
         }
 
+        @Pure
         public boolean hasNext() {
             return next != null;
         }
 
+        @Impure
         public Object next() {
             if (next == null) {
                 throw new NoSuchElementException();
@@ -554,6 +582,7 @@ public class InsnList {
             return result;
         }
 
+        @Impure
         public void remove() {
             if (remove != null) {
                 if (remove == next) {
@@ -568,10 +597,12 @@ public class InsnList {
             }
         }
 
+        @Pure
         public boolean hasPrevious() {
             return prev != null;
         }
 
+        @Impure
         public Object previous() {
             AbstractInsnNode result = prev;
             next = result;
@@ -580,6 +611,7 @@ public class InsnList {
             return result;
         }
 
+        @Impure
         public int nextIndex() {
             if (next == null) {
                 return size();
@@ -590,6 +622,7 @@ public class InsnList {
             return next.index;
         }
 
+        @Impure
         public int previousIndex() {
             if (prev == null) {
                 return -1;
@@ -600,12 +633,14 @@ public class InsnList {
             return prev.index;
         }
 
+        @Impure
         public void add(Object o) {
             InsnList.this.insertBefore(next, (AbstractInsnNode) o);
             prev = (AbstractInsnNode) o;
             remove = null;
         }
 
+        @Impure
         public void set(Object o) {
             InsnList.this.set(next.prev, (AbstractInsnNode) o);
             prev = (AbstractInsnNode) o;

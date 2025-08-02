@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.tree;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import java.util.List;
 
 import org1.objectweb.asm.MethodVisitor;
@@ -95,6 +97,7 @@ public class TryCatchBlockNode {
      *            handler, or <tt>null</tt> to catch any exceptions (for
      *            "finally" blocks).
      */
+    @SideEffectFree
     public TryCatchBlockNode(final LabelNode start, final LabelNode end,
             final LabelNode handler, final String type) {
         this.start = start;
@@ -112,6 +115,7 @@ public class TryCatchBlockNode {
      *            the new index of this try catch block in the method's list of
      *            try catch block nodes.
      */
+    @Impure
     public void updateIndex(final int index) {
         int newTypeRef = 0x42000000 | (index << 8);
         if (visibleTypeAnnotations != null) {
@@ -132,6 +136,7 @@ public class TryCatchBlockNode {
      * @param mv
      *            a method visitor.
      */
+    @Impure
     public void accept(final MethodVisitor mv) {
         mv.visitTryCatchBlock(start.getLabel(), end.getLabel(),
                 handler == null ? null : handler.getLabel(), type);

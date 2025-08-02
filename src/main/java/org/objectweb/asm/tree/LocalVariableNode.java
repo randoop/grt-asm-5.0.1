@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.tree;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import org1.objectweb.asm.MethodVisitor;
 
 /**
@@ -88,6 +90,7 @@ public class LocalVariableNode {
      * @param index
      *            the local variable's index.
      */
+    @SideEffectFree
     public LocalVariableNode(final String name, final String desc,
             final String signature, final LabelNode start, final LabelNode end,
             final int index) {
@@ -105,6 +108,7 @@ public class LocalVariableNode {
      * @param mv
      *            a method visitor.
      */
+    @Impure
     public void accept(final MethodVisitor mv) {
         mv.visitLocalVariable(name, desc, signature, start.getLabel(),
                 end.getLabel(), index);

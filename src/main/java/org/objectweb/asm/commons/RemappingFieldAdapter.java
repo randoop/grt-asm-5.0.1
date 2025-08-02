@@ -30,6 +30,8 @@
 
 package org1.objectweb.asm.commons;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import org1.objectweb.asm.AnnotationVisitor;
 import org1.objectweb.asm.FieldVisitor;
 import org1.objectweb.asm.Opcodes;
@@ -44,16 +46,21 @@ public class RemappingFieldAdapter extends FieldVisitor {
 
     private final Remapper remapper;
 
+    @SideEffectFree
+    @Impure
     public RemappingFieldAdapter(final FieldVisitor fv, final Remapper remapper) {
         this(Opcodes.ASM5, fv, remapper);
     }
 
+    @SideEffectFree
+    @Impure
     protected RemappingFieldAdapter(final int api, final FieldVisitor fv,
             final Remapper remapper) {
         super(api, fv);
         this.remapper = remapper;
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
         AnnotationVisitor av = fv.visitAnnotation(remapper.mapDesc(desc),
@@ -61,6 +68,7 @@ public class RemappingFieldAdapter extends FieldVisitor {
         return av == null ? null : new RemappingAnnotationAdapter(av, remapper);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitTypeAnnotation(int typeRef,
             TypePath typePath, String desc, boolean visible) {

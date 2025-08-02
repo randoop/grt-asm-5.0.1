@@ -30,6 +30,7 @@
 
 package org1.objectweb.asm.commons;
 
+import org.checkerframework.dataflow.qual.Impure;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -54,12 +55,14 @@ import org1.objectweb.asm.tree.TryCatchBlockNode;
  */
 public class TryCatchBlockSorter extends MethodNode {
 
+    @Impure
     public TryCatchBlockSorter(final MethodVisitor mv, final int access,
             final String name, final String desc, final String signature,
             final String[] exceptions) {
         this(Opcodes.ASM5, mv, access, name, desc, signature, exceptions);
     }
 
+    @Impure
     protected TryCatchBlockSorter(final int api, final MethodVisitor mv,
             final int access, final String name, final String desc,
             final String signature, final String[] exceptions) {
@@ -67,17 +70,20 @@ public class TryCatchBlockSorter extends MethodNode {
         this.mv = mv;
     }
 
+    @Impure
     @Override
     public void visitEnd() {
         // Compares TryCatchBlockNodes by the length of their "try" block.
         Comparator<TryCatchBlockNode> comp = new Comparator<TryCatchBlockNode>() {
 
+            @Impure
             public int compare(TryCatchBlockNode t1, TryCatchBlockNode t2) {
                 int len1 = blockLength(t1);
                 int len2 = blockLength(t2);
                 return len1 - len2;
             }
 
+            @Impure
             private int blockLength(TryCatchBlockNode block) {
                 int startidx = instructions.indexOf(block.start);
                 int endidx = instructions.indexOf(block.end);

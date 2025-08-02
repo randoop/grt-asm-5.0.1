@@ -29,6 +29,9 @@
  */
 package org1.objectweb.asm.tree;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -174,6 +177,7 @@ public abstract class AbstractInsnNode {
      * @param opcode
      *            the opcode of the instruction to be constructed.
      */
+    @SideEffectFree
     protected AbstractInsnNode(final int opcode) {
         this.opcode = opcode;
         this.index = -1;
@@ -184,6 +188,7 @@ public abstract class AbstractInsnNode {
      * 
      * @return the opcode of this instruction.
      */
+    @Pure
     public int getOpcode() {
         return opcode;
     }
@@ -194,6 +199,7 @@ public abstract class AbstractInsnNode {
      * @return the type of this instruction, i.e. one the constants defined in
      *         this class.
      */
+    @Pure
     public abstract int getType();
 
     /**
@@ -203,6 +209,7 @@ public abstract class AbstractInsnNode {
      * @return the previous instruction in the list to which this instruction
      *         belongs, if any. May be <tt>null</tt>.
      */
+    @Pure
     public AbstractInsnNode getPrevious() {
         return prev;
     }
@@ -214,6 +221,7 @@ public abstract class AbstractInsnNode {
      * @return the next instruction in the list to which this instruction
      *         belongs, if any. May be <tt>null</tt>.
      */
+    @Pure
     public AbstractInsnNode getNext() {
         return next;
     }
@@ -224,6 +232,7 @@ public abstract class AbstractInsnNode {
      * @param cv
      *            a code visitor.
      */
+    @Impure
     public abstract void accept(final MethodVisitor cv);
 
     /**
@@ -232,6 +241,7 @@ public abstract class AbstractInsnNode {
      * @param mv
      *            a method visitor.
      */
+    @Impure
     protected final void acceptAnnotations(final MethodVisitor mv) {
         int n = visibleTypeAnnotations == null ? 0 : visibleTypeAnnotations
                 .size();
@@ -257,6 +267,7 @@ public abstract class AbstractInsnNode {
      * @return a copy of this instruction. The returned instruction does not
      *         belong to any {@link InsnList}.
      */
+    @Impure
     public abstract AbstractInsnNode clone(
             final Map<LabelNode, LabelNode> labels);
 
@@ -269,6 +280,7 @@ public abstract class AbstractInsnNode {
      *            a map from LabelNodes to cloned LabelNodes.
      * @return the clone of the given label.
      */
+    @Pure
     static LabelNode clone(final LabelNode label,
             final Map<LabelNode, LabelNode> map) {
         return map.get(label);
@@ -283,6 +295,7 @@ public abstract class AbstractInsnNode {
      *            a map from LabelNodes to cloned LabelNodes.
      * @return the clones of the given labels.
      */
+    @Impure
     static LabelNode[] clone(final List<LabelNode> labels,
             final Map<LabelNode, LabelNode> map) {
         LabelNode[] clones = new LabelNode[labels.size()];
@@ -299,6 +312,7 @@ public abstract class AbstractInsnNode {
      *            the source instruction.
      * @return this instruction.
      */
+    @Impure
     protected final AbstractInsnNode cloneAnnotations(
             final AbstractInsnNode insn) {
         if (insn.visibleTypeAnnotations != null) {

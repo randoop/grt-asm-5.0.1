@@ -29,6 +29,7 @@
  */
 package org1.objectweb.asm.xml;
 
+import org.checkerframework.dataflow.qual.Impure;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,6 +69,7 @@ public final class SAXCodeAdapter extends MethodVisitor {
      * @param sa
      *            content handler that will be used to send SAX 2.0 events.
      */
+    @Impure
     public SAXCodeAdapter(final SAXAdapter sa, final int access) {
         super(Opcodes.ASM5);
         this.sa = sa;
@@ -75,6 +77,7 @@ public final class SAXCodeAdapter extends MethodVisitor {
         this.labelNames = new HashMap<Label, String>();
     }
 
+    @Impure
     @Override
     public void visitParameter(String name, int access) {
         AttributesImpl attrs = new AttributesImpl();
@@ -87,6 +90,7 @@ public final class SAXCodeAdapter extends MethodVisitor {
         sa.addElement("parameter", attrs);
     }
 
+    @Impure
     @Override
     public final void visitCode() {
         if ((access & (Opcodes.ACC_ABSTRACT | Opcodes.ACC_INTERFACE | Opcodes.ACC_NATIVE)) == 0) {
@@ -94,6 +98,7 @@ public final class SAXCodeAdapter extends MethodVisitor {
         }
     }
 
+    @Impure
     @Override
     public void visitFrame(final int type, final int nLocal,
             final Object[] local, final int nStack, final Object[] stack) {
@@ -134,6 +139,7 @@ public final class SAXCodeAdapter extends MethodVisitor {
         sa.addEnd("frame");
     }
 
+    @Impure
     private void appendFrameTypes(final boolean local, final int n,
             final Object[] types) {
         for (int i = 0; i < n; ++i) {
@@ -153,11 +159,13 @@ public final class SAXCodeAdapter extends MethodVisitor {
         }
     }
 
+    @Impure
     @Override
     public final void visitInsn(final int opcode) {
         sa.addElement(Printer.OPCODES[opcode], new AttributesImpl());
     }
 
+    @Impure
     @Override
     public final void visitIntInsn(final int opcode, final int operand) {
         AttributesImpl attrs = new AttributesImpl();
@@ -165,6 +173,7 @@ public final class SAXCodeAdapter extends MethodVisitor {
         sa.addElement(Printer.OPCODES[opcode], attrs);
     }
 
+    @Impure
     @Override
     public final void visitVarInsn(final int opcode, final int var) {
         AttributesImpl attrs = new AttributesImpl();
@@ -172,6 +181,7 @@ public final class SAXCodeAdapter extends MethodVisitor {
         sa.addElement(Printer.OPCODES[opcode], attrs);
     }
 
+    @Impure
     @Override
     public final void visitTypeInsn(final int opcode, final String type) {
         AttributesImpl attrs = new AttributesImpl();
@@ -179,6 +189,7 @@ public final class SAXCodeAdapter extends MethodVisitor {
         sa.addElement(Printer.OPCODES[opcode], attrs);
     }
 
+    @Impure
     @Override
     public final void visitFieldInsn(final int opcode, final String owner,
             final String name, final String desc) {
@@ -189,6 +200,7 @@ public final class SAXCodeAdapter extends MethodVisitor {
         sa.addElement(Printer.OPCODES[opcode], attrs);
     }
 
+    @Impure
     @Override
     public final void visitMethodInsn(final int opcode, final String owner,
             final String name, final String desc, final boolean itf) {
@@ -200,6 +212,7 @@ public final class SAXCodeAdapter extends MethodVisitor {
         sa.addElement(Printer.OPCODES[opcode], attrs);
     }
 
+    @Impure
     @Override
     public void visitInvokeDynamicInsn(String name, String desc, Handle bsm,
             Object... bsmArgs) {
@@ -215,6 +228,7 @@ public final class SAXCodeAdapter extends MethodVisitor {
         sa.addEnd("INVOKEDYNAMIC");
     }
 
+    @Impure
     @Override
     public final void visitJumpInsn(final int opcode, final Label label) {
         AttributesImpl attrs = new AttributesImpl();
@@ -222,6 +236,7 @@ public final class SAXCodeAdapter extends MethodVisitor {
         sa.addElement(Printer.OPCODES[opcode], attrs);
     }
 
+    @Impure
     @Override
     public final void visitLabel(final Label label) {
         AttributesImpl attrs = new AttributesImpl();
@@ -229,11 +244,13 @@ public final class SAXCodeAdapter extends MethodVisitor {
         sa.addElement("Label", attrs);
     }
 
+    @Impure
     @Override
     public final void visitLdcInsn(final Object cst) {
         sa.addElement(Printer.OPCODES[Opcodes.LDC], getConstantAttribute(cst));
     }
 
+    @Impure
     private static AttributesImpl getConstantAttribute(final Object cst) {
         AttributesImpl attrs = new AttributesImpl();
         attrs.addAttribute("", "cst", "cst", "",
@@ -243,6 +260,7 @@ public final class SAXCodeAdapter extends MethodVisitor {
         return attrs;
     }
 
+    @Impure
     @Override
     public final void visitIincInsn(final int var, final int increment) {
         AttributesImpl attrs = new AttributesImpl();
@@ -251,6 +269,7 @@ public final class SAXCodeAdapter extends MethodVisitor {
         sa.addElement(Printer.OPCODES[Opcodes.IINC], attrs);
     }
 
+    @Impure
     @Override
     public final void visitTableSwitchInsn(final int min, final int max,
             final Label dflt, final Label... labels) {
@@ -268,6 +287,7 @@ public final class SAXCodeAdapter extends MethodVisitor {
         sa.addEnd(o);
     }
 
+    @Impure
     @Override
     public final void visitLookupSwitchInsn(final Label dflt, final int[] keys,
             final Label[] labels) {
@@ -284,6 +304,7 @@ public final class SAXCodeAdapter extends MethodVisitor {
         sa.addEnd(o);
     }
 
+    @Impure
     @Override
     public final void visitMultiANewArrayInsn(final String desc, final int dims) {
         AttributesImpl attrs = new AttributesImpl();
@@ -292,6 +313,7 @@ public final class SAXCodeAdapter extends MethodVisitor {
         sa.addElement(Printer.OPCODES[Opcodes.MULTIANEWARRAY], attrs);
     }
 
+    @Impure
     @Override
     public final void visitTryCatchBlock(final Label start, final Label end,
             final Label handler, final String type) {
@@ -305,6 +327,7 @@ public final class SAXCodeAdapter extends MethodVisitor {
         sa.addElement("TryCatch", attrs);
     }
 
+    @Impure
     @Override
     public final void visitMaxs(final int maxStack, final int maxLocals) {
         AttributesImpl attrs = new AttributesImpl();
@@ -317,6 +340,7 @@ public final class SAXCodeAdapter extends MethodVisitor {
         sa.addEnd("code");
     }
 
+    @Impure
     @Override
     public void visitLocalVariable(final String name, final String desc,
             final String signature, final Label start, final Label end,
@@ -334,6 +358,7 @@ public final class SAXCodeAdapter extends MethodVisitor {
         sa.addElement("LocalVar", attrs);
     }
 
+    @Impure
     @Override
     public final void visitLineNumber(final int line, final Label start) {
         AttributesImpl attrs = new AttributesImpl();
@@ -342,11 +367,13 @@ public final class SAXCodeAdapter extends MethodVisitor {
         sa.addElement("LineNumber", attrs);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitAnnotationDefault() {
         return new SAXAnnotationAdapter(sa, "annotationDefault", 0, null, null);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitAnnotation(final String desc,
             final boolean visible) {
@@ -354,6 +381,7 @@ public final class SAXCodeAdapter extends MethodVisitor {
                 null, desc);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitTypeAnnotation(int typeRef,
             TypePath typePath, String desc, boolean visible) {
@@ -361,6 +389,7 @@ public final class SAXCodeAdapter extends MethodVisitor {
                 null, desc, typeRef, typePath);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitParameterAnnotation(final int parameter,
             final String desc, final boolean visible) {
@@ -368,6 +397,7 @@ public final class SAXCodeAdapter extends MethodVisitor {
                 : -1, parameter, desc);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitInsnAnnotation(int typeRef,
             TypePath typePath, String desc, boolean visible) {
@@ -375,6 +405,7 @@ public final class SAXCodeAdapter extends MethodVisitor {
                 null, desc, typeRef, typePath);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitTryCatchAnnotation(int typeRef,
             TypePath typePath, String desc, boolean visible) {
@@ -382,6 +413,7 @@ public final class SAXCodeAdapter extends MethodVisitor {
                 : -1, null, desc, typeRef, typePath);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitLocalVariableAnnotation(int typeRef,
             TypePath typePath, Label[] start, Label[] end, int[] index,
@@ -398,11 +430,13 @@ public final class SAXCodeAdapter extends MethodVisitor {
                 visible ? 1 : -1, null, desc, typeRef, typePath, s, e, index);
     }
 
+    @Impure
     @Override
     public void visitEnd() {
         sa.addEnd("method");
     }
 
+    @Impure
     private final String getLabel(final Label label) {
         String name = labelNames.get(label);
         if (name == null) {

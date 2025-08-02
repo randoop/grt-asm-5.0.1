@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.tree.analysis;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -49,14 +51,19 @@ import org1.objectweb.asm.tree.MethodInsnNode;
 public class SourceInterpreter extends Interpreter<SourceValue> implements
         Opcodes {
 
+    @SideEffectFree
+    @Impure
     public SourceInterpreter() {
         super(ASM5);
     }
 
+    @SideEffectFree
+    @Impure
     protected SourceInterpreter(final int api) {
         super(api);
     }
 
+    @Impure
     @Override
     public SourceValue newValue(final Type type) {
         if (type == Type.VOID_TYPE) {
@@ -65,6 +72,7 @@ public class SourceInterpreter extends Interpreter<SourceValue> implements
         return new SourceValue(type == null ? 1 : type.getSize());
     }
 
+    @Impure
     @Override
     public SourceValue newOperation(final AbstractInsnNode insn) {
         int size;
@@ -88,12 +96,14 @@ public class SourceInterpreter extends Interpreter<SourceValue> implements
         return new SourceValue(size, insn);
     }
 
+    @Impure
     @Override
     public SourceValue copyOperation(final AbstractInsnNode insn,
             final SourceValue value) {
         return new SourceValue(value.getSize(), insn);
     }
 
+    @Impure
     @Override
     public SourceValue unaryOperation(final AbstractInsnNode insn,
             final SourceValue value) {
@@ -118,6 +128,7 @@ public class SourceInterpreter extends Interpreter<SourceValue> implements
         return new SourceValue(size, insn);
     }
 
+    @Impure
     @Override
     public SourceValue binaryOperation(final AbstractInsnNode insn,
             final SourceValue value1, final SourceValue value2) {
@@ -149,6 +160,7 @@ public class SourceInterpreter extends Interpreter<SourceValue> implements
         return new SourceValue(size, insn);
     }
 
+    @Impure
     @Override
     public SourceValue ternaryOperation(final AbstractInsnNode insn,
             final SourceValue value1, final SourceValue value2,
@@ -156,6 +168,7 @@ public class SourceInterpreter extends Interpreter<SourceValue> implements
         return new SourceValue(1, insn);
     }
 
+    @Impure
     @Override
     public SourceValue naryOperation(final AbstractInsnNode insn,
             final List<? extends SourceValue> values) {
@@ -171,11 +184,13 @@ public class SourceInterpreter extends Interpreter<SourceValue> implements
         return new SourceValue(size, insn);
     }
 
+    @SideEffectFree
     @Override
     public void returnOperation(final AbstractInsnNode insn,
             final SourceValue value, final SourceValue expected) {
     }
 
+    @Impure
     @Override
     public SourceValue merge(final SourceValue d, final SourceValue w) {
         if (d.insns instanceof SmallSet && w.insns instanceof SmallSet) {

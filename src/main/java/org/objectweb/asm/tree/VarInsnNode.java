@@ -29,6 +29,9 @@
  */
 package org1.objectweb.asm.tree;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
 import java.util.Map;
 
 import org1.objectweb.asm.MethodVisitor;
@@ -59,6 +62,8 @@ public class VarInsnNode extends AbstractInsnNode {
      *            the operand of the instruction to be constructed. This operand
      *            is the index of a local variable.
      */
+    @SideEffectFree
+    @Impure
     public VarInsnNode(final int opcode, final int var) {
         super(opcode);
         this.var = var;
@@ -72,21 +77,25 @@ public class VarInsnNode extends AbstractInsnNode {
      *            FLOAD, DLOAD, ALOAD, ISTORE, LSTORE, FSTORE, DSTORE, ASTORE or
      *            RET.
      */
+    @Impure
     public void setOpcode(final int opcode) {
         this.opcode = opcode;
     }
 
+    @Pure
     @Override
     public int getType() {
         return VAR_INSN;
     }
 
+    @Impure
     @Override
     public void accept(final MethodVisitor mv) {
         mv.visitVarInsn(opcode, var);
         acceptAnnotations(mv);
     }
 
+    @Impure
     @Override
     public AbstractInsnNode clone(final Map<LabelNode, LabelNode> labels) {
         return new VarInsnNode(opcode, var).cloneAnnotations(this);

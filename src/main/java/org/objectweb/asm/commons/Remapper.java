@@ -30,6 +30,9 @@
 
 package org1.objectweb.asm.commons;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
 import org1.objectweb.asm.Handle;
 import org1.objectweb.asm.Type;
 import org1.objectweb.asm.signature.SignatureReader;
@@ -50,6 +53,7 @@ import org1.objectweb.asm.signature.SignatureWriter;
  */
 public abstract class Remapper {
 
+    @Impure
     public String mapDesc(String desc) {
         Type t = Type.getType(desc);
         switch (t.getSort()) {
@@ -68,6 +72,7 @@ public abstract class Remapper {
         return desc;
     }
 
+    @Impure
     private Type mapType(Type t) {
         switch (t.getSort()) {
         case Type.ARRAY:
@@ -85,6 +90,7 @@ public abstract class Remapper {
         return t;
     }
 
+    @Impure
     public String mapType(String type) {
         if (type == null) {
             return null;
@@ -92,6 +98,7 @@ public abstract class Remapper {
         return mapType(Type.getObjectType(type)).getInternalName();
     }
 
+    @Impure
     public String[] mapTypes(String[] types) {
         String[] newTypes = null;
         boolean needMapping = false;
@@ -112,6 +119,7 @@ public abstract class Remapper {
         return needMapping ? newTypes : types;
     }
 
+    @Impure
     public String mapMethodDesc(String desc) {
         if ("()V".equals(desc)) {
             return desc;
@@ -131,6 +139,7 @@ public abstract class Remapper {
         return s.toString();
     }
 
+    @Impure
     public Object mapValue(Object value) {
         if (value instanceof Type) {
             return mapType((Type) value);
@@ -151,6 +160,7 @@ public abstract class Remapper {
      *            signature parameter of the ClassVisitor.visitField or
      *            MethodVisitor.visitLocalVariable methods
      */
+    @Impure
     public String mapSignature(String signature, boolean typeSignature) {
         if (signature == null) {
             return null;
@@ -166,6 +176,8 @@ public abstract class Remapper {
         return w.toString();
     }
 
+    @SideEffectFree
+    @Impure
     protected SignatureVisitor createRemappingSignatureAdapter(
             SignatureVisitor v) {
         return new RemappingSignatureAdapter(v, this);
@@ -182,6 +194,7 @@ public abstract class Remapper {
      *            descriptor of the method.
      * @return new name of the method
      */
+    @Impure
     public String mapMethodName(String owner, String name, String desc) {
         return name;
     }
@@ -195,6 +208,7 @@ public abstract class Remapper {
      *            descriptor of the invokedynamic.
      * @return new invokdynamic name.
      */
+    @Pure
     public String mapInvokeDynamicMethodName(String name, String desc) {
         return name;
     }
@@ -210,6 +224,7 @@ public abstract class Remapper {
      *            descriptor of the field
      * @return new name of the field.
      */
+    @Impure
     public String mapFieldName(String owner, String name, String desc) {
         return name;
     }
@@ -217,6 +232,7 @@ public abstract class Remapper {
     /**
      * Map type name to the new name. Subclasses can override.
      */
+    @Impure
     public String map(String typeName) {
         return typeName;
     }

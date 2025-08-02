@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.tree.analysis;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,9 +50,11 @@ class Subroutine {
 
     List<JumpInsnNode> callers;
 
+    @SideEffectFree
     private Subroutine() {
     }
 
+    @Impure
     Subroutine(final LabelNode start, final int maxLocals,
             final JumpInsnNode caller) {
         this.start = start;
@@ -59,6 +63,7 @@ class Subroutine {
         callers.add(caller);
     }
 
+    @Impure
     public Subroutine copy() {
         Subroutine result = new Subroutine();
         result.start = start;
@@ -68,6 +73,7 @@ class Subroutine {
         return result;
     }
 
+    @Impure
     public boolean merge(final Subroutine subroutine) throws AnalyzerException {
         boolean changes = false;
         for (int i = 0; i < access.length; ++i) {

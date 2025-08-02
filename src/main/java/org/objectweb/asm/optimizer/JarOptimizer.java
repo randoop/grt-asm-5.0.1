@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.optimizer;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -64,6 +66,7 @@ public class JarOptimizer {
     static final Map<String, String> HIERARCHY = new HashMap<String, String>();
     static boolean nodebug = false;
 
+    @Impure
     public static void main(final String[] args) throws IOException {
         File f = new File(args[0]);
         InputStream is = new GZIPInputStream(new FileInputStream(f));
@@ -92,6 +95,7 @@ public class JarOptimizer {
         optimize(new File(args[argIndex]));
     }
 
+    @Impure
     static void optimize(final File f) throws IOException {
         if (nodebug && f.getName().contains("debug")) {
             return;
@@ -145,10 +149,13 @@ public class JarOptimizer {
 
         String owner;
 
+        @SideEffectFree
+        @Impure
         public ClassDump() {
             super(Opcodes.ASM5);
         }
 
+        @Impure
         @Override
         public void visit(final int version, final int access,
                 final String name, final String signature,
@@ -159,6 +166,7 @@ public class JarOptimizer {
             }
         }
 
+        @Impure
         @Override
         public FieldVisitor visitField(final int access, final String name,
                 final String desc, final String signature, final Object value) {
@@ -168,6 +176,7 @@ public class JarOptimizer {
             return null;
         }
 
+        @Impure
         @Override
         public MethodVisitor visitMethod(final int access, final String name,
                 final String desc, final String signature,
@@ -185,10 +194,13 @@ public class JarOptimizer {
 
         String method;
 
+        @SideEffectFree
+        @Impure
         public ClassVerifier() {
             super(Opcodes.ASM5);
         }
 
+        @Impure
         @Override
         public void visit(final int version, final int access,
                 final String name, final String signature,
@@ -196,18 +208,21 @@ public class JarOptimizer {
             owner = name;
         }
 
+        @Impure
         @Override
         public MethodVisitor visitMethod(final int access, final String name,
                 final String desc, final String signature,
                 final String[] exceptions) {
             method = name + desc;
             return new MethodVisitor(Opcodes.ASM5) {
+                @Impure
                 @Override
                 public void visitFieldInsn(final int opcode,
                         final String owner, final String name, final String desc) {
                     check(owner, name);
                 }
 
+                @Impure
                 @Override
                 public void visitMethodInsn(final int opcode,
                         final String owner, final String name,
@@ -217,6 +232,7 @@ public class JarOptimizer {
             };
         }
 
+        @Impure
         void check(String owner, String member) {
             if (owner.startsWith("java/")) {
                 String o = owner;

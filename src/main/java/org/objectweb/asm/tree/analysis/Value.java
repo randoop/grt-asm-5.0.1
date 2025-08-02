@@ -28,6 +28,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org1.objectweb.asm.tree.analysis;
+import org.checkerframework.dataflow.qual.Pure;
 
 /**
  * An immutable symbolic value for semantic interpretation of bytecode.
@@ -41,5 +42,6 @@ public interface Value {
      * 
      * @return either 1 or 2.
      */
+    @Pure
     int getSize();
 }

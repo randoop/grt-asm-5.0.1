@@ -28,6 +28,8 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org1.objectweb.asm;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
  * A dynamically extensible vector of bytes. This class is roughly equivalent to
@@ -51,6 +53,7 @@ public class ByteVector {
      * Constructs a new {@link ByteVector ByteVector} with a default initial
      * size.
      */
+    @SideEffectFree
     public ByteVector() {
         data = new byte[64];
     }
@@ -62,6 +65,7 @@ public class ByteVector {
      * @param initialSize
      *            the initial size of the byte vector to be constructed.
      */
+    @SideEffectFree
     public ByteVector(final int initialSize) {
         data = new byte[initialSize];
     }
@@ -74,6 +78,7 @@ public class ByteVector {
      *            a byte.
      * @return this byte vector.
      */
+    @Impure
     public ByteVector putByte(final int b) {
         int length = this.length;
         if (length + 1 > data.length) {
@@ -94,6 +99,7 @@ public class ByteVector {
      *            another byte.
      * @return this byte vector.
      */
+    @Impure
     ByteVector put11(final int b1, final int b2) {
         int length = this.length;
         if (length + 2 > data.length) {
@@ -114,6 +120,7 @@ public class ByteVector {
      *            a short.
      * @return this byte vector.
      */
+    @Impure
     public ByteVector putShort(final int s) {
         int length = this.length;
         if (length + 2 > data.length) {
@@ -136,6 +143,7 @@ public class ByteVector {
      *            a short.
      * @return this byte vector.
      */
+    @Impure
     ByteVector put12(final int b, final int s) {
         int length = this.length;
         if (length + 3 > data.length) {
@@ -157,6 +165,7 @@ public class ByteVector {
      *            an int.
      * @return this byte vector.
      */
+    @Impure
     public ByteVector putInt(final int i) {
         int length = this.length;
         if (length + 4 > data.length) {
@@ -179,6 +188,7 @@ public class ByteVector {
      *            a long.
      * @return this byte vector.
      */
+    @Impure
     public ByteVector putLong(final long l) {
         int length = this.length;
         if (length + 8 > data.length) {
@@ -207,6 +217,7 @@ public class ByteVector {
      *            a String whose UTF8 encoded length must be less than 65536.
      * @return this byte vector.
      */
+    @Impure
     public ByteVector putUTF8(final String s) {
         int charLength = s.length();
         if (charLength > 65535) {
@@ -255,6 +266,7 @@ public class ByteVector {
      *            already encoded characters.
      * @return this byte vector.
      */
+    @Impure
     ByteVector encodeUTF8(final String s, int i, int maxByteLength) {
         int charLength = s.length();
         int byteLength = i;
@@ -311,6 +323,7 @@ public class ByteVector {
      *            number of bytes of b that must be copied.
      * @return this byte vector.
      */
+    @Impure
     public ByteVector putByteArray(final byte[] b, final int off, final int len) {
         if (length + len > data.length) {
             enlarge(len);
@@ -329,6 +342,7 @@ public class ByteVector {
      *            number of additional bytes that this byte vector should be
      *            able to receive.
      */
+    @Impure
     private void enlarge(final int size) {
         int length1 = 2 * data.length;
         int length2 = length + size;

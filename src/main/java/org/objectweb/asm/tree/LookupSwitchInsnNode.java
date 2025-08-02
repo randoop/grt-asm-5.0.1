@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.tree;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -72,6 +74,7 @@ public class LookupSwitchInsnNode extends AbstractInsnNode {
      *            beginnings of the handler blocks. <tt>labels[i]</tt> is the
      *            beginning of the handler block for the <tt>keys[i]</tt> key.
      */
+    @Impure
     public LookupSwitchInsnNode(final LabelNode dflt, final int[] keys,
             final LabelNode[] labels) {
         super(Opcodes.LOOKUPSWITCH);
@@ -89,11 +92,13 @@ public class LookupSwitchInsnNode extends AbstractInsnNode {
         }
     }
 
+    @Pure
     @Override
     public int getType() {
         return LOOKUPSWITCH_INSN;
     }
 
+    @Impure
     @Override
     public void accept(final MethodVisitor mv) {
         int[] keys = new int[this.keys.size()];
@@ -108,6 +113,7 @@ public class LookupSwitchInsnNode extends AbstractInsnNode {
         acceptAnnotations(mv);
     }
 
+    @Impure
     @Override
     public AbstractInsnNode clone(final Map<LabelNode, LabelNode> labels) {
         LookupSwitchInsnNode clone = new LookupSwitchInsnNode(clone(dflt,

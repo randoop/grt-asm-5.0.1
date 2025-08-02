@@ -28,6 +28,8 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org1.objectweb.asm;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
  * A visitor to visit a Java field. The methods of this class must be called in
@@ -57,6 +59,8 @@ public abstract class FieldVisitor {
      *            the ASM API version implemented by this visitor. Must be one
      *            of {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
      */
+    @SideEffectFree
+    @Impure
     public FieldVisitor(final int api) {
         this(api, null);
     }
@@ -71,6 +75,7 @@ public abstract class FieldVisitor {
      *            the field visitor to which this visitor must delegate method
      *            calls. May be null.
      */
+    @SideEffectFree
     public FieldVisitor(final int api, final FieldVisitor fv) {
         if (api != Opcodes.ASM4 && api != Opcodes.ASM5) {
             throw new IllegalArgumentException();
@@ -89,6 +94,7 @@ public abstract class FieldVisitor {
      * @return a visitor to visit the annotation values, or <tt>null</tt> if
      *         this visitor is not interested in visiting this annotation.
      */
+    @Impure
     public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
         if (fv != null) {
             return fv.visitAnnotation(desc, visible);
@@ -114,6 +120,7 @@ public abstract class FieldVisitor {
      * @return a visitor to visit the annotation values, or <tt>null</tt> if
      *         this visitor is not interested in visiting this annotation.
      */
+    @Impure
     public AnnotationVisitor visitTypeAnnotation(int typeRef,
             TypePath typePath, String desc, boolean visible) {
         if (api < Opcodes.ASM5) {
@@ -131,6 +138,7 @@ public abstract class FieldVisitor {
      * @param attr
      *            an attribute.
      */
+    @Impure
     public void visitAttribute(Attribute attr) {
         if (fv != null) {
             fv.visitAttribute(attr);
@@ -142,6 +150,7 @@ public abstract class FieldVisitor {
      * called, is used to inform the visitor that all the annotations and
      * attributes of the field have been visited.
      */
+    @Impure
     public void visitEnd() {
         if (fv != null) {
             fv.visitEnd();

@@ -29,6 +29,9 @@
  */
 package org1.objectweb.asm.tree.analysis;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,6 +86,7 @@ public class Frame<V extends Value> {
      * @param nStack
      *            the maximum stack size of the frame.
      */
+    @SideEffectFree
     public Frame(final int nLocals, final int nStack) {
         this.values = (V[]) new Value[nLocals + nStack];
         this.locals = nLocals;
@@ -94,6 +98,7 @@ public class Frame<V extends Value> {
      * @param src
      *            a frame.
      */
+    @Impure
     public Frame(final Frame<? extends V> src) {
         this(src.locals, src.values.length - src.locals);
         init(src);
@@ -106,6 +111,7 @@ public class Frame<V extends Value> {
      *            a frame.
      * @return this frame.
      */
+    @Impure
     public Frame<V> init(final Frame<? extends V> src) {
         returnValue = src.returnValue;
         System.arraycopy(src.values, 0, values, 0, values.length);
@@ -120,6 +126,7 @@ public class Frame<V extends Value> {
      *            the expected return type of the analyzed method, or
      *            <tt>null</tt> if the method returns void.
      */
+    @Impure
     public void setReturn(final V v) {
         returnValue = v;
     }
@@ -129,6 +136,7 @@ public class Frame<V extends Value> {
      * 
      * @return the maximum number of local variables of this frame.
      */
+    @Pure
     public int getLocals() {
         return locals;
     }
@@ -138,6 +146,7 @@ public class Frame<V extends Value> {
      * 
      * @return the maximum stack size of this frame.
      */
+    @Pure
     public int getMaxStackSize() {
         return values.length - locals;
     }
@@ -151,6 +160,7 @@ public class Frame<V extends Value> {
      * @throws IndexOutOfBoundsException
      *             if the variable does not exist.
      */
+    @Pure
     public V getLocal(final int i) throws IndexOutOfBoundsException {
         if (i >= locals) {
             throw new IndexOutOfBoundsException(
@@ -169,6 +179,7 @@ public class Frame<V extends Value> {
      * @throws IndexOutOfBoundsException
      *             if the variable does not exist.
      */
+    @Impure
     public void setLocal(final int i, final V value)
             throws IndexOutOfBoundsException {
         if (i >= locals) {
@@ -184,6 +195,7 @@ public class Frame<V extends Value> {
      * 
      * @return the number of values in the operand stack of this frame.
      */
+    @Pure
     public int getStackSize() {
         return top;
     }
@@ -197,6 +209,7 @@ public class Frame<V extends Value> {
      * @throws IndexOutOfBoundsException
      *             if the operand stack slot does not exist.
      */
+    @Pure
     public V getStack(final int i) throws IndexOutOfBoundsException {
         return values[i + locals];
     }
@@ -204,6 +217,7 @@ public class Frame<V extends Value> {
     /**
      * Clears the operand stack of this frame.
      */
+    @Impure
     public void clearStack() {
         top = 0;
     }
@@ -215,6 +229,7 @@ public class Frame<V extends Value> {
      * @throws IndexOutOfBoundsException
      *             if the operand stack is empty.
      */
+    @Impure
     public V pop() throws IndexOutOfBoundsException {
         if (top == 0) {
             throw new IndexOutOfBoundsException(
@@ -231,6 +246,7 @@ public class Frame<V extends Value> {
      * @throws IndexOutOfBoundsException
      *             if the operand stack is full.
      */
+    @Impure
     public void push(final V value) throws IndexOutOfBoundsException {
         if (top + locals >= values.length) {
             throw new IndexOutOfBoundsException(
@@ -239,6 +255,7 @@ public class Frame<V extends Value> {
         values[top++ + locals] = value;
     }
 
+    @Impure
     public void execute(final AbstractInsnNode insn,
             final Interpreter<V> interpreter) throws AnalyzerException {
         V value1, value2, value3, value4;
@@ -680,6 +697,7 @@ public class Frame<V extends Value> {
      * @throws AnalyzerException
      *             if the frames have incompatible sizes.
      */
+    @Impure
     public boolean merge(final Frame<? extends V> frame,
             final Interpreter<V> interpreter) throws AnalyzerException {
         if (top != frame.top) {
@@ -707,6 +725,7 @@ public class Frame<V extends Value> {
      * @return <tt>true</tt> if this frame has been changed as a result of the
      *         merge operation, or <tt>false</tt> otherwise.
      */
+    @Impure
     public boolean merge(final Frame<? extends V> frame, final boolean[] access) {
         boolean changes = false;
         for (int i = 0; i < locals; ++i) {
@@ -723,6 +742,7 @@ public class Frame<V extends Value> {
      * 
      * @return a string representation of this frame.
      */
+    @Impure
     @Override
     public String toString() {
         StringBuffer b = new StringBuffer();

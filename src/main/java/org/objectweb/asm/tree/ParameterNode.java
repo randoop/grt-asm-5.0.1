@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.tree;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import org1.objectweb.asm.MethodVisitor;
 
 /**
@@ -59,6 +61,7 @@ public class ParameterNode {
      * @param name
      *            the parameter's name.
      */
+    @SideEffectFree
     public ParameterNode(final String name, final int access) {
         this.name = name;
         this.access = access;
@@ -70,6 +73,7 @@ public class ParameterNode {
      * @param mv
      *            a method visitor.
      */
+    @Impure
     public void accept(final MethodVisitor mv) {
         mv.visitParameter(name, access);
     }

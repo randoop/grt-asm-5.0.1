@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.util;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
@@ -377,6 +379,7 @@ public class CheckMethodAdapter extends MethodVisitor {
      * @param mv
      *            the method visitor to which this adapter must delegate calls.
      */
+    @Impure
     public CheckMethodAdapter(final MethodVisitor mv) {
         this(mv, new HashMap<Label, Integer>());
     }
@@ -395,6 +398,7 @@ public class CheckMethodAdapter extends MethodVisitor {
      * @throws IllegalStateException
      *             If a subclass calls this constructor.
      */
+    @Impure
     public CheckMethodAdapter(final MethodVisitor mv,
             final Map<Label, Integer> labels) {
         this(Opcodes.ASM5, mv, labels);
@@ -413,6 +417,7 @@ public class CheckMethodAdapter extends MethodVisitor {
      * @param labels
      *            a map of already visited labels (in other methods).
      */
+    @Impure
     protected CheckMethodAdapter(final int api, final MethodVisitor mv,
             final Map<Label, Integer> labels) {
         super(api, mv);
@@ -438,10 +443,12 @@ public class CheckMethodAdapter extends MethodVisitor {
      * @param labels
      *            a map of already visited labels (in other methods).
      */
+    @Impure
     public CheckMethodAdapter(final int access, final String name,
             final String desc, final MethodVisitor cmv,
             final Map<Label, Integer> labels) {
         this(new MethodNode(Opcodes.ASM5, access, name, desc, null, null) {
+            @Impure
             @Override
             public void visitEnd() {
                 Analyzer<BasicValue> a = new Analyzer<BasicValue>(
@@ -468,6 +475,7 @@ public class CheckMethodAdapter extends MethodVisitor {
         this.access = access;
     }
 
+    @Impure
     @Override
     public void visitParameter(String name, int access) {
         if (name != null) {
@@ -478,6 +486,7 @@ public class CheckMethodAdapter extends MethodVisitor {
         super.visitParameter(name, access);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitAnnotation(final String desc,
             final boolean visible) {
@@ -486,6 +495,7 @@ public class CheckMethodAdapter extends MethodVisitor {
         return new CheckAnnotationAdapter(super.visitAnnotation(desc, visible));
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitTypeAnnotation(final int typeRef,
             final TypePath typePath, final String desc, final boolean visible) {
@@ -506,12 +516,14 @@ public class CheckMethodAdapter extends MethodVisitor {
                 typePath, desc, visible));
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitAnnotationDefault() {
         checkEndMethod();
         return new CheckAnnotationAdapter(super.visitAnnotationDefault(), false);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitParameterAnnotation(final int parameter,
             final String desc, final boolean visible) {
@@ -521,6 +533,7 @@ public class CheckMethodAdapter extends MethodVisitor {
                 parameter, desc, visible));
     }
 
+    @Impure
     @Override
     public void visitAttribute(final Attribute attr) {
         checkEndMethod();
@@ -531,6 +544,7 @@ public class CheckMethodAdapter extends MethodVisitor {
         super.visitAttribute(attr);
     }
 
+    @Impure
     @Override
     public void visitCode() {
         if ((access & Opcodes.ACC_ABSTRACT) != 0) {
@@ -540,6 +554,7 @@ public class CheckMethodAdapter extends MethodVisitor {
         super.visitCode();
     }
 
+    @Impure
     @Override
     public void visitFrame(final int type, final int nLocal,
             final Object[] local, final int nStack, final Object[] stack) {
@@ -614,6 +629,7 @@ public class CheckMethodAdapter extends MethodVisitor {
         super.visitFrame(type, nLocal, local, nStack, stack);
     }
 
+    @Impure
     @Override
     public void visitInsn(final int opcode) {
         checkStartCode();
@@ -623,6 +639,7 @@ public class CheckMethodAdapter extends MethodVisitor {
         ++insnCount;
     }
 
+    @Impure
     @Override
     public void visitIntInsn(final int opcode, final int operand) {
         checkStartCode();
@@ -647,6 +664,7 @@ public class CheckMethodAdapter extends MethodVisitor {
         ++insnCount;
     }
 
+    @Impure
     @Override
     public void visitVarInsn(final int opcode, final int var) {
         checkStartCode();
@@ -657,6 +675,7 @@ public class CheckMethodAdapter extends MethodVisitor {
         ++insnCount;
     }
 
+    @Impure
     @Override
     public void visitTypeInsn(final int opcode, final String type) {
         checkStartCode();
@@ -671,6 +690,7 @@ public class CheckMethodAdapter extends MethodVisitor {
         ++insnCount;
     }
 
+    @Impure
     @Override
     public void visitFieldInsn(final int opcode, final String owner,
             final String name, final String desc) {
@@ -684,6 +704,7 @@ public class CheckMethodAdapter extends MethodVisitor {
         ++insnCount;
     }
 
+    @Impure
     @Deprecated
     @Override
     public void visitMethodInsn(int opcode, String owner, String name,
@@ -696,6 +717,7 @@ public class CheckMethodAdapter extends MethodVisitor {
                 opcode == Opcodes.INVOKEINTERFACE);
     }
 
+    @Impure
     @Override
     public void visitMethodInsn(int opcode, String owner, String name,
             String desc, boolean itf) {
@@ -706,6 +728,7 @@ public class CheckMethodAdapter extends MethodVisitor {
         doVisitMethodInsn(opcode, owner, name, desc, itf);
     }
 
+    @Impure
     private void doVisitMethodInsn(int opcode, final String owner,
             final String name, final String desc, final boolean itf) {
         checkStartCode();
@@ -734,6 +757,7 @@ public class CheckMethodAdapter extends MethodVisitor {
         ++insnCount;
     }
 
+    @Impure
     @Override
     public void visitInvokeDynamicInsn(String name, String desc, Handle bsm,
             Object... bsmArgs) {
@@ -753,6 +777,7 @@ public class CheckMethodAdapter extends MethodVisitor {
         ++insnCount;
     }
 
+    @Impure
     @Override
     public void visitJumpInsn(final int opcode, final Label label) {
         checkStartCode();
@@ -765,6 +790,7 @@ public class CheckMethodAdapter extends MethodVisitor {
         ++insnCount;
     }
 
+    @Impure
     @Override
     public void visitLabel(final Label label) {
         checkStartCode();
@@ -777,6 +803,7 @@ public class CheckMethodAdapter extends MethodVisitor {
         super.visitLabel(label);
     }
 
+    @Impure
     @Override
     public void visitLdcInsn(final Object cst) {
         checkStartCode();
@@ -786,6 +813,7 @@ public class CheckMethodAdapter extends MethodVisitor {
         ++insnCount;
     }
 
+    @Impure
     @Override
     public void visitIincInsn(final int var, final int increment) {
         checkStartCode();
@@ -796,6 +824,7 @@ public class CheckMethodAdapter extends MethodVisitor {
         ++insnCount;
     }
 
+    @Impure
     @Override
     public void visitTableSwitchInsn(final int min, final int max,
             final Label dflt, final Label... labels) {
@@ -822,6 +851,7 @@ public class CheckMethodAdapter extends MethodVisitor {
         ++insnCount;
     }
 
+    @Impure
     @Override
     public void visitLookupSwitchInsn(final Label dflt, final int[] keys,
             final Label[] labels) {
@@ -845,6 +875,7 @@ public class CheckMethodAdapter extends MethodVisitor {
         ++insnCount;
     }
 
+    @Impure
     @Override
     public void visitMultiANewArrayInsn(final String desc, final int dims) {
         checkStartCode();
@@ -868,6 +899,7 @@ public class CheckMethodAdapter extends MethodVisitor {
         ++insnCount;
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitInsnAnnotation(final int typeRef,
             final TypePath typePath, final String desc, final boolean visible) {
@@ -891,6 +923,7 @@ public class CheckMethodAdapter extends MethodVisitor {
                 typePath, desc, visible));
     }
 
+    @Impure
     @Override
     public void visitTryCatchBlock(final Label start, final Label end,
             final Label handler, final String type) {
@@ -915,6 +948,7 @@ public class CheckMethodAdapter extends MethodVisitor {
         handlers.add(end);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitTryCatchAnnotation(final int typeRef,
             final TypePath typePath, final String desc, final boolean visible) {
@@ -931,6 +965,7 @@ public class CheckMethodAdapter extends MethodVisitor {
                 typeRef, typePath, desc, visible));
     }
 
+    @Impure
     @Override
     public void visitLocalVariable(final String name, final String desc,
             final String signature, final Label start, final Label end,
@@ -951,6 +986,7 @@ public class CheckMethodAdapter extends MethodVisitor {
         super.visitLocalVariable(name, desc, signature, start, end, index);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitLocalVariableAnnotation(int typeRef,
             TypePath typePath, Label[] start, Label[] end, int[] index,
@@ -985,6 +1021,7 @@ public class CheckMethodAdapter extends MethodVisitor {
                 end, index, desc, visible);
     }
 
+    @Impure
     @Override
     public void visitLineNumber(final int line, final Label start) {
         checkStartCode();
@@ -994,6 +1031,7 @@ public class CheckMethodAdapter extends MethodVisitor {
         super.visitLineNumber(line, start);
     }
 
+    @Impure
     @Override
     public void visitMaxs(final int maxStack, final int maxLocals) {
         checkStartCode();
@@ -1021,6 +1059,7 @@ public class CheckMethodAdapter extends MethodVisitor {
         super.visitMaxs(maxStack, maxLocals);
     }
 
+    @Impure
     @Override
     public void visitEnd() {
         checkEndMethod();
@@ -1033,6 +1072,7 @@ public class CheckMethodAdapter extends MethodVisitor {
     /**
      * Checks that the visitCode method has been called.
      */
+    @SideEffectFree
     void checkStartCode() {
         if (!startCode) {
             throw new IllegalStateException(
@@ -1043,6 +1083,7 @@ public class CheckMethodAdapter extends MethodVisitor {
     /**
      * Checks that the visitMaxs method has not been called.
      */
+    @SideEffectFree
     void checkEndCode() {
         if (endCode) {
             throw new IllegalStateException(
@@ -1053,6 +1094,7 @@ public class CheckMethodAdapter extends MethodVisitor {
     /**
      * Checks that the visitEnd method has not been called.
      */
+    @SideEffectFree
     void checkEndMethod() {
         if (endMethod) {
             throw new IllegalStateException(
@@ -1066,6 +1108,7 @@ public class CheckMethodAdapter extends MethodVisitor {
      * @param value
      *            the value to be checked.
      */
+    @Impure
     void checkFrameValue(final Object value) {
         if (value == Opcodes.TOP || value == Opcodes.INTEGER
                 || value == Opcodes.FLOAT || value == Opcodes.LONG
@@ -1093,6 +1136,7 @@ public class CheckMethodAdapter extends MethodVisitor {
      * @param type
      *            the expected opcode type.
      */
+    @SideEffectFree
     static void checkOpcode(final int opcode, final int type) {
         if (opcode < 0 || opcode > 199 || TYPE[opcode] != type) {
             throw new IllegalArgumentException("Invalid opcode: " + opcode);
@@ -1107,6 +1151,7 @@ public class CheckMethodAdapter extends MethodVisitor {
      * @param msg
      *            an message to be used in case of error.
      */
+    @SideEffectFree
     static void checkSignedByte(final int value, final String msg) {
         if (value < Byte.MIN_VALUE || value > Byte.MAX_VALUE) {
             throw new IllegalArgumentException(msg
@@ -1122,6 +1167,7 @@ public class CheckMethodAdapter extends MethodVisitor {
      * @param msg
      *            an message to be used in case of error.
      */
+    @SideEffectFree
     static void checkSignedShort(final int value, final String msg) {
         if (value < Short.MIN_VALUE || value > Short.MAX_VALUE) {
             throw new IllegalArgumentException(msg
@@ -1137,6 +1183,7 @@ public class CheckMethodAdapter extends MethodVisitor {
      * @param msg
      *            an message to be used in case of error.
      */
+    @SideEffectFree
     static void checkUnsignedShort(final int value, final String msg) {
         if (value < 0 || value > 65535) {
             throw new IllegalArgumentException(msg
@@ -1151,6 +1198,7 @@ public class CheckMethodAdapter extends MethodVisitor {
      * @param cst
      *            the value to be checked.
      */
+    @SideEffectFree
     static void checkConstant(final Object cst) {
         if (!(cst instanceof Integer) && !(cst instanceof Float)
                 && !(cst instanceof Long) && !(cst instanceof Double)
@@ -1159,6 +1207,8 @@ public class CheckMethodAdapter extends MethodVisitor {
         }
     }
 
+    @SideEffectFree
+    @Impure
     void checkLDCConstant(final Object cst) {
         if (cst instanceof Type) {
             int s = ((Type) cst).getSort();
@@ -1197,6 +1247,8 @@ public class CheckMethodAdapter extends MethodVisitor {
      * @param msg
      *            a message to be used in case of error.
      */
+    @SideEffectFree
+    @Impure
     static void checkUnqualifiedName(int version, final String name,
             final String msg) {
         if ((version & 0xFFFF) < Opcodes.V1_5) {
@@ -1219,6 +1271,8 @@ public class CheckMethodAdapter extends MethodVisitor {
      * @param msg
      *            a message to be used in case of error.
      */
+    @SideEffectFree
+    @Impure
     static void checkIdentifier(final String name, final String msg) {
         checkIdentifier(name, 0, -1, msg);
     }
@@ -1237,6 +1291,7 @@ public class CheckMethodAdapter extends MethodVisitor {
      * @param msg
      *            a message to be used in case of error.
      */
+    @SideEffectFree
     static void checkIdentifier(final String name, final int start,
             final int end, final String msg) {
         if (name == null || (end == -1 ? name.length() <= start : end <= start)) {
@@ -1266,6 +1321,7 @@ public class CheckMethodAdapter extends MethodVisitor {
      * @param msg
      *            a message to be used in case of error.
      */
+    @SideEffectFree
     static void checkMethodIdentifier(int version, final String name,
             final String msg) {
         if (name == null || name.length() == 0) {
@@ -1307,6 +1363,7 @@ public class CheckMethodAdapter extends MethodVisitor {
      * @param msg
      *            a message to be used in case of error.
      */
+    @Impure
     static void checkInternalName(final String name, final String msg) {
         if (name == null || name.length() == 0) {
             throw new IllegalArgumentException("Invalid " + msg
@@ -1333,6 +1390,8 @@ public class CheckMethodAdapter extends MethodVisitor {
      * @param msg
      *            a message to be used in case of error.
      */
+    @SideEffectFree
+    @Impure
     static void checkInternalName(final String name, final int start,
             final int end, final String msg) {
         int max = end == -1 ? name.length() : end;
@@ -1364,6 +1423,7 @@ public class CheckMethodAdapter extends MethodVisitor {
      * @param canBeVoid
      *            <tt>true</tt> if <tt>V</tt> can be considered valid.
      */
+    @Impure
     static void checkDesc(final String desc, final boolean canBeVoid) {
         int end = checkDesc(desc, 0, canBeVoid);
         if (end != desc.length()) {
@@ -1382,6 +1442,7 @@ public class CheckMethodAdapter extends MethodVisitor {
      *            <tt>true</tt> if <tt>V</tt> can be considered valid.
      * @return the index of the last character of the type decriptor, plus one.
      */
+    @Impure
     static int checkDesc(final String desc, final int start,
             final boolean canBeVoid) {
         if (desc == null || start >= desc.length()) {
@@ -1441,6 +1502,7 @@ public class CheckMethodAdapter extends MethodVisitor {
      * @param desc
      *            the string to be checked.
      */
+    @Impure
     static void checkMethodDesc(final String desc) {
         if (desc == null || desc.length() == 0) {
             throw new IllegalArgumentException(
@@ -1476,6 +1538,7 @@ public class CheckMethodAdapter extends MethodVisitor {
      * @param msg
      *            a message to be used in case of error.
      */
+    @SideEffectFree
     void checkLabel(final Label label, final boolean checkVisited,
             final String msg) {
         if (label == null) {
@@ -1494,6 +1557,7 @@ public class CheckMethodAdapter extends MethodVisitor {
      * @param label
      *            the label to be checked.
      */
+    @Impure
     private static void checkNonDebugLabel(final Label label) {
         Field f = getLabelStatusField();
         int status = 0;
@@ -1513,6 +1577,7 @@ public class CheckMethodAdapter extends MethodVisitor {
      * 
      * @return the Field object corresponding to the Label.status field.
      */
+    @Impure
     private static Field getLabelStatusField() {
         if (labelStatusField == null) {
             labelStatusField = getLabelField("a");
@@ -1530,6 +1595,7 @@ public class CheckMethodAdapter extends MethodVisitor {
      *            a field name.
      * @return the field of the Label class whose name is given, or null.
      */
+    @Impure
     private static Field getLabelField(final String name) {
         try {
             Field f = Label.class.getDeclaredField(name);

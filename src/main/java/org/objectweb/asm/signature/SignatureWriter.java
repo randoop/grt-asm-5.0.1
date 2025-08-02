@@ -29,6 +29,9 @@
  */
 package org1.objectweb.asm.signature;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Pure;
 import org1.objectweb.asm.Opcodes;
 
 /**
@@ -65,6 +68,8 @@ public class SignatureWriter extends SignatureVisitor {
     /**
      * Constructs a new {@link SignatureWriter} object.
      */
+    @SideEffectFree
+    @Impure
     public SignatureWriter() {
         super(Opcodes.ASM5);
     }
@@ -73,6 +78,7 @@ public class SignatureWriter extends SignatureVisitor {
     // Implementation of the SignatureVisitor interface
     // ------------------------------------------------------------------------
 
+    @Impure
     @Override
     public void visitFormalTypeParameter(final String name) {
         if (!hasFormals) {
@@ -83,28 +89,33 @@ public class SignatureWriter extends SignatureVisitor {
         buf.append(':');
     }
 
+    @Pure
     @Override
     public SignatureVisitor visitClassBound() {
         return this;
     }
 
+    @Impure
     @Override
     public SignatureVisitor visitInterfaceBound() {
         buf.append(':');
         return this;
     }
 
+    @Impure
     @Override
     public SignatureVisitor visitSuperclass() {
         endFormals();
         return this;
     }
 
+    @Pure
     @Override
     public SignatureVisitor visitInterface() {
         return this;
     }
 
+    @Impure
     @Override
     public SignatureVisitor visitParameterType() {
         endFormals();
@@ -115,6 +126,7 @@ public class SignatureWriter extends SignatureVisitor {
         return this;
     }
 
+    @Impure
     @Override
     public SignatureVisitor visitReturnType() {
         endFormals();
@@ -125,17 +137,20 @@ public class SignatureWriter extends SignatureVisitor {
         return this;
     }
 
+    @Impure
     @Override
     public SignatureVisitor visitExceptionType() {
         buf.append('^');
         return this;
     }
 
+    @Impure
     @Override
     public void visitBaseType(final char descriptor) {
         buf.append(descriptor);
     }
 
+    @Impure
     @Override
     public void visitTypeVariable(final String name) {
         buf.append('T');
@@ -143,12 +158,14 @@ public class SignatureWriter extends SignatureVisitor {
         buf.append(';');
     }
 
+    @Impure
     @Override
     public SignatureVisitor visitArrayType() {
         buf.append('[');
         return this;
     }
 
+    @Impure
     @Override
     public void visitClassType(final String name) {
         buf.append('L');
@@ -156,6 +173,7 @@ public class SignatureWriter extends SignatureVisitor {
         argumentStack *= 2;
     }
 
+    @Impure
     @Override
     public void visitInnerClassType(final String name) {
         endArguments();
@@ -164,6 +182,7 @@ public class SignatureWriter extends SignatureVisitor {
         argumentStack *= 2;
     }
 
+    @Impure
     @Override
     public void visitTypeArgument() {
         if (argumentStack % 2 == 0) {
@@ -173,6 +192,7 @@ public class SignatureWriter extends SignatureVisitor {
         buf.append('*');
     }
 
+    @Impure
     @Override
     public SignatureVisitor visitTypeArgument(final char wildcard) {
         if (argumentStack % 2 == 0) {
@@ -185,6 +205,7 @@ public class SignatureWriter extends SignatureVisitor {
         return this;
     }
 
+    @Impure
     @Override
     public void visitEnd() {
         endArguments();
@@ -196,6 +217,7 @@ public class SignatureWriter extends SignatureVisitor {
      * 
      * @return the signature that was built by this signature writer.
      */
+    @SideEffectFree
     @Override
     public String toString() {
         return buf.toString();
@@ -208,6 +230,7 @@ public class SignatureWriter extends SignatureVisitor {
     /**
      * Ends the formal type parameters section of the signature.
      */
+    @Impure
     private void endFormals() {
         if (hasFormals) {
             hasFormals = false;
@@ -218,6 +241,7 @@ public class SignatureWriter extends SignatureVisitor {
     /**
      * Ends the type arguments of a class or inner class type.
      */
+    @Impure
     private void endArguments() {
         if (argumentStack % 2 != 0) {
             buf.append('>');

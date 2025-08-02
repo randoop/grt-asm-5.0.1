@@ -29,6 +29,9 @@
  */
 package org1.objectweb.asm.util;
 
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import java.io.FileInputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -173,6 +176,7 @@ public class CheckClassAdapter extends ClassVisitor {
      * @throws Exception
      *             if the class cannot be found, or if an IO exception occurs.
      */
+    @Impure
     public static void main(final String[] args) throws Exception {
         if (args.length != 1) {
             System.err.println("Verifies the given class.");
@@ -206,6 +210,7 @@ public class CheckClassAdapter extends ClassVisitor {
      * @param pw
      *            write where results going to be printed
      */
+    @Impure
     public static void verify(final ClassReader cr, final ClassLoader loader,
             final boolean dump, final PrintWriter pw) {
         ClassNode cn = new ClassNode();
@@ -254,11 +259,13 @@ public class CheckClassAdapter extends ClassVisitor {
      * @param pw
      *            write where results going to be printed
      */
+    @Impure
     public static void verify(final ClassReader cr, final boolean dump,
             final PrintWriter pw) {
         verify(cr, null, dump, pw);
     }
 
+    @Impure
     static void printAnalyzerResult(MethodNode method, Analyzer<BasicValue> a,
             final PrintWriter pw) {
         Frame<BasicValue>[] frames = a.getFrames();
@@ -297,6 +304,7 @@ public class CheckClassAdapter extends ClassVisitor {
         pw.println();
     }
 
+    @SideEffectFree
     private static String getShortName(final String name) {
         int n = name.lastIndexOf('/');
         int k = name.length();
@@ -314,6 +322,7 @@ public class CheckClassAdapter extends ClassVisitor {
      * @param cv
      *            the class visitor to which this adapter must delegate calls.
      */
+    @Impure
     public CheckClassAdapter(final ClassVisitor cv) {
         this(cv, true);
     }
@@ -333,6 +342,7 @@ public class CheckClassAdapter extends ClassVisitor {
      * @throws IllegalStateException
      *             If a subclass calls this constructor.
      */
+    @Impure
     public CheckClassAdapter(final ClassVisitor cv, final boolean checkDataFlow) {
         this(Opcodes.ASM5, cv, checkDataFlow);
         if (getClass() != CheckClassAdapter.class) {
@@ -354,6 +364,7 @@ public class CheckClassAdapter extends ClassVisitor {
      *            {@link CheckMethodAdapter}). This option requires valid
      *            maxLocals and maxStack values.
      */
+    @Impure
     protected CheckClassAdapter(final int api, final ClassVisitor cv,
             final boolean checkDataFlow) {
         super(api, cv);
@@ -365,6 +376,7 @@ public class CheckClassAdapter extends ClassVisitor {
     // Implementation of the ClassVisitor interface
     // ------------------------------------------------------------------------
 
+    @Impure
     @Override
     public void visit(final int version, final int access, final String name,
             final String signature, final String superName,
@@ -409,6 +421,7 @@ public class CheckClassAdapter extends ClassVisitor {
         super.visit(version, access, name, signature, superName, interfaces);
     }
 
+    @Impure
     @Override
     public void visitSource(final String file, final String debug) {
         checkState();
@@ -420,6 +433,7 @@ public class CheckClassAdapter extends ClassVisitor {
         super.visitSource(file, debug);
     }
 
+    @Impure
     @Override
     public void visitOuterClass(final String owner, final String name,
             final String desc) {
@@ -438,6 +452,7 @@ public class CheckClassAdapter extends ClassVisitor {
         super.visitOuterClass(owner, name, desc);
     }
 
+    @Impure
     @Override
     public void visitInnerClass(final String name, final String outerName,
             final String innerName, final int access) {
@@ -465,6 +480,7 @@ public class CheckClassAdapter extends ClassVisitor {
         super.visitInnerClass(name, outerName, innerName, access);
     }
 
+    @Impure
     @Override
     public FieldVisitor visitField(final int access, final String name,
             final String desc, final String signature, final Object value) {
@@ -487,6 +503,7 @@ public class CheckClassAdapter extends ClassVisitor {
         return new CheckFieldAdapter(av);
     }
 
+    @Impure
     @Override
     public MethodVisitor visitMethod(final int access, final String name,
             final String desc, final String signature, final String[] exceptions) {
@@ -523,6 +540,7 @@ public class CheckClassAdapter extends ClassVisitor {
         return cma;
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitAnnotation(final String desc,
             final boolean visible) {
@@ -531,6 +549,7 @@ public class CheckClassAdapter extends ClassVisitor {
         return new CheckAnnotationAdapter(super.visitAnnotation(desc, visible));
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitTypeAnnotation(final int typeRef,
             final TypePath typePath, final String desc, final boolean visible) {
@@ -548,6 +567,7 @@ public class CheckClassAdapter extends ClassVisitor {
                 typePath, desc, visible));
     }
 
+    @Impure
     @Override
     public void visitAttribute(final Attribute attr) {
         checkState();
@@ -558,6 +578,7 @@ public class CheckClassAdapter extends ClassVisitor {
         super.visitAttribute(attr);
     }
 
+    @Impure
     @Override
     public void visitEnd() {
         checkState();
@@ -573,6 +594,7 @@ public class CheckClassAdapter extends ClassVisitor {
      * Checks that the visit method has been called and that visitEnd has not
      * been called.
      */
+    @SideEffectFree
     private void checkState() {
         if (!start) {
             throw new IllegalStateException(
@@ -594,6 +616,7 @@ public class CheckClassAdapter extends ClassVisitor {
      * @param possibleAccess
      *            the valid access flags.
      */
+    @SideEffectFree
     static void checkAccess(final int access, final int possibleAccess) {
         if ((access & ~possibleAccess) != 0) {
             throw new IllegalArgumentException("Invalid access flags: "
@@ -621,6 +644,7 @@ public class CheckClassAdapter extends ClassVisitor {
      * @param signature
      *            a string containing the signature that must be checked.
      */
+    @Impure
     public static void checkClassSignature(final String signature) {
         // ClassSignature:
         // FormalTypeParameters? ClassTypeSignature ClassTypeSignature*
@@ -645,6 +669,7 @@ public class CheckClassAdapter extends ClassVisitor {
      * @param signature
      *            a string containing the signature that must be checked.
      */
+    @Impure
     public static void checkMethodSignature(final String signature) {
         // MethodTypeSignature:
         // FormalTypeParameters? ( TypeSignature* ) ( TypeSignature | V ) (
@@ -684,6 +709,7 @@ public class CheckClassAdapter extends ClassVisitor {
      * @param signature
      *            a string containing the signature that must be checked.
      */
+    @Impure
     public static void checkFieldSignature(final String signature) {
         int pos = checkFieldTypeSignature(signature, 0);
         if (pos != signature.length()) {
@@ -702,6 +728,8 @@ public class CheckClassAdapter extends ClassVisitor {
      *            element type, or static inner type within 'typeRef'. May be
      *            <tt>null</tt> if the annotation targets 'typeRef' as a whole.
      */
+    @SideEffectFree
+    @Impure
     static void checkTypeRefAndPath(int typeRef, TypePath typePath) {
         int mask = 0;
         switch (typeRef >>> 24) {
@@ -772,6 +800,7 @@ public class CheckClassAdapter extends ClassVisitor {
      *            index of first character to be checked.
      * @return the index of the first character after the checked part.
      */
+    @Impure
     private static int checkFormalTypeParameters(final String signature, int pos) {
         // FormalTypeParameters:
         // < FormalTypeParameter+ >
@@ -793,6 +822,7 @@ public class CheckClassAdapter extends ClassVisitor {
      *            index of first character to be checked.
      * @return the index of the first character after the checked part.
      */
+    @Impure
     private static int checkFormalTypeParameter(final String signature, int pos) {
         // FormalTypeParameter:
         // Identifier : FieldTypeSignature? (: FieldTypeSignature)*
@@ -817,6 +847,7 @@ public class CheckClassAdapter extends ClassVisitor {
      *            index of first character to be checked.
      * @return the index of the first character after the checked part.
      */
+    @Impure
     private static int checkFieldTypeSignature(final String signature, int pos) {
         // FieldTypeSignature:
         // ClassTypeSignature | ArrayTypeSignature | TypeVariableSignature
@@ -843,6 +874,7 @@ public class CheckClassAdapter extends ClassVisitor {
      *            index of first character to be checked.
      * @return the index of the first character after the checked part.
      */
+    @Impure
     private static int checkClassTypeSignature(final String signature, int pos) {
         // ClassTypeSignature:
         // L Identifier ( / Identifier )* TypeArguments? ( . Identifier
@@ -874,6 +906,7 @@ public class CheckClassAdapter extends ClassVisitor {
      *            index of first character to be checked.
      * @return the index of the first character after the checked part.
      */
+    @Impure
     private static int checkTypeArguments(final String signature, int pos) {
         // TypeArguments:
         // < TypeArgument+ >
@@ -895,6 +928,7 @@ public class CheckClassAdapter extends ClassVisitor {
      *            index of first character to be checked.
      * @return the index of the first character after the checked part.
      */
+    @Impure
     private static int checkTypeArgument(final String signature, int pos) {
         // TypeArgument:
         // * | ( ( + | - )? FieldTypeSignature )
@@ -917,6 +951,8 @@ public class CheckClassAdapter extends ClassVisitor {
      *            index of first character to be checked.
      * @return the index of the first character after the checked part.
      */
+    @Pure
+    @Impure
     private static int checkTypeVariableSignature(final String signature,
             int pos) {
         // TypeVariableSignature:
@@ -936,6 +972,7 @@ public class CheckClassAdapter extends ClassVisitor {
      *            index of first character to be checked.
      * @return the index of the first character after the checked part.
      */
+    @Impure
     private static int checkTypeSignature(final String signature, int pos) {
         // TypeSignature:
         // Z | C | B | S | I | F | J | D | FieldTypeSignature
@@ -964,6 +1001,8 @@ public class CheckClassAdapter extends ClassVisitor {
      *            index of first character to be checked.
      * @return the index of the first character after the checked part.
      */
+    @Pure
+    @Impure
     private static int checkIdentifier(final String signature, int pos) {
         if (!Character.isJavaIdentifierStart(getChar(signature, pos))) {
             throw new IllegalArgumentException(signature
@@ -985,6 +1024,8 @@ public class CheckClassAdapter extends ClassVisitor {
      *            index of first character to be checked.
      * @return the index of the first character after the checked part.
      */
+    @Pure
+    @Impure
     private static int checkChar(final char c, final String signature, int pos) {
         if (getChar(signature, pos) == c) {
             return pos + 1;
@@ -1003,6 +1044,7 @@ public class CheckClassAdapter extends ClassVisitor {
      * @return the character at the given index, or 0 if there is no such
      *         character.
      */
+    @Pure
     private static char getChar(final String signature, int pos) {
         return pos < signature.length() ? signature.charAt(pos) : (char) 0;
     }

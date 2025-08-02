@@ -37,4 +37,13 @@
   <name>ASM Core</name>
   <artifactId>asm</artifactId>
   <packaging>jar</packaging>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.checkerframework</groupId>
+      <artifactId>checker-qual</artifactId>
+      <version>3.49.5</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
 </project>

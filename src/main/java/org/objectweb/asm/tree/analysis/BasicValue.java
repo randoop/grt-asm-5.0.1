@@ -29,6 +29,9 @@
  */
 package org1.objectweb.asm.tree.analysis;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import org1.objectweb.asm.Type;
 
 /**
@@ -59,23 +62,29 @@ public class BasicValue implements Value {
 
     private final Type type;
 
+    @SideEffectFree
     public BasicValue(final Type type) {
         this.type = type;
     }
 
+    @Pure
     public Type getType() {
         return type;
     }
 
+    @Pure
     public int getSize() {
         return type == Type.LONG_TYPE || type == Type.DOUBLE_TYPE ? 2 : 1;
     }
 
+    @Pure
+    @Impure
     public boolean isReference() {
         return type != null
                 && (type.getSort() == Type.OBJECT || type.getSort() == Type.ARRAY);
     }
 
+    @Pure
     @Override
     public boolean equals(final Object value) {
         if (value == this) {
@@ -91,11 +100,13 @@ public class BasicValue implements Value {
         }
     }
 
+    @Pure
     @Override
     public int hashCode() {
         return type == null ? 0 : type.hashCode();
     }
 
+    @Impure
     @Override
     public String toString() {
         if (this == UNINITIALIZED_VALUE) {

@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.util;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import java.io.PrintWriter;
 
 import org1.objectweb.asm.AnnotationVisitor;
@@ -99,6 +101,7 @@ public final class TraceClassVisitor extends ClassVisitor {
      * @param pw
      *            the print writer to be used to print the class.
      */
+    @Impure
     public TraceClassVisitor(final PrintWriter pw) {
         this(null, pw);
     }
@@ -112,6 +115,7 @@ public final class TraceClassVisitor extends ClassVisitor {
      * @param pw
      *            the print writer to be used to print the class.
      */
+    @Impure
     public TraceClassVisitor(final ClassVisitor cv, final PrintWriter pw) {
         this(cv, new Textifier(), pw);
     }
@@ -129,6 +133,8 @@ public final class TraceClassVisitor extends ClassVisitor {
      *            you simply want to use the result via
      *            {@link Printer#getText()}, instead of printing it.
      */
+    @SideEffectFree
+    @Impure
     public TraceClassVisitor(final ClassVisitor cv, final Printer p,
             final PrintWriter pw) {
         super(Opcodes.ASM5, cv);
@@ -136,6 +142,7 @@ public final class TraceClassVisitor extends ClassVisitor {
         this.p = p;
     }
 
+    @Impure
     @Override
     public void visit(final int version, final int access, final String name,
             final String signature, final String superName,
@@ -144,12 +151,14 @@ public final class TraceClassVisitor extends ClassVisitor {
         super.visit(version, access, name, signature, superName, interfaces);
     }
 
+    @Impure
     @Override
     public void visitSource(final String file, final String debug) {
         p.visitSource(file, debug);
         super.visitSource(file, debug);
     }
 
+    @Impure
     @Override
     public void visitOuterClass(final String owner, final String name,
             final String desc) {
@@ -157,6 +166,7 @@ public final class TraceClassVisitor extends ClassVisitor {
         super.visitOuterClass(owner, name, desc);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitAnnotation(final String desc,
             final boolean visible) {
@@ -166,6 +176,7 @@ public final class TraceClassVisitor extends ClassVisitor {
         return new TraceAnnotationVisitor(av, p);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitTypeAnnotation(int typeRef,
             TypePath typePath, String desc, boolean visible) {
@@ -176,12 +187,14 @@ public final class TraceClassVisitor extends ClassVisitor {
         return new TraceAnnotationVisitor(av, p);
     }
 
+    @Impure
     @Override
     public void visitAttribute(final Attribute attr) {
         p.visitClassAttribute(attr);
         super.visitAttribute(attr);
     }
 
+    @Impure
     @Override
     public void visitInnerClass(final String name, final String outerName,
             final String innerName, final int access) {
@@ -189,6 +202,7 @@ public final class TraceClassVisitor extends ClassVisitor {
         super.visitInnerClass(name, outerName, innerName, access);
     }
 
+    @Impure
     @Override
     public FieldVisitor visitField(final int access, final String name,
             final String desc, final String signature, final Object value) {
@@ -198,6 +212,7 @@ public final class TraceClassVisitor extends ClassVisitor {
         return new TraceFieldVisitor(fv, p);
     }
 
+    @Impure
     @Override
     public MethodVisitor visitMethod(final int access, final String name,
             final String desc, final String signature, final String[] exceptions) {
@@ -208,6 +223,7 @@ public final class TraceClassVisitor extends ClassVisitor {
         return new TraceMethodVisitor(mv, p);
     }
 
+    @Impure
     @Override
     public void visitEnd() {
         p.visitClassEnd();

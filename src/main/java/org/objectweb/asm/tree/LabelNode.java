@@ -29,6 +29,9 @@
  */
 package org1.objectweb.asm.tree;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
 import java.util.Map;
 
 import org1.objectweb.asm.Label;
@@ -41,20 +44,26 @@ public class LabelNode extends AbstractInsnNode {
 
     private Label label;
 
+    @SideEffectFree
+    @Impure
     public LabelNode() {
         super(-1);
     }
 
+    @SideEffectFree
+    @Impure
     public LabelNode(final Label label) {
         super(-1);
         this.label = label;
     }
 
+    @Pure
     @Override
     public int getType() {
         return LABEL;
     }
 
+    @Impure
     public Label getLabel() {
         if (label == null) {
             label = new Label();
@@ -62,16 +71,19 @@ public class LabelNode extends AbstractInsnNode {
         return label;
     }
 
+    @Impure
     @Override
     public void accept(final MethodVisitor cv) {
         cv.visitLabel(getLabel());
     }
 
+    @Pure
     @Override
     public AbstractInsnNode clone(final Map<LabelNode, LabelNode> labels) {
         return labels.get(this);
     }
 
+    @Impure
     public void resetLabel() {
         label = null;
     }

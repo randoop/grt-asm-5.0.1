@@ -29,6 +29,9 @@
  */
 package org1.objectweb.asm.tree;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
 import java.util.Map;
 
 import org1.objectweb.asm.MethodVisitor;
@@ -54,6 +57,8 @@ public class IntInsnNode extends AbstractInsnNode {
      * @param operand
      *            the operand of the instruction to be constructed.
      */
+    @SideEffectFree
+    @Impure
     public IntInsnNode(final int opcode, final int operand) {
         super(opcode);
         this.operand = operand;
@@ -66,21 +71,25 @@ public class IntInsnNode extends AbstractInsnNode {
      *            the new instruction opcode. This opcode must be BIPUSH, SIPUSH
      *            or NEWARRAY.
      */
+    @Impure
     public void setOpcode(final int opcode) {
         this.opcode = opcode;
     }
 
+    @Pure
     @Override
     public int getType() {
         return INT_INSN;
     }
 
+    @Impure
     @Override
     public void accept(final MethodVisitor mv) {
         mv.visitIntInsn(opcode, operand);
         acceptAnnotations(mv);
     }
 
+    @Impure
     @Override
     public AbstractInsnNode clone(final Map<LabelNode, LabelNode> labels) {
         return new IntInsnNode(opcode, operand).cloneAnnotations(this);

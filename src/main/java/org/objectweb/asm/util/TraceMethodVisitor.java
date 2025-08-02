@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.util;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import org1.objectweb.asm.AnnotationVisitor;
 import org1.objectweb.asm.Attribute;
 import org1.objectweb.asm.Handle;
@@ -47,21 +49,27 @@ public final class TraceMethodVisitor extends MethodVisitor {
 
     public final Printer p;
 
+    @SideEffectFree
+    @Impure
     public TraceMethodVisitor(final Printer p) {
         this(null, p);
     }
 
+    @SideEffectFree
+    @Impure
     public TraceMethodVisitor(final MethodVisitor mv, final Printer p) {
         super(Opcodes.ASM5, mv);
         this.p = p;
     }
 
+    @Impure
     @Override
     public void visitParameter(String name, int access) {
         p.visitParameter(name, access);
         super.visitParameter(name, access);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitAnnotation(final String desc,
             final boolean visible) {
@@ -71,6 +79,7 @@ public final class TraceMethodVisitor extends MethodVisitor {
         return new TraceAnnotationVisitor(av, p);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitTypeAnnotation(int typeRef,
             TypePath typePath, String desc, boolean visible) {
@@ -81,12 +90,14 @@ public final class TraceMethodVisitor extends MethodVisitor {
         return new TraceAnnotationVisitor(av, p);
     }
 
+    @Impure
     @Override
     public void visitAttribute(final Attribute attr) {
         p.visitMethodAttribute(attr);
         super.visitAttribute(attr);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitAnnotationDefault() {
         Printer p = this.p.visitAnnotationDefault();
@@ -94,6 +105,7 @@ public final class TraceMethodVisitor extends MethodVisitor {
         return new TraceAnnotationVisitor(av, p);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitParameterAnnotation(final int parameter,
             final String desc, final boolean visible) {
@@ -103,12 +115,14 @@ public final class TraceMethodVisitor extends MethodVisitor {
         return new TraceAnnotationVisitor(av, p);
     }
 
+    @Impure
     @Override
     public void visitCode() {
         p.visitCode();
         super.visitCode();
     }
 
+    @Impure
     @Override
     public void visitFrame(final int type, final int nLocal,
             final Object[] local, final int nStack, final Object[] stack) {
@@ -116,30 +130,35 @@ public final class TraceMethodVisitor extends MethodVisitor {
         super.visitFrame(type, nLocal, local, nStack, stack);
     }
 
+    @Impure
     @Override
     public void visitInsn(final int opcode) {
         p.visitInsn(opcode);
         super.visitInsn(opcode);
     }
 
+    @Impure
     @Override
     public void visitIntInsn(final int opcode, final int operand) {
         p.visitIntInsn(opcode, operand);
         super.visitIntInsn(opcode, operand);
     }
 
+    @Impure
     @Override
     public void visitVarInsn(final int opcode, final int var) {
         p.visitVarInsn(opcode, var);
         super.visitVarInsn(opcode, var);
     }
 
+    @Impure
     @Override
     public void visitTypeInsn(final int opcode, final String type) {
         p.visitTypeInsn(opcode, type);
         super.visitTypeInsn(opcode, type);
     }
 
+    @Impure
     @Override
     public void visitFieldInsn(final int opcode, final String owner,
             final String name, final String desc) {
@@ -147,6 +166,7 @@ public final class TraceMethodVisitor extends MethodVisitor {
         super.visitFieldInsn(opcode, owner, name, desc);
     }
 
+    @Impure
     @Deprecated
     @Override
     public void visitMethodInsn(int opcode, String owner, String name,
@@ -161,6 +181,7 @@ public final class TraceMethodVisitor extends MethodVisitor {
         }
     }
 
+    @Impure
     @Override
     public void visitMethodInsn(int opcode, String owner, String name,
             String desc, boolean itf) {
@@ -174,6 +195,7 @@ public final class TraceMethodVisitor extends MethodVisitor {
         }
     }
 
+    @Impure
     @Override
     public void visitInvokeDynamicInsn(String name, String desc, Handle bsm,
             Object... bsmArgs) {
@@ -181,30 +203,35 @@ public final class TraceMethodVisitor extends MethodVisitor {
         super.visitInvokeDynamicInsn(name, desc, bsm, bsmArgs);
     }
 
+    @Impure
     @Override
     public void visitJumpInsn(final int opcode, final Label label) {
         p.visitJumpInsn(opcode, label);
         super.visitJumpInsn(opcode, label);
     }
 
+    @Impure
     @Override
     public void visitLabel(final Label label) {
         p.visitLabel(label);
         super.visitLabel(label);
     }
 
+    @Impure
     @Override
     public void visitLdcInsn(final Object cst) {
         p.visitLdcInsn(cst);
         super.visitLdcInsn(cst);
     }
 
+    @Impure
     @Override
     public void visitIincInsn(final int var, final int increment) {
         p.visitIincInsn(var, increment);
         super.visitIincInsn(var, increment);
     }
 
+    @Impure
     @Override
     public void visitTableSwitchInsn(final int min, final int max,
             final Label dflt, final Label... labels) {
@@ -212,6 +239,7 @@ public final class TraceMethodVisitor extends MethodVisitor {
         super.visitTableSwitchInsn(min, max, dflt, labels);
     }
 
+    @Impure
     @Override
     public void visitLookupSwitchInsn(final Label dflt, final int[] keys,
             final Label[] labels) {
@@ -219,12 +247,14 @@ public final class TraceMethodVisitor extends MethodVisitor {
         super.visitLookupSwitchInsn(dflt, keys, labels);
     }
 
+    @Impure
     @Override
     public void visitMultiANewArrayInsn(final String desc, final int dims) {
         p.visitMultiANewArrayInsn(desc, dims);
         super.visitMultiANewArrayInsn(desc, dims);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitInsnAnnotation(int typeRef,
             TypePath typePath, String desc, boolean visible) {
@@ -235,6 +265,7 @@ public final class TraceMethodVisitor extends MethodVisitor {
         return new TraceAnnotationVisitor(av, p);
     }
 
+    @Impure
     @Override
     public void visitTryCatchBlock(final Label start, final Label end,
             final Label handler, final String type) {
@@ -242,6 +273,7 @@ public final class TraceMethodVisitor extends MethodVisitor {
         super.visitTryCatchBlock(start, end, handler, type);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitTryCatchAnnotation(int typeRef,
             TypePath typePath, String desc, boolean visible) {
@@ -252,6 +284,7 @@ public final class TraceMethodVisitor extends MethodVisitor {
         return new TraceAnnotationVisitor(av, p);
     }
 
+    @Impure
     @Override
     public void visitLocalVariable(final String name, final String desc,
             final String signature, final Label start, final Label end,
@@ -260,6 +293,7 @@ public final class TraceMethodVisitor extends MethodVisitor {
         super.visitLocalVariable(name, desc, signature, start, end, index);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitLocalVariableAnnotation(int typeRef,
             TypePath typePath, Label[] start, Label[] end, int[] index,
@@ -272,18 +306,21 @@ public final class TraceMethodVisitor extends MethodVisitor {
         return new TraceAnnotationVisitor(av, p);
     }
 
+    @Impure
     @Override
     public void visitLineNumber(final int line, final Label start) {
         p.visitLineNumber(line, start);
         super.visitLineNumber(line, start);
     }
 
+    @Impure
     @Override
     public void visitMaxs(final int maxStack, final int maxLocals) {
         p.visitMaxs(maxStack, maxLocals);
         super.visitMaxs(maxStack, maxLocals);
     }
 
+    @Impure
     @Override
     public void visitEnd() {
         p.visitMethodEnd();

@@ -30,6 +30,7 @@
 
 package org1.objectweb.asm.commons;
 
+import org.checkerframework.dataflow.qual.Impure;
 import org1.objectweb.asm.AnnotationVisitor;
 import org1.objectweb.asm.Handle;
 import org1.objectweb.asm.Label;
@@ -46,23 +47,27 @@ public class RemappingMethodAdapter extends LocalVariablesSorter {
 
     protected final Remapper remapper;
 
+    @Impure
     public RemappingMethodAdapter(final int access, final String desc,
             final MethodVisitor mv, final Remapper remapper) {
         this(Opcodes.ASM5, access, desc, mv, remapper);
     }
 
+    @Impure
     protected RemappingMethodAdapter(final int api, final int access,
             final String desc, final MethodVisitor mv, final Remapper remapper) {
         super(api, access, desc, mv);
         this.remapper = remapper;
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitAnnotationDefault() {
         AnnotationVisitor av = super.visitAnnotationDefault();
         return av == null ? av : new RemappingAnnotationAdapter(av, remapper);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
         AnnotationVisitor av = super.visitAnnotation(remapper.mapDesc(desc),
@@ -70,6 +75,7 @@ public class RemappingMethodAdapter extends LocalVariablesSorter {
         return av == null ? av : new RemappingAnnotationAdapter(av, remapper);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitTypeAnnotation(int typeRef,
             TypePath typePath, String desc, boolean visible) {
@@ -78,6 +84,7 @@ public class RemappingMethodAdapter extends LocalVariablesSorter {
         return av == null ? av : new RemappingAnnotationAdapter(av, remapper);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitParameterAnnotation(int parameter,
             String desc, boolean visible) {
@@ -86,6 +93,7 @@ public class RemappingMethodAdapter extends LocalVariablesSorter {
         return av == null ? av : new RemappingAnnotationAdapter(av, remapper);
     }
 
+    @Impure
     @Override
     public void visitFrame(int type, int nLocal, Object[] local, int nStack,
             Object[] stack) {
@@ -93,6 +101,7 @@ public class RemappingMethodAdapter extends LocalVariablesSorter {
                 remapEntries(nStack, stack));
     }
 
+    @Impure
     private Object[] remapEntries(int n, Object[] entries) {
         for (int i = 0; i < n; i++) {
             if (entries[i] instanceof String) {
@@ -111,6 +120,7 @@ public class RemappingMethodAdapter extends LocalVariablesSorter {
         return entries;
     }
 
+    @Impure
     @Override
     public void visitFieldInsn(int opcode, String owner, String name,
             String desc) {
@@ -119,6 +129,7 @@ public class RemappingMethodAdapter extends LocalVariablesSorter {
                 remapper.mapDesc(desc));
     }
 
+    @Impure
     @Deprecated
     @Override
     public void visitMethodInsn(final int opcode, final String owner,
@@ -131,6 +142,7 @@ public class RemappingMethodAdapter extends LocalVariablesSorter {
                 opcode == Opcodes.INVOKEINTERFACE);
     }
 
+    @Impure
     @Override
     public void visitMethodInsn(final int opcode, final String owner,
             final String name, final String desc, final boolean itf) {
@@ -141,6 +153,7 @@ public class RemappingMethodAdapter extends LocalVariablesSorter {
         doVisitMethodInsn(opcode, owner, name, desc, itf);
     }
 
+    @Impure
     private void doVisitMethodInsn(int opcode, String owner, String name,
             String desc, boolean itf) {
         // Calling super.visitMethodInsn requires to call the correct version
@@ -156,6 +169,7 @@ public class RemappingMethodAdapter extends LocalVariablesSorter {
         }
     }
 
+    @Impure
     @Override
     public void visitInvokeDynamicInsn(String name, String desc, Handle bsm,
             Object... bsmArgs) {
@@ -168,21 +182,25 @@ public class RemappingMethodAdapter extends LocalVariablesSorter {
                 bsmArgs);
     }
 
+    @Impure
     @Override
     public void visitTypeInsn(int opcode, String type) {
         super.visitTypeInsn(opcode, remapper.mapType(type));
     }
 
+    @Impure
     @Override
     public void visitLdcInsn(Object cst) {
         super.visitLdcInsn(remapper.mapValue(cst));
     }
 
+    @Impure
     @Override
     public void visitMultiANewArrayInsn(String desc, int dims) {
         super.visitMultiANewArrayInsn(remapper.mapDesc(desc), dims);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitInsnAnnotation(int typeRef,
             TypePath typePath, String desc, boolean visible) {
@@ -191,6 +209,7 @@ public class RemappingMethodAdapter extends LocalVariablesSorter {
         return av == null ? av : new RemappingAnnotationAdapter(av, remapper);
     }
 
+    @Impure
     @Override
     public void visitTryCatchBlock(Label start, Label end, Label handler,
             String type) {
@@ -198,6 +217,7 @@ public class RemappingMethodAdapter extends LocalVariablesSorter {
                 : remapper.mapType(type));
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitTryCatchAnnotation(int typeRef,
             TypePath typePath, String desc, boolean visible) {
@@ -206,6 +226,7 @@ public class RemappingMethodAdapter extends LocalVariablesSorter {
         return av == null ? av : new RemappingAnnotationAdapter(av, remapper);
     }
 
+    @Impure
     @Override
     public void visitLocalVariable(String name, String desc, String signature,
             Label start, Label end, int index) {
@@ -213,6 +234,7 @@ public class RemappingMethodAdapter extends LocalVariablesSorter {
                 remapper.mapSignature(signature, true), start, end, index);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitLocalVariableAnnotation(int typeRef,
             TypePath typePath, Label[] start, Label[] end, int[] index,

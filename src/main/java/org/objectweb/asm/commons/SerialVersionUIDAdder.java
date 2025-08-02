@@ -29,6 +29,9 @@
  */
 package org1.objectweb.asm.commons;
 
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutput;
 import java.io.DataOutputStream;
@@ -169,6 +172,8 @@ public class SerialVersionUIDAdder extends ClassVisitor {
      * @throws IllegalStateException
      *             If a subclass calls this constructor.
      */
+    @SideEffectFree
+    @Impure
     public SerialVersionUIDAdder(final ClassVisitor cv) {
         this(Opcodes.ASM5, cv);
         if (getClass() != SerialVersionUIDAdder.class) {
@@ -186,6 +191,8 @@ public class SerialVersionUIDAdder extends ClassVisitor {
      *            a {@link ClassVisitor} to which this visitor will delegate
      *            calls.
      */
+    @SideEffectFree
+    @Impure
     protected SerialVersionUIDAdder(final int api, final ClassVisitor cv) {
         super(api, cv);
         svuidFields = new ArrayList<Item>();
@@ -201,6 +208,7 @@ public class SerialVersionUIDAdder extends ClassVisitor {
      * Visit class header and get class name, access , and interfaces
      * information (step 1,2, and 3) for SVUID computation.
      */
+    @Impure
     @Override
     public void visit(final int version, final int access, final String name,
             final String signature, final String superName,
@@ -222,6 +230,7 @@ public class SerialVersionUIDAdder extends ClassVisitor {
      * Visit the methods and get constructor and method information (step 5 and
      * 7). Also determine if there is a class initializer (step 6).
      */
+    @Impure
     @Override
     public MethodVisitor visitMethod(final int access, final String name,
             final String desc, final String signature, final String[] exceptions) {
@@ -259,6 +268,7 @@ public class SerialVersionUIDAdder extends ClassVisitor {
      * Gets class field information for step 4 of the algorithm. Also determines
      * if the class already has a SVUID.
      */
+    @Impure
     @Override
     public FieldVisitor visitField(final int access, final String name,
             final String desc, final String signature, final Object value) {
@@ -294,6 +304,7 @@ public class SerialVersionUIDAdder extends ClassVisitor {
      * Our SVUID computation must do as the JVM does and ignore access bits in
      * the class file in favor of the access bits InnerClass attribute.
      */
+    @Impure
     @Override
     public void visitInnerClass(final String aname, final String outerName,
             final String innerName, final int attr_access) {
@@ -306,6 +317,7 @@ public class SerialVersionUIDAdder extends ClassVisitor {
     /*
      * Add the SVUID if class doesn't have one
      */
+    @Impure
     @Override
     public void visitEnd() {
         // compute SVUID and add it to the class
@@ -331,10 +343,12 @@ public class SerialVersionUIDAdder extends ClassVisitor {
      * 
      * @return true if the class already has a SVUID field.
      */
+    @Pure
     public boolean hasSVUID() {
         return hasSVUID;
     }
 
+    @Impure
     protected void addSVUID(long svuid) {
         FieldVisitor fv = super.visitField(Opcodes.ACC_FINAL
                 + Opcodes.ACC_STATIC, "serialVersionUID", "J", null, new Long(
@@ -351,6 +365,7 @@ public class SerialVersionUIDAdder extends ClassVisitor {
      * @throws IOException
      *             if an I/O error occurs
      */
+    @Impure
     protected long computeSVUID() throws IOException {
         ByteArrayOutputStream bos;
         DataOutputStream dos = null;
@@ -465,6 +480,7 @@ public class SerialVersionUIDAdder extends ClassVisitor {
      *            the value whose SHA message digest must be computed.
      * @return the SHA-1 message digest of the given value.
      */
+    @Impure
     protected byte[] computeSHAdigest(final byte[] value) {
         try {
             return MessageDigest.getInstance("SHA").digest(value);
@@ -485,6 +501,7 @@ public class SerialVersionUIDAdder extends ClassVisitor {
      * @exception IOException
      *                if an error occurs
      */
+    @Impure
     private static void writeItems(final Collection<Item> itemCollection,
             final DataOutput dos, final boolean dotted) throws IOException {
         int size = itemCollection.size();
@@ -510,12 +527,14 @@ public class SerialVersionUIDAdder extends ClassVisitor {
 
         final String desc;
 
+        @SideEffectFree
         Item(final String name, final int access, final String desc) {
             this.name = name;
             this.access = access;
             this.desc = desc;
         }
 
+        @Pure
         public int compareTo(final Item other) {
             int retVal = name.compareTo(other.name);
             if (retVal == 0) {
@@ -524,6 +543,7 @@ public class SerialVersionUIDAdder extends ClassVisitor {
             return retVal;
         }
 
+        @Pure
         @Override
         public boolean equals(final Object o) {
             if (o instanceof Item) {
@@ -532,6 +552,7 @@ public class SerialVersionUIDAdder extends ClassVisitor {
             return false;
         }
 
+        @Pure
         @Override
         public int hashCode() {
             return (name + desc).hashCode();

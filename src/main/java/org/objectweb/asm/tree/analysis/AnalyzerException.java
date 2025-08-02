@@ -29,6 +29,7 @@
  */
 package org1.objectweb.asm.tree.analysis;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import org1.objectweb.asm.tree.AbstractInsnNode;
 
 /**
@@ -41,17 +42,20 @@ public class AnalyzerException extends Exception {
 
     public final AbstractInsnNode node;
 
+    @SideEffectFree
     public AnalyzerException(final AbstractInsnNode node, final String msg) {
         super(msg);
         this.node = node;
     }
 
+    @SideEffectFree
     public AnalyzerException(final AbstractInsnNode node, final String msg,
             final Throwable exception) {
         super(msg, exception);
         this.node = node;
     }
 
+    @SideEffectFree
     public AnalyzerException(final AbstractInsnNode node, final String msg,
             final Object expected, final Value encountered) {
         super((msg == null ? "Expected " : msg + ": expected ") + expected

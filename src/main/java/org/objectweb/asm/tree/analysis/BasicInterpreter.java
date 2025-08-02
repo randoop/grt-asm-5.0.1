@@ -29,6 +29,9 @@
  */
 package org1.objectweb.asm.tree.analysis;
 
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import java.util.List;
 
 import org1.objectweb.asm.Handle;
@@ -52,14 +55,19 @@ import org1.objectweb.asm.tree.TypeInsnNode;
 public class BasicInterpreter extends Interpreter<BasicValue> implements
         Opcodes {
 
+    @SideEffectFree
+    @Impure
     public BasicInterpreter() {
         super(ASM5);
     }
 
+    @SideEffectFree
+    @Impure
     protected BasicInterpreter(final int api) {
         super(api);
     }
 
+    @Impure
     @Override
     public BasicValue newValue(final Type type) {
         if (type == null) {
@@ -88,6 +96,7 @@ public class BasicInterpreter extends Interpreter<BasicValue> implements
         }
     }
 
+    @Impure
     @Override
     public BasicValue newOperation(final AbstractInsnNode insn)
             throws AnalyzerException {
@@ -156,12 +165,15 @@ public class BasicInterpreter extends Interpreter<BasicValue> implements
         }
     }
 
+    @Pure
+    @Impure
     @Override
     public BasicValue copyOperation(final AbstractInsnNode insn,
             final BasicValue value) throws AnalyzerException {
         return value;
     }
 
+    @Impure
     @Override
     public BasicValue unaryOperation(final AbstractInsnNode insn,
             final BasicValue value) throws AnalyzerException {
@@ -250,6 +262,7 @@ public class BasicInterpreter extends Interpreter<BasicValue> implements
         }
     }
 
+    @Impure
     @Override
     public BasicValue binaryOperation(final AbstractInsnNode insn,
             final BasicValue value1, final BasicValue value2)
@@ -321,6 +334,7 @@ public class BasicInterpreter extends Interpreter<BasicValue> implements
         }
     }
 
+    @Impure
     @Override
     public BasicValue ternaryOperation(final AbstractInsnNode insn,
             final BasicValue value1, final BasicValue value2,
@@ -328,6 +342,7 @@ public class BasicInterpreter extends Interpreter<BasicValue> implements
         return null;
     }
 
+    @Impure
     @Override
     public BasicValue naryOperation(final AbstractInsnNode insn,
             final List<? extends BasicValue> values) throws AnalyzerException {
@@ -342,12 +357,14 @@ public class BasicInterpreter extends Interpreter<BasicValue> implements
         }
     }
 
+    @Impure
     @Override
     public void returnOperation(final AbstractInsnNode insn,
             final BasicValue value, final BasicValue expected)
             throws AnalyzerException {
     }
 
+    @Impure
     @Override
     public BasicValue merge(final BasicValue v, final BasicValue w) {
         if (!v.equals(w)) {

@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.util;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import org1.objectweb.asm.Opcodes;
 import org1.objectweb.asm.signature.SignatureVisitor;
 
@@ -112,6 +114,8 @@ public class CheckSignatureAdapter extends SignatureVisitor {
      *            the visitor to which this adapter must delegate calls. May be
      *            <tt>null</tt>.
      */
+    @SideEffectFree
+    @Impure
     public CheckSignatureAdapter(final int type, final SignatureVisitor sv) {
         this(Opcodes.ASM5, type, sv);
     }
@@ -130,6 +134,8 @@ public class CheckSignatureAdapter extends SignatureVisitor {
      *            the visitor to which this adapter must delegate calls. May be
      *            <tt>null</tt>.
      */
+    @SideEffectFree
+    @Impure
     protected CheckSignatureAdapter(final int api, final int type,
             final SignatureVisitor sv) {
         super(api);
@@ -140,6 +146,7 @@ public class CheckSignatureAdapter extends SignatureVisitor {
 
     // class and method signatures
 
+    @Impure
     @Override
     public void visitFormalTypeParameter(final String name) {
         if (type == TYPE_SIGNATURE
@@ -153,6 +160,7 @@ public class CheckSignatureAdapter extends SignatureVisitor {
         }
     }
 
+    @Impure
     @Override
     public SignatureVisitor visitClassBound() {
         if (state != FORMAL) {
@@ -163,6 +171,7 @@ public class CheckSignatureAdapter extends SignatureVisitor {
         return new CheckSignatureAdapter(TYPE_SIGNATURE, v);
     }
 
+    @Impure
     @Override
     public SignatureVisitor visitInterfaceBound() {
         if (state != FORMAL && state != BOUND) {
@@ -174,6 +183,7 @@ public class CheckSignatureAdapter extends SignatureVisitor {
 
     // class signatures
 
+    @Impure
     @Override
     public SignatureVisitor visitSuperclass() {
         if (type != CLASS_SIGNATURE || (state & (EMPTY | FORMAL | BOUND)) == 0) {
@@ -184,6 +194,7 @@ public class CheckSignatureAdapter extends SignatureVisitor {
         return new CheckSignatureAdapter(TYPE_SIGNATURE, v);
     }
 
+    @Impure
     @Override
     public SignatureVisitor visitInterface() {
         if (state != SUPER) {
@@ -195,6 +206,7 @@ public class CheckSignatureAdapter extends SignatureVisitor {
 
     // method signatures
 
+    @Impure
     @Override
     public SignatureVisitor visitParameterType() {
         if (type != METHOD_SIGNATURE
@@ -206,6 +218,7 @@ public class CheckSignatureAdapter extends SignatureVisitor {
         return new CheckSignatureAdapter(TYPE_SIGNATURE, v);
     }
 
+    @Impure
     @Override
     public SignatureVisitor visitReturnType() {
         if (type != METHOD_SIGNATURE
@@ -219,6 +232,7 @@ public class CheckSignatureAdapter extends SignatureVisitor {
         return cv;
     }
 
+    @Impure
     @Override
     public SignatureVisitor visitExceptionType() {
         if (state != RETURN) {
@@ -230,6 +244,7 @@ public class CheckSignatureAdapter extends SignatureVisitor {
 
     // type signatures
 
+    @Impure
     @Override
     public void visitBaseType(final char descriptor) {
         if (type != TYPE_SIGNATURE || state != EMPTY) {
@@ -250,6 +265,7 @@ public class CheckSignatureAdapter extends SignatureVisitor {
         }
     }
 
+    @Impure
     @Override
     public void visitTypeVariable(final String name) {
         if (type != TYPE_SIGNATURE || state != EMPTY) {
@@ -262,6 +278,7 @@ public class CheckSignatureAdapter extends SignatureVisitor {
         }
     }
 
+    @Impure
     @Override
     public SignatureVisitor visitArrayType() {
         if (type != TYPE_SIGNATURE || state != EMPTY) {
@@ -272,6 +289,7 @@ public class CheckSignatureAdapter extends SignatureVisitor {
         return new CheckSignatureAdapter(TYPE_SIGNATURE, v);
     }
 
+    @Impure
     @Override
     public void visitClassType(final String name) {
         if (type != TYPE_SIGNATURE || state != EMPTY) {
@@ -284,6 +302,7 @@ public class CheckSignatureAdapter extends SignatureVisitor {
         }
     }
 
+    @Impure
     @Override
     public void visitInnerClassType(final String name) {
         if (state != CLASS_TYPE) {
@@ -295,6 +314,7 @@ public class CheckSignatureAdapter extends SignatureVisitor {
         }
     }
 
+    @Impure
     @Override
     public void visitTypeArgument() {
         if (state != CLASS_TYPE) {
@@ -305,6 +325,7 @@ public class CheckSignatureAdapter extends SignatureVisitor {
         }
     }
 
+    @Impure
     @Override
     public SignatureVisitor visitTypeArgument(final char wildcard) {
         if (state != CLASS_TYPE) {
@@ -317,6 +338,7 @@ public class CheckSignatureAdapter extends SignatureVisitor {
         return new CheckSignatureAdapter(TYPE_SIGNATURE, v);
     }
 
+    @Impure
     @Override
     public void visitEnd() {
         if (state != CLASS_TYPE) {

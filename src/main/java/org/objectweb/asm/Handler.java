@@ -28,6 +28,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org1.objectweb.asm;
+import org.checkerframework.dataflow.qual.Impure;
 
 /**
  * Information about an exception handler block.
@@ -80,6 +81,7 @@ class Handler {
      *            the end of the range to be removed. Maybe null.
      * @return the exception handler list with the start-end range removed.
      */
+    @Impure
     static Handler remove(Handler h, Label start, Label end) {
         if (h == null) {
             return null;

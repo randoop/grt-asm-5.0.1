@@ -28,6 +28,9 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org1.objectweb.asm;
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
  * A {@link ClassVisitor} that generates classes in bytecode form. More
@@ -604,6 +607,8 @@ public class ClassWriter extends ClassVisitor {
      *            of this class. See {@link #COMPUTE_MAXS},
      *            {@link #COMPUTE_FRAMES}.
      */
+    @SideEffectFree
+    @Impure
     public ClassWriter(final int flags) {
         super(Opcodes.ASM5);
         index = 1;
@@ -650,6 +655,7 @@ public class ClassWriter extends ClassVisitor {
      *            these methods</i>. See {@link #COMPUTE_MAXS},
      *            {@link #COMPUTE_FRAMES}.
      */
+    @Impure
     public ClassWriter(final ClassReader classReader, final int flags) {
         this(flags);
         classReader.copyPool(this);
@@ -660,6 +666,7 @@ public class ClassWriter extends ClassVisitor {
     // Implementation of the ClassVisitor abstract class
     // ------------------------------------------------------------------------
 
+    @Impure
     @Override
     public final void visit(final int version, final int access,
             final String name, final String signature, final String superName,
@@ -681,6 +688,7 @@ public class ClassWriter extends ClassVisitor {
         }
     }
 
+    @Impure
     @Override
     public final void visitSource(final String file, final String debug) {
         if (file != null) {
@@ -692,6 +700,7 @@ public class ClassWriter extends ClassVisitor {
         }
     }
 
+    @Impure
     @Override
     public final void visitOuterClass(final String owner, final String name,
             final String desc) {
@@ -701,6 +710,7 @@ public class ClassWriter extends ClassVisitor {
         }
     }
 
+    @Impure
     @Override
     public final AnnotationVisitor visitAnnotation(final String desc,
             final boolean visible) {
@@ -721,6 +731,7 @@ public class ClassWriter extends ClassVisitor {
         return aw;
     }
 
+    @Impure
     @Override
     public final AnnotationVisitor visitTypeAnnotation(int typeRef,
             TypePath typePath, final String desc, final boolean visible) {
@@ -744,12 +755,14 @@ public class ClassWriter extends ClassVisitor {
         return aw;
     }
 
+    @Impure
     @Override
     public final void visitAttribute(final Attribute attr) {
         attr.next = attrs;
         attrs = attr;
     }
 
+    @Impure
     @Override
     public final void visitInnerClass(final String name,
             final String outerName, final String innerName, final int access) {
@@ -781,12 +794,14 @@ public class ClassWriter extends ClassVisitor {
         }
     }
 
+    @Impure
     @Override
     public final FieldVisitor visitField(final int access, final String name,
             final String desc, final String signature, final Object value) {
         return new FieldWriter(this, access, name, desc, signature, value);
     }
 
+    @Impure
     @Override
     public final MethodVisitor visitMethod(final int access, final String name,
             final String desc, final String signature, final String[] exceptions) {
@@ -794,6 +809,7 @@ public class ClassWriter extends ClassVisitor {
                 exceptions, computeMaxs, computeFrames);
     }
 
+    @SideEffectFree
     @Override
     public final void visitEnd() {
     }
@@ -807,6 +823,7 @@ public class ClassWriter extends ClassVisitor {
      * 
      * @return the bytecode of the class that was build with this class writer.
      */
+    @Impure
     public byte[] toByteArray() {
         if (index > 0xFFFF) {
             throw new RuntimeException("Class file too large!");
@@ -1013,6 +1030,7 @@ public class ClassWriter extends ClassVisitor {
      *            {@link Type}.
      * @return a new or already existing constant item with the given value.
      */
+    @Impure
     Item newConstItem(final Object cst) {
         if (cst instanceof Integer) {
             int val = ((Integer) cst).intValue();
@@ -1071,6 +1089,7 @@ public class ClassWriter extends ClassVisitor {
      * @return the index of a new or already existing constant item with the
      *         given value.
      */
+    @Impure
     public int newConst(final Object cst) {
         return newConstItem(cst).index;
     }
@@ -1085,6 +1104,7 @@ public class ClassWriter extends ClassVisitor {
      *            the String value.
      * @return the index of a new or already existing UTF8 item.
      */
+    @Impure
     public int newUTF8(final String value) {
         key.set(UTF8, value, null, null);
         Item result = get(key);
@@ -1106,6 +1126,7 @@ public class ClassWriter extends ClassVisitor {
      *            the internal name of the class.
      * @return a new or already existing class reference item.
      */
+    @Impure
     Item newClassItem(final String value) {
         key2.set(CLASS, value, null, null);
         Item result = get(key2);
@@ -1127,6 +1148,7 @@ public class ClassWriter extends ClassVisitor {
      *            the internal name of the class.
      * @return the index of a new or already existing class reference item.
      */
+    @Impure
     public int newClass(final String value) {
         return newClassItem(value).index;
     }
@@ -1141,6 +1163,7 @@ public class ClassWriter extends ClassVisitor {
      *            method descriptor of the method type.
      * @return a new or already existing method type reference item.
      */
+    @Impure
     Item newMethodTypeItem(final String methodDesc) {
         key2.set(MTYPE, methodDesc, null, null);
         Item result = get(key2);
@@ -1163,6 +1186,7 @@ public class ClassWriter extends ClassVisitor {
      * @return the index of a new or already existing method type reference
      *         item.
      */
+    @Impure
     public int newMethodType(final String methodDesc) {
         return newMethodTypeItem(methodDesc).index;
     }
@@ -1189,6 +1213,7 @@ public class ClassWriter extends ClassVisitor {
      *            the descriptor of the field or method.
      * @return a new or an already existing method type reference item.
      */
+    @Impure
     Item newHandleItem(final int tag, final String owner, final String name,
             final String desc) {
         key4.set(HANDLE_BASE + tag, owner, name, desc);
@@ -1231,6 +1256,7 @@ public class ClassWriter extends ClassVisitor {
      * @return the index of a new or already existing method type reference
      *         item.
      */
+    @Impure
     public int newHandle(final int tag, final String owner, final String name,
             final String desc) {
         return newHandleItem(tag, owner, name, desc).index;
@@ -1253,6 +1279,7 @@ public class ClassWriter extends ClassVisitor {
      * 
      * @return a new or an already existing invokedynamic type reference item.
      */
+    @Impure
     Item newInvokeDynamicItem(final String name, final String desc,
             final Handle bsm, final Object... bsmArgs) {
         // cache for performance
@@ -1338,6 +1365,7 @@ public class ClassWriter extends ClassVisitor {
      * @return the index of a new or already existing invokedynamic reference
      *         item.
      */
+    @Impure
     public int newInvokeDynamic(final String name, final String desc,
             final Handle bsm, final Object... bsmArgs) {
         return newInvokeDynamicItem(name, desc, bsm, bsmArgs).index;
@@ -1355,6 +1383,7 @@ public class ClassWriter extends ClassVisitor {
      *            the field's descriptor.
      * @return a new or already existing field reference item.
      */
+    @Impure
     Item newFieldItem(final String owner, final String name, final String desc) {
         key3.set(FIELD, owner, name, desc);
         Item result = get(key3);
@@ -1380,6 +1409,7 @@ public class ClassWriter extends ClassVisitor {
      *            the field's descriptor.
      * @return the index of a new or already existing field reference item.
      */
+    @Impure
     public int newField(final String owner, final String name, final String desc) {
         return newFieldItem(owner, name, desc).index;
     }
@@ -1398,6 +1428,7 @@ public class ClassWriter extends ClassVisitor {
      *            <tt>true</tt> if <tt>owner</tt> is an interface.
      * @return a new or already existing method reference item.
      */
+    @Impure
     Item newMethodItem(final String owner, final String name,
             final String desc, final boolean itf) {
         int type = itf ? IMETH : METH;
@@ -1427,6 +1458,7 @@ public class ClassWriter extends ClassVisitor {
      *            <tt>true</tt> if <tt>owner</tt> is an interface.
      * @return the index of a new or already existing method reference item.
      */
+    @Impure
     public int newMethod(final String owner, final String name,
             final String desc, final boolean itf) {
         return newMethodItem(owner, name, desc, itf).index;
@@ -1440,6 +1472,7 @@ public class ClassWriter extends ClassVisitor {
      *            the int value.
      * @return a new or already existing int item.
      */
+    @Impure
     Item newInteger(final int value) {
         key.set(value);
         Item result = get(key);
@@ -1459,6 +1492,7 @@ public class ClassWriter extends ClassVisitor {
      *            the float value.
      * @return a new or already existing float item.
      */
+    @Impure
     Item newFloat(final float value) {
         key.set(value);
         Item result = get(key);
@@ -1478,6 +1512,7 @@ public class ClassWriter extends ClassVisitor {
      *            the long value.
      * @return a new or already existing long item.
      */
+    @Impure
     Item newLong(final long value) {
         key.set(value);
         Item result = get(key);
@@ -1498,6 +1533,7 @@ public class ClassWriter extends ClassVisitor {
      *            the double value.
      * @return a new or already existing double item.
      */
+    @Impure
     Item newDouble(final double value) {
         key.set(value);
         Item result = get(key);
@@ -1518,6 +1554,7 @@ public class ClassWriter extends ClassVisitor {
      *            the String value.
      * @return a new or already existing string item.
      */
+    @Impure
     private Item newString(final String value) {
         key2.set(STR, value, null, null);
         Item result = get(key2);
@@ -1541,6 +1578,7 @@ public class ClassWriter extends ClassVisitor {
      *            a type descriptor.
      * @return the index of a new or already existing name and type item.
      */
+    @Impure
     public int newNameType(final String name, final String desc) {
         return newNameTypeItem(name, desc).index;
     }
@@ -1555,6 +1593,7 @@ public class ClassWriter extends ClassVisitor {
      *            a type descriptor.
      * @return a new or already existing name and type item.
      */
+    @Impure
     Item newNameTypeItem(final String name, final String desc) {
         key2.set(NAME_TYPE, name, desc, null);
         Item result = get(key2);
@@ -1574,6 +1613,7 @@ public class ClassWriter extends ClassVisitor {
      *            the internal name to be added to the type table.
      * @return the index of this internal name in the type table.
      */
+    @Impure
     int addType(final String type) {
         key.set(TYPE_NORMAL, type, null, null);
         Item result = get(key);
@@ -1595,6 +1635,7 @@ public class ClassWriter extends ClassVisitor {
      *            UNINITIALIZED type value.
      * @return the index of this internal name in the type table.
      */
+    @Impure
     int addUninitializedType(final String type, final int offset) {
         key.type = TYPE_UNINIT;
         key.intVal = offset;
@@ -1615,6 +1656,7 @@ public class ClassWriter extends ClassVisitor {
      * @return the added Item, which a new Item instance with the same value as
      *         the given Item.
      */
+    @Impure
     private Item addType(final Item item) {
         ++typeCount;
         Item result = new Item(typeCount, key);
@@ -1643,6 +1685,7 @@ public class ClassWriter extends ClassVisitor {
      *            index of an internal name in {@link #typeTable}.
      * @return the index of the common super type of the two given types.
      */
+    @Impure
     int getMergedType(final int type1, final int type2) {
         key2.type = TYPE_MERGED;
         key2.longVal = type1 | (((long) type2) << 32);
@@ -1674,6 +1717,7 @@ public class ClassWriter extends ClassVisitor {
      * @return the internal name of the common super class of the two given
      *         classes.
      */
+    @Impure
     protected String getCommonSuperClass(final String type1, final String type2) {
         Class<?> c, d;
         ClassLoader classLoader = getClass().getClassLoader();
@@ -1708,6 +1752,8 @@ public class ClassWriter extends ClassVisitor {
      * @return the constant pool's hash table item which is equal to the given
      *         item, or <tt>null</tt> if there is no such item.
      */
+    @Pure
+    @Impure
     private Item get(final Item key) {
         Item i = items[key.hashCode % items.length];
         while (i != null && (i.type != key.type || !key.isEqualTo(i))) {
@@ -1723,6 +1769,7 @@ public class ClassWriter extends ClassVisitor {
      * @param i
      *            the item to be added to the constant pool's hash table.
      */
+    @Impure
     private void put(final Item i) {
         if (index + typeCount > threshold) {
             int ll = items.length;
@@ -1756,6 +1803,7 @@ public class ClassWriter extends ClassVisitor {
      * @param s2
      *            another short.
      */
+    @Impure
     private void put122(final int b, final int s1, final int s2) {
         pool.put12(b, s1).putShort(s2);
     }
@@ -1770,6 +1818,7 @@ public class ClassWriter extends ClassVisitor {
      * @param s
      *            a short.
      */
+    @Impure
     private void put112(final int b1, final int b2, final int s) {
         pool.put11(b1, b2).putShort(s);
     }

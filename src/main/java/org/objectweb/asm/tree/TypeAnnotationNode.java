@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.tree;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import org1.objectweb.asm.Opcodes;
 import org1.objectweb.asm.TypePath;
 import org1.objectweb.asm.TypeReference;
@@ -68,6 +70,8 @@ public class TypeAnnotationNode extends AnnotationNode {
      * @throws IllegalStateException
      *             If a subclass calls this constructor.
      */
+    @SideEffectFree
+    @Impure
     public TypeAnnotationNode(final int typeRef, final TypePath typePath,
             final String desc) {
         this(Opcodes.ASM5, typeRef, typePath, desc);
@@ -91,6 +95,8 @@ public class TypeAnnotationNode extends AnnotationNode {
      * @param desc
      *            the class descriptor of the annotation class.
      */
+    @SideEffectFree
+    @Impure
     public TypeAnnotationNode(final int api, final int typeRef,
             final TypePath typePath, final String desc) {
         super(api, desc);

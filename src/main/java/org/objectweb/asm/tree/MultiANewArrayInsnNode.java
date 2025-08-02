@@ -29,6 +29,9 @@
  */
 package org1.objectweb.asm.tree;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
 import java.util.Map;
 
 import org1.objectweb.asm.MethodVisitor;
@@ -59,23 +62,28 @@ public class MultiANewArrayInsnNode extends AbstractInsnNode {
      * @param dims
      *            number of dimensions of the array to allocate.
      */
+    @SideEffectFree
+    @Impure
     public MultiANewArrayInsnNode(final String desc, final int dims) {
         super(Opcodes.MULTIANEWARRAY);
         this.desc = desc;
         this.dims = dims;
     }
 
+    @Pure
     @Override
     public int getType() {
         return MULTIANEWARRAY_INSN;
     }
 
+    @Impure
     @Override
     public void accept(final MethodVisitor mv) {
         mv.visitMultiANewArrayInsn(desc, dims);
         acceptAnnotations(mv);
     }
 
+    @Impure
     @Override
     public AbstractInsnNode clone(final Map<LabelNode, LabelNode> labels) {
         return new MultiANewArrayInsnNode(desc, dims).cloneAnnotations(this);

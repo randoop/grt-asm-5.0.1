@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.optimizer;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
 import java.util.HashMap;
 
 import org1.objectweb.asm.Handle;
@@ -52,6 +54,7 @@ public class ConstantPool extends HashMap<Constant, Constant> {
 
     private final Constant key5 = new Constant();
 
+    @Impure
     public Constant newInteger(final int value) {
         key1.set(value);
         Constant result = get(key1);
@@ -62,6 +65,7 @@ public class ConstantPool extends HashMap<Constant, Constant> {
         return result;
     }
 
+    @Impure
     public Constant newFloat(final float value) {
         key1.set(value);
         Constant result = get(key1);
@@ -72,6 +76,7 @@ public class ConstantPool extends HashMap<Constant, Constant> {
         return result;
     }
 
+    @Impure
     public Constant newLong(final long value) {
         key1.set(value);
         Constant result = get(key1);
@@ -82,6 +87,7 @@ public class ConstantPool extends HashMap<Constant, Constant> {
         return result;
     }
 
+    @Impure
     public Constant newDouble(final double value) {
         key1.set(value);
         Constant result = get(key1);
@@ -92,6 +98,7 @@ public class ConstantPool extends HashMap<Constant, Constant> {
         return result;
     }
 
+    @Impure
     public Constant newUTF8(final String value) {
         key1.set('s', value, null, null);
         Constant result = get(key1);
@@ -102,6 +109,7 @@ public class ConstantPool extends HashMap<Constant, Constant> {
         return result;
     }
 
+    @Impure
     private Constant newString(final String value) {
         key2.set('S', value, null, null);
         Constant result = get(key2);
@@ -113,6 +121,7 @@ public class ConstantPool extends HashMap<Constant, Constant> {
         return result;
     }
 
+    @Impure
     public Constant newClass(final String value) {
         key2.set('C', value, null, null);
         Constant result = get(key2);
@@ -124,6 +133,7 @@ public class ConstantPool extends HashMap<Constant, Constant> {
         return result;
     }
 
+    @Impure
     public Constant newMethodType(final String methodDescriptor) {
         key2.set('t', methodDescriptor, null, null);
         Constant result = get(key2);
@@ -135,6 +145,7 @@ public class ConstantPool extends HashMap<Constant, Constant> {
         return result;
     }
 
+    @Impure
     public Constant newHandle(final int tag, final String owner,
             final String name, final String desc) {
         key4.set((char) ('h' - 1 + tag), owner, name, desc);
@@ -151,6 +162,7 @@ public class ConstantPool extends HashMap<Constant, Constant> {
         return result;
     }
 
+    @Impure
     public Constant newConst(final Object cst) {
         if (cst instanceof Integer) {
             int val = ((Integer) cst).intValue();
@@ -184,6 +196,7 @@ public class ConstantPool extends HashMap<Constant, Constant> {
         }
     }
 
+    @Impure
     public Constant newField(final String owner, final String name,
             final String desc) {
         key3.set('G', owner, name, desc);
@@ -197,6 +210,7 @@ public class ConstantPool extends HashMap<Constant, Constant> {
         return result;
     }
 
+    @Impure
     public Constant newMethod(final String owner, final String name,
             final String desc, final boolean itf) {
         key3.set(itf ? 'N' : 'M', owner, name, desc);
@@ -210,6 +224,7 @@ public class ConstantPool extends HashMap<Constant, Constant> {
         return result;
     }
 
+    @Impure
     public Constant newInvokeDynamic(String name, String desc, Handle bsm,
             Object... bsmArgs) {
         key5.set(name, desc, bsm, bsmArgs);
@@ -227,6 +242,7 @@ public class ConstantPool extends HashMap<Constant, Constant> {
         return result;
     }
 
+    @Impure
     public Constant newNameType(final String name, final String desc) {
         key2.set('T', name, desc, null);
         Constant result = get(key2);
@@ -239,10 +255,12 @@ public class ConstantPool extends HashMap<Constant, Constant> {
         return result;
     }
 
+    @Pure
     private Constant get(final Constant key) {
         return get((Object) key);
     }
 
+    @Impure
     private void put(final Constant cst) {
         put(cst, cst);
     }

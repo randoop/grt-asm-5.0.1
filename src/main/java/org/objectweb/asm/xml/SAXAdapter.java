@@ -29,6 +29,9 @@
  */
 package org1.objectweb.asm.xml;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -42,14 +45,17 @@ public class SAXAdapter {
 
     private final ContentHandler h;
 
+    @SideEffectFree
     protected SAXAdapter(final ContentHandler h) {
         this.h = h;
     }
 
+    @Pure
     protected ContentHandler getContentHandler() {
         return h;
     }
 
+    @Impure
     protected void addDocumentStart() {
         try {
             h.startDocument();
@@ -58,6 +64,7 @@ public class SAXAdapter {
         }
     }
 
+    @Impure
     protected void addDocumentEnd() {
         try {
             h.endDocument();
@@ -66,6 +73,7 @@ public class SAXAdapter {
         }
     }
 
+    @Impure
     protected final void addStart(final String name, final Attributes attrs) {
         try {
             h.startElement("", name, name, attrs);
@@ -74,6 +82,7 @@ public class SAXAdapter {
         }
     }
 
+    @Impure
     protected final void addEnd(final String name) {
         try {
             h.endElement("", name, name);
@@ -82,6 +91,7 @@ public class SAXAdapter {
         }
     }
 
+    @Impure
     protected final void addElement(final String name, final Attributes attrs) {
         addStart(name, attrs);
         addEnd(name);

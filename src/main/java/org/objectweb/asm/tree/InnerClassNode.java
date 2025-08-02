@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.tree;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import org1.objectweb.asm.ClassVisitor;
 
 /**
@@ -81,6 +83,7 @@ public class InnerClassNode {
      *            the access flags of the inner class as originally declared in
      *            the enclosing class.
      */
+    @SideEffectFree
     public InnerClassNode(final String name, final String outerName,
             final String innerName, final int access) {
         this.name = name;
@@ -95,6 +98,7 @@ public class InnerClassNode {
      * @param cv
      *            a class visitor.
      */
+    @Impure
     public void accept(final ClassVisitor cv) {
         cv.visitInnerClass(name, outerName, innerName, access);
     }

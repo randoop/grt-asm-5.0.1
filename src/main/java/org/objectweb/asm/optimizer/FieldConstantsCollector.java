@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.optimizer;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import org1.objectweb.asm.AnnotationVisitor;
 import org1.objectweb.asm.Attribute;
 import org1.objectweb.asm.FieldVisitor;
@@ -45,11 +47,14 @@ public class FieldConstantsCollector extends FieldVisitor {
 
     private final ConstantPool cp;
 
+    @SideEffectFree
+    @Impure
     public FieldConstantsCollector(final FieldVisitor fv, final ConstantPool cp) {
         super(Opcodes.ASM5, fv);
         this.cp = cp;
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitAnnotation(final String desc,
             final boolean visible) {
@@ -63,6 +68,7 @@ public class FieldConstantsCollector extends FieldVisitor {
                 visible), cp);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitTypeAnnotation(int typeRef,
             TypePath typePath, String desc, boolean visible) {
@@ -76,12 +82,14 @@ public class FieldConstantsCollector extends FieldVisitor {
                 visible), cp);
     }
 
+    @Impure
     @Override
     public void visitAttribute(final Attribute attr) {
         // can do nothing
         fv.visitAttribute(attr);
     }
 
+    @Impure
     @Override
     public void visitEnd() {
         fv.visitEnd();

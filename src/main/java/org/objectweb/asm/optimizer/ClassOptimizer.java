@@ -29,6 +29,9 @@
  */
 package org1.objectweb.asm.optimizer;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Pure;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,10 +62,13 @@ public class ClassOptimizer extends RemappingClassAdapter {
     boolean hasClinitMethod = false;
     List<String> syntheticClassFields = new ArrayList<String>();
 
+    @SideEffectFree
+    @Impure
     public ClassOptimizer(final ClassVisitor cv, final Remapper remapper) {
         super(Opcodes.ASM5, cv, remapper);
     }
 
+    @Impure
     FieldVisitor syntheticFieldVisitor(final int access, final String name,
             final String desc) {
         return super.visitField(access, name, desc, null, null);
@@ -72,6 +78,7 @@ public class ClassOptimizer extends RemappingClassAdapter {
     // Overridden methods
     // ------------------------------------------------------------------------
 
+    @Impure
     @Override
     public void visit(final int version, final int access, final String name,
             final String signature, final String superName,
@@ -87,17 +94,20 @@ public class ClassOptimizer extends RemappingClassAdapter {
         isInterface = (access & Opcodes.ACC_INTERFACE) != 0;
     }
 
+    @SideEffectFree
     @Override
     public void visitSource(final String source, final String debug) {
         // remove debug info
     }
 
+    @SideEffectFree
     @Override
     public void visitOuterClass(final String owner, final String name,
             final String desc) {
         // remove debug info
     }
 
+    @Pure
     @Override
     public AnnotationVisitor visitAnnotation(final String desc,
             final boolean visible) {
@@ -105,6 +115,7 @@ public class ClassOptimizer extends RemappingClassAdapter {
         return null;
     }
 
+    @Pure
     @Override
     public AnnotationVisitor visitTypeAnnotation(int typeRef,
             TypePath typePath, String desc, boolean visible) {
@@ -112,17 +123,20 @@ public class ClassOptimizer extends RemappingClassAdapter {
         return null;
     }
 
+    @SideEffectFree
     @Override
     public void visitAttribute(final Attribute attr) {
         // remove non standard attributes
     }
 
+    @SideEffectFree
     @Override
     public void visitInnerClass(final String name, final String outerName,
             final String innerName, final int access) {
         // remove debug info
     }
 
+    @Impure
     @Override
     public FieldVisitor visitField(final int access, final String name,
             final String desc, final String signature, final Object value) {
@@ -150,6 +164,7 @@ public class ClassOptimizer extends RemappingClassAdapter {
         return null; // remove debug info
     }
 
+    @Impure
     @Override
     public MethodVisitor visitMethod(final int access, final String name,
             final String desc, final String signature, final String[] exceptions) {
@@ -162,6 +177,7 @@ public class ClassOptimizer extends RemappingClassAdapter {
             MethodVisitor mv = super.visitMethod(access, name, desc, null,
                     exceptions);
             return new MethodVisitor(Opcodes.ASM5, mv) {
+                @Impure
                 @Override
                 public void visitCode() {
                     super.visitCode();
@@ -188,12 +204,14 @@ public class ClassOptimizer extends RemappingClassAdapter {
         }
     }
 
+    @Impure
     @Override
     protected MethodVisitor createRemappingMethodAdapter(int access,
             String newDesc, MethodVisitor mv) {
         return new MethodOptimizer(this, access, newDesc, mv, remapper);
     }
 
+    @Impure
     @Override
     public void visitEnd() {
         if (syntheticClassFields.isEmpty()) {

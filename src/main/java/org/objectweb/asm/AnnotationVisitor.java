@@ -28,6 +28,8 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org1.objectweb.asm;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
  * A visitor to visit a Java annotation. The methods of this class must be
@@ -58,6 +60,8 @@ public abstract class AnnotationVisitor {
      *            the ASM API version implemented by this visitor. Must be one
      *            of {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
      */
+    @SideEffectFree
+    @Impure
     public AnnotationVisitor(final int api) {
         this(api, null);
     }
@@ -72,6 +76,7 @@ public abstract class AnnotationVisitor {
      *            the annotation visitor to which this visitor must delegate
      *            method calls. May be null.
      */
+    @SideEffectFree
     public AnnotationVisitor(final int api, final AnnotationVisitor av) {
         if (api != Opcodes.ASM4 && api != Opcodes.ASM5) {
             throw new IllegalArgumentException();
@@ -95,6 +100,7 @@ public abstract class AnnotationVisitor {
      *            {@link #visitArray visitArray} and visiting each array element
      *            in turn, but is more convenient).
      */
+    @Impure
     public void visit(String name, Object value) {
         if (av != null) {
             av.visit(name, value);
@@ -111,6 +117,7 @@ public abstract class AnnotationVisitor {
      * @param value
      *            the actual enumeration value.
      */
+    @Impure
     public void visitEnum(String name, String desc, String value) {
         if (av != null) {
             av.visitEnum(name, desc, value);
@@ -130,6 +137,7 @@ public abstract class AnnotationVisitor {
      *         visited before calling other methods on this annotation
      *         visitor</i>.
      */
+    @Impure
     public AnnotationVisitor visitAnnotation(String name, String desc) {
         if (av != null) {
             return av.visitAnnotation(name, desc);
@@ -151,6 +159,7 @@ public abstract class AnnotationVisitor {
      *         visitor are ignored. <i>All the array values must be visited
      *         before calling other methods on this annotation visitor</i>.
      */
+    @Impure
     public AnnotationVisitor visitArray(String name) {
         if (av != null) {
             return av.visitArray(name);
@@ -161,6 +170,7 @@ public abstract class AnnotationVisitor {
     /**
      * Visits the end of the annotation.
      */
+    @Impure
     public void visitEnd() {
         if (av != null) {
             av.visitEnd();

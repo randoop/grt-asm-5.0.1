@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.tree;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -79,6 +81,7 @@ public class TableSwitchInsnNode extends AbstractInsnNode {
      *            beginnings of the handler blocks. <tt>labels[i]</tt> is the
      *            beginning of the handler block for the <tt>min + i</tt> key.
      */
+    @Impure
     public TableSwitchInsnNode(final int min, final int max,
             final LabelNode dflt, final LabelNode... labels) {
         super(Opcodes.TABLESWITCH);
@@ -91,11 +94,13 @@ public class TableSwitchInsnNode extends AbstractInsnNode {
         }
     }
 
+    @Pure
     @Override
     public int getType() {
         return TABLESWITCH_INSN;
     }
 
+    @Impure
     @Override
     public void accept(final MethodVisitor mv) {
         Label[] labels = new Label[this.labels.size()];
@@ -106,6 +111,7 @@ public class TableSwitchInsnNode extends AbstractInsnNode {
         acceptAnnotations(mv);
     }
 
+    @Impure
     @Override
     public AbstractInsnNode clone(final Map<LabelNode, LabelNode> labels) {
         return new TableSwitchInsnNode(min, max, clone(dflt, labels), clone(

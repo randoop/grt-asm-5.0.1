@@ -29,6 +29,9 @@
  */
 package org1.objectweb.asm.tree;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
 import java.util.Map;
 
 import org1.objectweb.asm.MethodVisitor;
@@ -59,23 +62,28 @@ public class IincInsnNode extends AbstractInsnNode {
      * @param incr
      *            increment amount to increment the local variable by.
      */
+    @SideEffectFree
+    @Impure
     public IincInsnNode(final int var, final int incr) {
         super(Opcodes.IINC);
         this.var = var;
         this.incr = incr;
     }
 
+    @Pure
     @Override
     public int getType() {
         return IINC_INSN;
     }
 
+    @Impure
     @Override
     public void accept(final MethodVisitor mv) {
         mv.visitIincInsn(var, incr);
         acceptAnnotations(mv);
     }
 
+    @Impure
     @Override
     public AbstractInsnNode clone(final Map<LabelNode, LabelNode> labels) {
         return new IincInsnNode(var, incr).cloneAnnotations(this);

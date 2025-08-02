@@ -29,6 +29,9 @@
  */
 package org1.objectweb.asm.tree;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
 import java.util.Map;
 
 import org1.objectweb.asm.MethodVisitor;
@@ -61,22 +64,28 @@ public class LineNumberNode extends AbstractInsnNode {
      * @param start
      *            the first instruction corresponding to this line number.
      */
+    @SideEffectFree
+    @Impure
     public LineNumberNode(final int line, final LabelNode start) {
         super(-1);
         this.line = line;
         this.start = start;
     }
 
+    @Pure
     @Override
     public int getType() {
         return LINE;
     }
 
+    @Impure
     @Override
     public void accept(final MethodVisitor mv) {
         mv.visitLineNumber(line, start.getLabel());
     }
 
+    @SideEffectFree
+    @Impure
     @Override
     public AbstractInsnNode clone(final Map<LabelNode, LabelNode> labels) {
         return new LineNumberNode(line, clone(start, labels));

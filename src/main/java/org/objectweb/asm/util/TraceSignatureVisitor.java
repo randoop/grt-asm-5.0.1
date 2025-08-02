@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.util;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import org1.objectweb.asm.Opcodes;
 import org1.objectweb.asm.signature.SignatureVisitor;
 
@@ -74,17 +76,21 @@ public final class TraceSignatureVisitor extends SignatureVisitor {
 
     private String separator = "";
 
+    @Impure
     public TraceSignatureVisitor(final int access) {
         super(Opcodes.ASM5);
         isInterface = (access & Opcodes.ACC_INTERFACE) != 0;
         this.declaration = new StringBuffer();
     }
 
+    @SideEffectFree
+    @Impure
     private TraceSignatureVisitor(final StringBuffer buf) {
         super(Opcodes.ASM5);
         this.declaration = buf;
     }
 
+    @Impure
     @Override
     public void visitFormalTypeParameter(final String name) {
         declaration.append(seenFormalParameter ? ", " : "<").append(name);
@@ -92,6 +98,7 @@ public final class TraceSignatureVisitor extends SignatureVisitor {
         seenInterfaceBound = false;
     }
 
+    @Impure
     @Override
     public SignatureVisitor visitClassBound() {
         separator = " extends ";
@@ -99,6 +106,7 @@ public final class TraceSignatureVisitor extends SignatureVisitor {
         return this;
     }
 
+    @Impure
     @Override
     public SignatureVisitor visitInterfaceBound() {
         separator = seenInterfaceBound ? ", " : " extends ";
@@ -107,6 +115,7 @@ public final class TraceSignatureVisitor extends SignatureVisitor {
         return this;
     }
 
+    @Impure
     @Override
     public SignatureVisitor visitSuperclass() {
         endFormals();
@@ -115,6 +124,7 @@ public final class TraceSignatureVisitor extends SignatureVisitor {
         return this;
     }
 
+    @Impure
     @Override
     public SignatureVisitor visitInterface() {
         separator = seenInterface ? ", " : isInterface ? " extends "
@@ -124,6 +134,7 @@ public final class TraceSignatureVisitor extends SignatureVisitor {
         return this;
     }
 
+    @Impure
     @Override
     public SignatureVisitor visitParameterType() {
         endFormals();
@@ -137,6 +148,7 @@ public final class TraceSignatureVisitor extends SignatureVisitor {
         return this;
     }
 
+    @Impure
     @Override
     public SignatureVisitor visitReturnType() {
         endFormals();
@@ -150,6 +162,7 @@ public final class TraceSignatureVisitor extends SignatureVisitor {
         return new TraceSignatureVisitor(returnType);
     }
 
+    @Impure
     @Override
     public SignatureVisitor visitExceptionType() {
         if (exceptions == null) {
@@ -161,6 +174,7 @@ public final class TraceSignatureVisitor extends SignatureVisitor {
         return new TraceSignatureVisitor(exceptions);
     }
 
+    @Impure
     @Override
     public void visitBaseType(final char descriptor) {
         switch (descriptor) {
@@ -196,12 +210,14 @@ public final class TraceSignatureVisitor extends SignatureVisitor {
         endType();
     }
 
+    @Impure
     @Override
     public void visitTypeVariable(final String name) {
         declaration.append(name);
         endType();
     }
 
+    @Impure
     @Override
     public SignatureVisitor visitArrayType() {
         startType();
@@ -209,6 +225,7 @@ public final class TraceSignatureVisitor extends SignatureVisitor {
         return this;
     }
 
+    @Impure
     @Override
     public void visitClassType(final String name) {
         if ("java/lang/Object".equals(name)) {
@@ -228,6 +245,7 @@ public final class TraceSignatureVisitor extends SignatureVisitor {
         argumentStack *= 2;
     }
 
+    @Impure
     @Override
     public void visitInnerClassType(final String name) {
         if (argumentStack % 2 != 0) {
@@ -240,6 +258,7 @@ public final class TraceSignatureVisitor extends SignatureVisitor {
         argumentStack *= 2;
     }
 
+    @Impure
     @Override
     public void visitTypeArgument() {
         if (argumentStack % 2 == 0) {
@@ -251,6 +270,7 @@ public final class TraceSignatureVisitor extends SignatureVisitor {
         declaration.append('?');
     }
 
+    @Impure
     @Override
     public SignatureVisitor visitTypeArgument(final char tag) {
         if (argumentStack % 2 == 0) {
@@ -270,6 +290,7 @@ public final class TraceSignatureVisitor extends SignatureVisitor {
         return this;
     }
 
+    @Impure
     @Override
     public void visitEnd() {
         if (argumentStack % 2 != 0) {
@@ -279,20 +300,24 @@ public final class TraceSignatureVisitor extends SignatureVisitor {
         endType();
     }
 
+    @SideEffectFree
     public String getDeclaration() {
         return declaration.toString();
     }
 
+    @SideEffectFree
     public String getReturnType() {
         return returnType == null ? null : returnType.toString();
     }
 
+    @SideEffectFree
     public String getExceptions() {
         return exceptions == null ? null : exceptions.toString();
     }
 
     // -----------------------------------------------
 
+    @Impure
     private void endFormals() {
         if (seenFormalParameter) {
             declaration.append('>');
@@ -300,10 +325,12 @@ public final class TraceSignatureVisitor extends SignatureVisitor {
         }
     }
 
+    @Impure
     private void startType() {
         arrayStack *= 2;
     }
 
+    @Impure
     private void endType() {
         if (arrayStack % 2 == 0) {
             arrayStack /= 2;

@@ -29,6 +29,7 @@
  */
 package org1.objectweb.asm.util;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import java.util.Map;
 
 import org1.objectweb.asm.Label;
@@ -52,5 +53,6 @@ public interface Textifiable {
      * @param labelNames
      *            map of label instances to their names.
      */
+    @SideEffectFree
     void textify(StringBuffer buf, Map<Label, String> labelNames);
 }

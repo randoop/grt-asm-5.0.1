@@ -28,6 +28,9 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org1.objectweb.asm;
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
  * A label represents a position in the bytecode of a method. Labels are used
@@ -252,6 +255,7 @@ public class Label {
     /**
      * Constructs a new label.
      */
+    @SideEffectFree
     public Label() {
     }
 
@@ -269,6 +273,7 @@ public class Label {
      * @throws IllegalStateException
      *             if this label is not resolved yet.
      */
+    @Pure
     public int getOffset() {
         if ((status & RESOLVED) == 0) {
             throw new IllegalStateException(
@@ -296,6 +301,7 @@ public class Label {
      * @throws IllegalArgumentException
      *             if this label has not been created by the given code writer.
      */
+    @Impure
     void put(final MethodWriter owner, final ByteVector out, final int source,
             final boolean wideOffset) {
         if ((status & RESOLVED) == 0) {
@@ -328,6 +334,7 @@ public class Label {
      *            the position where the offset for this forward reference must
      *            be stored.
      */
+    @Impure
     private void addReference(final int sourcePosition,
             final int referencePosition) {
         if (srcAndRefPositions == null) {
@@ -366,6 +373,7 @@ public class Label {
      *             if this label has already been resolved, or if it has not
      *             been created by the given code writer.
      */
+    @Impure
     boolean resolve(final MethodWriter owner, final int position,
             final byte[] data) {
         boolean needUpdate = false;
@@ -419,6 +427,7 @@ public class Label {
      * 
      * @return the first label of the series to which this label belongs.
      */
+    @Pure
     Label getFirst() {
         return !ClassReader.FRAMES || frame == null ? this : frame.owner;
     }
@@ -434,6 +443,7 @@ public class Label {
      *            a subroutine id.
      * @return true is this basic block belongs to the given subroutine.
      */
+    @Pure
     boolean inSubroutine(final long id) {
         if ((status & Label.VISITED) != 0) {
             return (srcAndRefPositions[(int) (id >>> 32)] & (int) id) != 0;
@@ -450,6 +460,7 @@ public class Label {
      * @return true if this basic block and the given one belong to a common
      *         subroutine.
      */
+    @Pure
     boolean inSameSubroutine(final Label block) {
         if ((status & VISITED) == 0 || (block.status & VISITED) == 0) {
             return false;
@@ -470,6 +481,7 @@ public class Label {
      * @param nbSubroutines
      *            the total number of subroutines in the method.
      */
+    @Impure
     void addToSubroutine(final long id, final int nbSubroutines) {
         if ((status & VISITED) == 0) {
             status |= VISITED;
@@ -493,6 +505,7 @@ public class Label {
      * @param nbSubroutines
      *            the total number of subroutines in the method.
      */
+    @Impure
     void visitSubroutine(final Label JSR, final long id, final int nbSubroutines) {
         // user managed stack of labels, to avoid using a recursive method
         // (recursivity can lead to stack overflow with very large methods)
@@ -553,6 +566,7 @@ public class Label {
      * 
      * @return a string representation of this label.
      */
+    @Pure
     @Override
     public String toString() {
         return "L" + System.identityHashCode(this);

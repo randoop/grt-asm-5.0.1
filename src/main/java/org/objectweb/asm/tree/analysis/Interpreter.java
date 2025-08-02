@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.tree.analysis;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import java.util.List;
 
 import org1.objectweb.asm.Type;
@@ -51,6 +53,7 @@ public abstract class Interpreter<V extends Value> {
 
     protected final int api;
 
+    @SideEffectFree
     protected Interpreter(final int api) {
         this.api = api;
     }
@@ -68,6 +71,7 @@ public abstract class Interpreter<V extends Value> {
      * @return a value that represents the given type. The size of the returned
      *         value must be equal to the size of the given type.
      */
+    @Impure
     public abstract V newValue(Type type);
 
     /**
@@ -84,6 +88,7 @@ public abstract class Interpreter<V extends Value> {
      * @throws AnalyzerException
      *             if an error occured during the interpretation.
      */
+    @Impure
     public abstract V newOperation(AbstractInsnNode insn)
             throws AnalyzerException;
 
@@ -103,6 +108,7 @@ public abstract class Interpreter<V extends Value> {
      * @throws AnalyzerException
      *             if an error occured during the interpretation.
      */
+    @Impure
     public abstract V copyOperation(AbstractInsnNode insn, V value)
             throws AnalyzerException;
 
@@ -124,6 +130,7 @@ public abstract class Interpreter<V extends Value> {
      * @throws AnalyzerException
      *             if an error occured during the interpretation.
      */
+    @Impure
     public abstract V unaryOperation(AbstractInsnNode insn, V value)
             throws AnalyzerException;
 
@@ -148,6 +155,7 @@ public abstract class Interpreter<V extends Value> {
      * @throws AnalyzerException
      *             if an error occured during the interpretation.
      */
+    @Impure
     public abstract V binaryOperation(AbstractInsnNode insn, V value1, V value2)
             throws AnalyzerException;
 
@@ -169,6 +177,7 @@ public abstract class Interpreter<V extends Value> {
      * @throws AnalyzerException
      *             if an error occured during the interpretation.
      */
+    @Impure
     public abstract V ternaryOperation(AbstractInsnNode insn, V value1,
             V value2, V value3) throws AnalyzerException;
 
@@ -187,6 +196,7 @@ public abstract class Interpreter<V extends Value> {
      * @throws AnalyzerException
      *             if an error occured during the interpretation.
      */
+    @Impure
     public abstract V naryOperation(AbstractInsnNode insn,
             List<? extends V> values) throws AnalyzerException;
 
@@ -205,6 +215,7 @@ public abstract class Interpreter<V extends Value> {
      * @throws AnalyzerException
      *             if an error occured during the interpretation.
      */
+    @Impure
     public abstract void returnOperation(AbstractInsnNode insn, V value,
             V expected) throws AnalyzerException;
 
@@ -222,5 +233,6 @@ public abstract class Interpreter<V extends Value> {
      * @return the merged value. If the merged value is equal to <tt>v</tt>,
      *         this method <i>must</i> return <tt>v</tt>.
      */
+    @Impure
     public abstract V merge(V v, V w);
 }

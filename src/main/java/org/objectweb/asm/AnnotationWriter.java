@@ -28,6 +28,9 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org1.objectweb.asm;
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
 
 /**
  * An {@link AnnotationVisitor} that generates annotations in bytecode form.
@@ -102,6 +105,8 @@ final class AnnotationWriter extends AnnotationVisitor {
      *            where in <tt>parent</tt> the number of annotation values must
      *            be stored.
      */
+    @SideEffectFree
+    @Impure
     AnnotationWriter(final ClassWriter cw, final boolean named,
             final ByteVector bv, final ByteVector parent, final int offset) {
         super(Opcodes.ASM5);
@@ -116,6 +121,7 @@ final class AnnotationWriter extends AnnotationVisitor {
     // Implementation of the AnnotationVisitor abstract class
     // ------------------------------------------------------------------------
 
+    @Impure
     @Override
     public void visit(final String name, final Object value) {
         ++size;
@@ -189,6 +195,7 @@ final class AnnotationWriter extends AnnotationVisitor {
         }
     }
 
+    @Impure
     @Override
     public void visitEnum(final String name, final String desc,
             final String value) {
@@ -199,6 +206,7 @@ final class AnnotationWriter extends AnnotationVisitor {
         bv.put12('e', cw.newUTF8(desc)).putShort(cw.newUTF8(value));
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitAnnotation(final String name,
             final String desc) {
@@ -211,6 +219,7 @@ final class AnnotationWriter extends AnnotationVisitor {
         return new AnnotationWriter(cw, true, bv, bv, bv.length - 2);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitArray(final String name) {
         ++size;
@@ -222,6 +231,7 @@ final class AnnotationWriter extends AnnotationVisitor {
         return new AnnotationWriter(cw, false, bv, bv, bv.length - 2);
     }
 
+    @Impure
     @Override
     public void visitEnd() {
         if (parent != null) {
@@ -240,6 +250,7 @@ final class AnnotationWriter extends AnnotationVisitor {
      * 
      * @return the size of this annotation writer list.
      */
+    @Pure
     int getSize() {
         int size = 0;
         AnnotationWriter aw = this;
@@ -257,6 +268,7 @@ final class AnnotationWriter extends AnnotationVisitor {
      * @param out
      *            where the annotations must be put.
      */
+    @Impure
     void put(final ByteVector out) {
         int n = 0;
         int size = 2;
@@ -289,6 +301,7 @@ final class AnnotationWriter extends AnnotationVisitor {
      * @param out
      *            where the annotations must be put.
      */
+    @Impure
     static void put(final AnnotationWriter[] panns, final int off,
             final ByteVector out) {
         int size = 1 + 2 * (panns.length - off);
@@ -329,6 +342,7 @@ final class AnnotationWriter extends AnnotationVisitor {
      * @param out
      *            where the type reference and type path must be put.
      */
+    @Impure
     static void putTarget(int typeRef, TypePath typePath, ByteVector out) {
         switch (typeRef >>> 24) {
         case 0x00: // CLASS_TYPE_PARAMETER

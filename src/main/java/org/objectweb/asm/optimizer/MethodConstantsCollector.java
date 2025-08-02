@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.optimizer;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import org1.objectweb.asm.AnnotationVisitor;
 import org1.objectweb.asm.Handle;
 import org1.objectweb.asm.Label;
@@ -46,12 +48,15 @@ public class MethodConstantsCollector extends MethodVisitor {
 
     private final ConstantPool cp;
 
+    @SideEffectFree
+    @Impure
     public MethodConstantsCollector(final MethodVisitor mv,
             final ConstantPool cp) {
         super(Opcodes.ASM5, mv);
         this.cp = cp;
     }
 
+    @Impure
     @Override
     public void visitParameter(String name, int access) {
         cp.newUTF8("MethodParameters");
@@ -61,12 +66,14 @@ public class MethodConstantsCollector extends MethodVisitor {
         mv.visitParameter(name, access);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitAnnotationDefault() {
         cp.newUTF8("AnnotationDefault");
         return new AnnotationConstantsCollector(mv.visitAnnotationDefault(), cp);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitAnnotation(final String desc,
             final boolean visible) {
@@ -80,6 +87,7 @@ public class MethodConstantsCollector extends MethodVisitor {
                 visible), cp);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitTypeAnnotation(int typeRef,
             TypePath typePath, String desc, boolean visible) {
@@ -93,6 +101,7 @@ public class MethodConstantsCollector extends MethodVisitor {
                 visible), cp);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitParameterAnnotation(final int parameter,
             final String desc, final boolean visible) {
@@ -106,12 +115,14 @@ public class MethodConstantsCollector extends MethodVisitor {
                 parameter, desc, visible), cp);
     }
 
+    @Impure
     @Override
     public void visitTypeInsn(final int opcode, final String type) {
         cp.newClass(type);
         mv.visitTypeInsn(opcode, type);
     }
 
+    @Impure
     @Override
     public void visitFieldInsn(final int opcode, final String owner,
             final String name, final String desc) {
@@ -119,6 +130,7 @@ public class MethodConstantsCollector extends MethodVisitor {
         mv.visitFieldInsn(opcode, owner, name, desc);
     }
 
+    @Impure
     @Override
     public void visitMethodInsn(final int opcode, final String owner,
             final String name, final String desc, final boolean itf) {
@@ -126,6 +138,7 @@ public class MethodConstantsCollector extends MethodVisitor {
         mv.visitMethodInsn(opcode, owner, name, desc, itf);
     }
 
+    @Impure
     @Override
     public void visitInvokeDynamicInsn(String name, String desc, Handle bsm,
             Object... bsmArgs) {
@@ -133,18 +146,21 @@ public class MethodConstantsCollector extends MethodVisitor {
         mv.visitInvokeDynamicInsn(name, desc, bsm, bsmArgs);
     }
 
+    @Impure
     @Override
     public void visitLdcInsn(final Object cst) {
         cp.newConst(cst);
         mv.visitLdcInsn(cst);
     }
 
+    @Impure
     @Override
     public void visitMultiANewArrayInsn(final String desc, final int dims) {
         cp.newClass(desc);
         mv.visitMultiANewArrayInsn(desc, dims);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitInsnAnnotation(int typeRef,
             TypePath typePath, String desc, boolean visible) {
@@ -158,6 +174,7 @@ public class MethodConstantsCollector extends MethodVisitor {
                 typePath, desc, visible), cp);
     }
 
+    @Impure
     @Override
     public void visitTryCatchBlock(final Label start, final Label end,
             final Label handler, final String type) {
@@ -167,6 +184,7 @@ public class MethodConstantsCollector extends MethodVisitor {
         mv.visitTryCatchBlock(start, end, handler, type);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitTryCatchAnnotation(int typeRef,
             TypePath typePath, String desc, boolean visible) {
@@ -180,6 +198,7 @@ public class MethodConstantsCollector extends MethodVisitor {
                 typeRef, typePath, desc, visible), cp);
     }
 
+    @Impure
     @Override
     public void visitLocalVariable(final String name, final String desc,
             final String signature, final Label start, final Label end,
@@ -195,6 +214,7 @@ public class MethodConstantsCollector extends MethodVisitor {
         mv.visitLocalVariable(name, desc, signature, start, end, index);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitLocalVariableAnnotation(int typeRef,
             TypePath typePath, Label[] start, Label[] end, int[] index,
@@ -210,12 +230,14 @@ public class MethodConstantsCollector extends MethodVisitor {
                         index, desc, visible), cp);
     }
 
+    @Impure
     @Override
     public void visitLineNumber(final int line, final Label start) {
         cp.newUTF8("LineNumberTable");
         mv.visitLineNumber(line, start);
     }
 
+    @Impure
     @Override
     public void visitMaxs(final int maxStack, final int maxLocals) {
         cp.newUTF8("Code");

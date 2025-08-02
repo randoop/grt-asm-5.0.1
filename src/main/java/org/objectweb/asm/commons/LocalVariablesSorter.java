@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.commons;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import org1.objectweb.asm.AnnotationVisitor;
 import org1.objectweb.asm.Label;
 import org1.objectweb.asm.MethodVisitor;
@@ -94,6 +96,7 @@ public class LocalVariablesSorter extends MethodVisitor {
      * @throws IllegalStateException
      *             If a subclass calls this constructor.
      */
+    @Impure
     public LocalVariablesSorter(final int access, final String desc,
             final MethodVisitor mv) {
         this(Opcodes.ASM5, access, desc, mv);
@@ -115,6 +118,7 @@ public class LocalVariablesSorter extends MethodVisitor {
      * @param mv
      *            the method visitor to which this adapter delegates calls.
      */
+    @Impure
     protected LocalVariablesSorter(final int api, final int access,
             final String desc, final MethodVisitor mv) {
         super(api, mv);
@@ -126,6 +130,7 @@ public class LocalVariablesSorter extends MethodVisitor {
         firstLocal = nextLocal;
     }
 
+    @Impure
     @Override
     public void visitVarInsn(final int opcode, final int var) {
         Type type;
@@ -160,16 +165,19 @@ public class LocalVariablesSorter extends MethodVisitor {
         mv.visitVarInsn(opcode, remap(var, type));
     }
 
+    @Impure
     @Override
     public void visitIincInsn(final int var, final int increment) {
         mv.visitIincInsn(remap(var, Type.INT_TYPE), increment);
     }
 
+    @Impure
     @Override
     public void visitMaxs(final int maxStack, final int maxLocals) {
         mv.visitMaxs(maxStack, nextLocal);
     }
 
+    @Impure
     @Override
     public void visitLocalVariable(final String name, final String desc,
             final String signature, final Label start, final Label end,
@@ -178,6 +186,7 @@ public class LocalVariablesSorter extends MethodVisitor {
         mv.visitLocalVariable(name, desc, signature, start, end, newIndex);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitLocalVariableAnnotation(int typeRef,
             TypePath typePath, Label[] start, Label[] end, int[] index,
@@ -191,6 +200,7 @@ public class LocalVariablesSorter extends MethodVisitor {
                 newIndex, desc, visible);
     }
 
+    @Impure
     @Override
     public void visitFrame(final int type, final int nLocal,
             final Object[] local, final int nStack, final Object[] stack) {
@@ -269,6 +279,7 @@ public class LocalVariablesSorter extends MethodVisitor {
      *            the type of the local variable to be created.
      * @return the identifier of the newly created local variable.
      */
+    @Impure
     public int newLocal(final Type type) {
         Object t;
         switch (type.getSort()) {
@@ -322,6 +333,7 @@ public class LocalVariablesSorter extends MethodVisitor {
      *            types use two slots. The types for the current stack map frame
      *            must be updated in place in this array.
      */
+    @SideEffectFree
     protected void updateNewLocals(Object[] newLocals) {
     }
 
@@ -335,9 +347,11 @@ public class LocalVariablesSorter extends MethodVisitor {
      * @param type
      *            the type of the value being stored in the local variable.
      */
+    @Impure
     protected void setLocalType(final int local, final Type type) {
     }
 
+    @Impure
     private void setFrameLocal(final int local, final Object type) {
         int l = newLocals.length;
         if (local >= l) {
@@ -348,6 +362,7 @@ public class LocalVariablesSorter extends MethodVisitor {
         newLocals[local] = type;
     }
 
+    @Impure
     private int remap(final int var, final Type type) {
         if (var + type.getSize() <= firstLocal) {
             return var;
@@ -373,6 +388,7 @@ public class LocalVariablesSorter extends MethodVisitor {
         return value;
     }
 
+    @Impure
     protected int newLocalMapping(final Type type) {
         int local = nextLocal;
         nextLocal += type.getSize();

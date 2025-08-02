@@ -29,6 +29,7 @@
  */
 package org1.objectweb.asm.xml;
 
+import org.checkerframework.dataflow.qual.Impure;
 import org1.objectweb.asm.AnnotationVisitor;
 import org1.objectweb.asm.Opcodes;
 import org1.objectweb.asm.Type;
@@ -46,18 +47,21 @@ public final class SAXAnnotationAdapter extends AnnotationVisitor {
 
     private final String elementName;
 
+    @Impure
     public SAXAnnotationAdapter(final SAXAdapter sa, final String elementName,
             final int visible, final String name, final String desc) {
         this(Opcodes.ASM5, sa, elementName, visible, desc, name, -1, -1, null,
                 null, null, null);
     }
 
+    @Impure
     public SAXAnnotationAdapter(final SAXAdapter sa, final String elementName,
             final int visible, final int parameter, final String desc) {
         this(Opcodes.ASM5, sa, elementName, visible, desc, null, parameter, -1,
                 null, null, null, null);
     }
 
+    @Impure
     public SAXAnnotationAdapter(final SAXAdapter sa, final String elementName,
             final int visible, final String name, final String desc,
             final int typeRef, final TypePath typePath) {
@@ -65,6 +69,7 @@ public final class SAXAnnotationAdapter extends AnnotationVisitor {
                 typePath, null, null, null);
     }
 
+    @Impure
     public SAXAnnotationAdapter(final SAXAdapter sa, final String elementName,
             final int visible, final String name, final String desc,
             int typeRef, TypePath typePath, final String[] start,
@@ -73,6 +78,7 @@ public final class SAXAnnotationAdapter extends AnnotationVisitor {
                 typePath, start, end, index);
     }
 
+    @Impure
     protected SAXAnnotationAdapter(final int api, final SAXAdapter sa,
             final String elementName, final int visible, final String desc,
             final String name, final int parameter) {
@@ -80,6 +86,7 @@ public final class SAXAnnotationAdapter extends AnnotationVisitor {
                 null, null, null);
     }
 
+    @Impure
     protected SAXAnnotationAdapter(final int api, final SAXAdapter sa,
             final String elementName, final int visible, final String desc,
             final String name, final int parameter, final int typeRef,
@@ -138,6 +145,7 @@ public final class SAXAnnotationAdapter extends AnnotationVisitor {
         sa.addStart(elementName, att);
     }
 
+    @Impure
     @Override
     public void visit(final String name, final Object value) {
         Class<?> c = value.getClass();
@@ -199,12 +207,14 @@ public final class SAXAnnotationAdapter extends AnnotationVisitor {
         }
     }
 
+    @Impure
     @Override
     public void visitEnum(final String name, final String desc,
             final String value) {
         addValueElement("annotationValueEnum", name, desc, value);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitAnnotation(final String name,
             final String desc) {
@@ -212,17 +222,20 @@ public final class SAXAnnotationAdapter extends AnnotationVisitor {
                 name, desc);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitArray(final String name) {
         return new SAXAnnotationAdapter(sa, "annotationValueArray", 0, name,
                 null);
     }
 
+    @Impure
     @Override
     public void visitEnd() {
         sa.addEnd(elementName);
     }
 
+    @Impure
     private void addValueElement(final String element, final String name,
             final String desc, final String value) {
         AttributesImpl att = new AttributesImpl();

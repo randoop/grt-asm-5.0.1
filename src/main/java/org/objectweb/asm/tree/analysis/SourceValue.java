@@ -29,6 +29,9 @@
  */
 package org1.objectweb.asm.tree.analysis;
 
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import java.util.Set;
 
 import org1.objectweb.asm.tree.AbstractInsnNode;
@@ -63,24 +66,29 @@ public class SourceValue implements Value {
      */
     public final Set<AbstractInsnNode> insns;
 
+    @Impure
     public SourceValue(final int size) {
         this(size, SmallSet.<AbstractInsnNode> emptySet());
     }
 
+    @Impure
     public SourceValue(final int size, final AbstractInsnNode insn) {
         this.size = size;
         this.insns = new SmallSet<AbstractInsnNode>(insn, null);
     }
 
+    @SideEffectFree
     public SourceValue(final int size, final Set<AbstractInsnNode> insns) {
         this.size = size;
         this.insns = insns;
     }
 
+    @Pure
     public int getSize() {
         return size;
     }
 
+    @Pure
     @Override
     public boolean equals(final Object value) {
         if (!(value instanceof SourceValue)) {
@@ -90,6 +98,7 @@ public class SourceValue implements Value {
         return size == v.size && insns.equals(v.insns);
     }
 
+    @Pure
     @Override
     public int hashCode() {
         return insns.hashCode();

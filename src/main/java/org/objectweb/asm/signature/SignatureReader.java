@@ -28,6 +28,8 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org1.objectweb.asm.signature;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
  * A type signature parser to make a signature visitor visit an existing
@@ -50,6 +52,7 @@ public class SignatureReader {
      *            A <i>ClassSignature</i>, <i>MethodTypeSignature</i>, or
      *            <i>FieldTypeSignature</i>.
      */
+    @SideEffectFree
     public SignatureReader(final String signature) {
         this.signature = signature;
     }
@@ -69,6 +72,7 @@ public class SignatureReader {
      * @param v
      *            the visitor that must visit this signature.
      */
+    @Impure
     public void accept(final SignatureVisitor v) {
         String signature = this.signature;
         int len = signature.length();
@@ -126,6 +130,7 @@ public class SignatureReader {
      * @param v
      *            the visitor that must visit this signature.
      */
+    @Impure
     public void acceptType(final SignatureVisitor v) {
         parseType(this.signature, 0, v);
     }
@@ -141,6 +146,7 @@ public class SignatureReader {
      *            the visitor that must visit this signature.
      * @return the index of the first character after the parsed signature.
      */
+    @Impure
     private static int parseType(final String signature, int pos,
             final SignatureVisitor v) {
         char c;

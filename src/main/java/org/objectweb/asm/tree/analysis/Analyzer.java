@@ -29,6 +29,9 @@
  */
 package org1.objectweb.asm.tree.analysis;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -83,6 +86,7 @@ public class Analyzer<V extends Value> implements Opcodes {
      *            the interpreter to be used to symbolically interpret the
      *            bytecode instructions.
      */
+    @SideEffectFree
     public Analyzer(final Interpreter<V> interpreter) {
         this.interpreter = interpreter;
     }
@@ -102,6 +106,7 @@ public class Analyzer<V extends Value> implements Opcodes {
      * @throws AnalyzerException
      *             if a problem occurs during the analysis.
      */
+    @Impure
     public Frame<V>[] analyze(final String owner, final MethodNode m)
             throws AnalyzerException {
         if ((m.access & (ACC_ABSTRACT | ACC_NATIVE)) != 0) {
@@ -301,6 +306,7 @@ public class Analyzer<V extends Value> implements Opcodes {
         return frames;
     }
 
+    @Impure
     private void findSubroutine(int insn, final Subroutine sub,
             final List<AbstractInsnNode> calls) throws AnalyzerException {
         while (true) {
@@ -378,6 +384,7 @@ public class Analyzer<V extends Value> implements Opcodes {
      *         cannot be reached, or if an error occured during the analysis of
      *         the method.
      */
+    @Pure
     public Frame<V>[] getFrames() {
         return frames;
     }
@@ -390,6 +397,7 @@ public class Analyzer<V extends Value> implements Opcodes {
      *            method.
      * @return a list of {@link TryCatchBlockNode} objects.
      */
+    @Pure
     public List<TryCatchBlockNode> getHandlers(final int insn) {
         return handlers[insn];
     }
@@ -406,6 +414,7 @@ public class Analyzer<V extends Value> implements Opcodes {
      * @throws AnalyzerException
      *             if a problem occurs.
      */
+    @SideEffectFree
     protected void init(String owner, MethodNode m) throws AnalyzerException {
     }
 
@@ -418,6 +427,8 @@ public class Analyzer<V extends Value> implements Opcodes {
      *            the maximum stack size of the frame.
      * @return the created frame.
      */
+    @SideEffectFree
+    @Impure
     protected Frame<V> newFrame(final int nLocals, final int nStack) {
         return new Frame<V>(nLocals, nStack);
     }
@@ -429,6 +440,7 @@ public class Analyzer<V extends Value> implements Opcodes {
      *            a frame.
      * @return the created frame.
      */
+    @Impure
     protected Frame<V> newFrame(final Frame<? extends V> src) {
         return new Frame<V>(src);
     }
@@ -444,6 +456,7 @@ public class Analyzer<V extends Value> implements Opcodes {
      * @param successor
      *            index of a successor instruction.
      */
+    @SideEffectFree
     protected void newControlFlowEdge(final int insn, final int successor) {
     }
 
@@ -462,6 +475,7 @@ public class Analyzer<V extends Value> implements Opcodes {
      *         performed by this analyzer, or false otherwise. The default
      *         implementation of this method always returns true.
      */
+    @Pure
     protected boolean newControlFlowExceptionEdge(final int insn,
             final int successor) {
         return true;
@@ -486,6 +500,7 @@ public class Analyzer<V extends Value> implements Opcodes {
      *         {@link #newControlFlowExceptionEdge(int, int)
      *         newControlFlowExceptionEdge(int, int)}.
      */
+    @Impure
     protected boolean newControlFlowExceptionEdge(final int insn,
             final TryCatchBlockNode tcb) {
         return newControlFlowExceptionEdge(insn, insns.indexOf(tcb.handler));
@@ -493,6 +508,7 @@ public class Analyzer<V extends Value> implements Opcodes {
 
     // -------------------------------------------------------------------------
 
+    @Impure
     private void merge(final int insn, final Frame<V> frame,
             final Subroutine subroutine) throws AnalyzerException {
         Frame<V> oldFrame = frames[insn];
@@ -522,6 +538,7 @@ public class Analyzer<V extends Value> implements Opcodes {
         }
     }
 
+    @Impure
     private void merge(final int insn, final Frame<V> beforeJSR,
             final Frame<V> afterRET, final Subroutine subroutineBeforeJSR,
             final boolean[] access) throws AnalyzerException {

@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.tree.analysis;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import java.util.List;
 
 import org1.objectweb.asm.Type;
@@ -71,6 +73,8 @@ public class SimpleVerifier extends BasicVerifier {
     /**
      * Constructs a new {@link SimpleVerifier}.
      */
+    @SideEffectFree
+    @Impure
     public SimpleVerifier() {
         this(null, null, false);
     }
@@ -86,6 +90,8 @@ public class SimpleVerifier extends BasicVerifier {
      * @param isInterface
      *            if the class that is verified is an interface.
      */
+    @SideEffectFree
+    @Impure
     public SimpleVerifier(final Type currentClass,
             final Type currentSuperClass, final boolean isInterface) {
         this(currentClass, currentSuperClass, null, isInterface);
@@ -104,6 +110,8 @@ public class SimpleVerifier extends BasicVerifier {
      * @param isInterface
      *            if the class that is verified is an interface.
      */
+    @SideEffectFree
+    @Impure
     public SimpleVerifier(final Type currentClass,
             final Type currentSuperClass,
             final List<Type> currentClassInterfaces, final boolean isInterface) {
@@ -111,6 +119,8 @@ public class SimpleVerifier extends BasicVerifier {
                 isInterface);
     }
 
+    @SideEffectFree
+    @Impure
     protected SimpleVerifier(final int api, final Type currentClass,
             final Type currentSuperClass,
             final List<Type> currentClassInterfaces, final boolean isInterface) {
@@ -129,10 +139,12 @@ public class SimpleVerifier extends BasicVerifier {
      * @param loader
      *            a <code>ClassLoader</code> to use
      */
+    @Impure
     public void setClassLoader(final ClassLoader loader) {
         this.loader = loader;
     }
 
+    @Impure
     @Override
     public BasicValue newValue(final Type type) {
         if (type == null) {
@@ -166,6 +178,7 @@ public class SimpleVerifier extends BasicVerifier {
         return v;
     }
 
+    @Impure
     @Override
     protected boolean isArrayValue(final BasicValue value) {
         Type t = value.getType();
@@ -173,6 +186,7 @@ public class SimpleVerifier extends BasicVerifier {
                 && ("Lnull;".equals(t.getDescriptor()) || t.getSort() == Type.ARRAY);
     }
 
+    @Impure
     @Override
     protected BasicValue getElementValue(final BasicValue objectArrayValue)
             throws AnalyzerException {
@@ -188,6 +202,7 @@ public class SimpleVerifier extends BasicVerifier {
         throw new Error("Internal error");
     }
 
+    @Impure
     @Override
     protected boolean isSubTypeOf(final BasicValue value,
             final BasicValue expected) {
@@ -214,6 +229,7 @@ public class SimpleVerifier extends BasicVerifier {
         }
     }
 
+    @Impure
     @Override
     public BasicValue merge(final BasicValue v, final BasicValue w) {
         if (!v.equals(w)) {
@@ -255,6 +271,7 @@ public class SimpleVerifier extends BasicVerifier {
         return v;
     }
 
+    @Impure
     protected boolean isInterface(final Type t) {
         if (currentClass != null && t.equals(currentClass)) {
             return isInterface;
@@ -262,6 +279,7 @@ public class SimpleVerifier extends BasicVerifier {
         return getClass(t).isInterface();
     }
 
+    @Impure
     protected Type getSuperClass(final Type t) {
         if (currentClass != null && t.equals(currentClass)) {
             return currentSuperClass;
@@ -270,6 +288,7 @@ public class SimpleVerifier extends BasicVerifier {
         return c == null ? null : Type.getType(c);
     }
 
+    @Impure
     protected boolean isAssignableFrom(final Type t, final Type u) {
         if (t.equals(u)) {
             return true;
@@ -306,6 +325,7 @@ public class SimpleVerifier extends BasicVerifier {
         return tc.isAssignableFrom(getClass(u));
     }
 
+    @Impure
     protected Class<?> getClass(final Type t) {
         try {
             if (t.getSort() == Type.ARRAY) {

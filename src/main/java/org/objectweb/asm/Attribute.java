@@ -28,6 +28,9 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org1.objectweb.asm;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
  * A non standard class, field, method or code attribute.
@@ -58,6 +61,7 @@ public class Attribute {
      * @param type
      *            the type of the attribute.
      */
+    @SideEffectFree
     protected Attribute(final String type) {
         this.type = type;
     }
@@ -68,6 +72,7 @@ public class Attribute {
      * 
      * @return <tt>true</tt> if this type of attribute is unknown.
      */
+    @Pure
     public boolean isUnknown() {
         return true;
     }
@@ -77,6 +82,7 @@ public class Attribute {
      * 
      * @return <tt>true</tt> if this type of attribute is a code attribute.
      */
+    @Pure
     public boolean isCodeAttribute() {
         return false;
     }
@@ -87,6 +93,7 @@ public class Attribute {
      * @return the labels corresponding to this attribute, or <tt>null</tt> if
      *         this attribute is not a code attribute that contains labels.
      */
+    @Pure
     protected Label[] getLabels() {
         return null;
     }
@@ -122,6 +129,7 @@ public class Attribute {
      * @return a <i>new</i> {@link Attribute} object corresponding to the given
      *         bytes.
      */
+    @Impure
     protected Attribute read(final ClassReader cr, final int off,
             final int len, final char[] buf, final int codeOff,
             final Label[] labels) {
@@ -156,6 +164,7 @@ public class Attribute {
      *            is not a code attribute.
      * @return the byte array form of this attribute.
      */
+    @Impure
     protected ByteVector write(final ClassWriter cw, final byte[] code,
             final int len, final int maxStack, final int maxLocals) {
         ByteVector v = new ByteVector();
@@ -169,6 +178,7 @@ public class Attribute {
      * 
      * @return the length of the attribute list that begins with this attribute.
      */
+    @Pure
     final int getCount() {
         int count = 0;
         Attribute attr = this;
@@ -204,6 +214,7 @@ public class Attribute {
      * @return the size of all the attributes in this attribute list. This size
      *         includes the size of the attribute headers.
      */
+    @Impure
     final int getSize(final ClassWriter cw, final byte[] code, final int len,
             final int maxStack, final int maxLocals) {
         Attribute attr = this;
@@ -242,6 +253,7 @@ public class Attribute {
      * @param out
      *            where the attributes must be written.
      */
+    @Impure
     final void put(final ClassWriter cw, final byte[] code, final int len,
             final int maxStack, final int maxLocals, final ByteVector out) {
         Attribute attr = this;

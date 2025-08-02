@@ -29,6 +29,7 @@
  */
 package org1.objectweb.asm.xml;
 
+import org.checkerframework.dataflow.qual.Impure;
 import org1.objectweb.asm.AnnotationVisitor;
 import org1.objectweb.asm.FieldVisitor;
 import org1.objectweb.asm.Opcodes;
@@ -44,12 +45,14 @@ public final class SAXFieldAdapter extends FieldVisitor {
 
     SAXAdapter sa;
 
+    @Impure
     public SAXFieldAdapter(final SAXAdapter sa, final Attributes att) {
         super(Opcodes.ASM5);
         this.sa = sa;
         sa.addStart("field", att);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitAnnotation(final String desc,
             final boolean visible) {
@@ -57,6 +60,7 @@ public final class SAXFieldAdapter extends FieldVisitor {
                 null, desc);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitTypeAnnotation(int typeRef,
             TypePath typePath, String desc, boolean visible) {
@@ -64,6 +68,7 @@ public final class SAXFieldAdapter extends FieldVisitor {
                 null, desc, typeRef, typePath);
     }
 
+    @Impure
     @Override
     public void visitEnd() {
         sa.addEnd("field");

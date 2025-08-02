@@ -29,6 +29,9 @@
  */
 package org1.objectweb.asm.optimizer;
 
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import java.util.Arrays;
 
 import org1.objectweb.asm.ClassWriter;
@@ -101,9 +104,11 @@ class Constant {
      */
     int hashCode;
 
+    @SideEffectFree
     Constant() {
     }
 
+    @SideEffectFree
     Constant(final Constant i) {
         type = i.type;
         intVal = i.intVal;
@@ -123,6 +128,7 @@ class Constant {
      * @param intVal
      *            the value of this item.
      */
+    @Impure
     void set(final int intVal) {
         this.type = 'I';
         this.intVal = intVal;
@@ -135,6 +141,7 @@ class Constant {
      * @param longVal
      *            the value of this item.
      */
+    @Impure
     void set(final long longVal) {
         this.type = 'J';
         this.longVal = longVal;
@@ -147,6 +154,7 @@ class Constant {
      * @param floatVal
      *            the value of this item.
      */
+    @Impure
     void set(final float floatVal) {
         this.type = 'F';
         this.floatVal = floatVal;
@@ -159,6 +167,7 @@ class Constant {
      * @param doubleVal
      *            the value of this item.
      */
+    @Impure
     void set(final double doubleVal) {
         this.type = 'D';
         this.doubleVal = doubleVal;
@@ -177,6 +186,7 @@ class Constant {
      * @param strVal3
      *            third part of the value of this item.
      */
+    @Impure
     void set(final char type, final String strVal1, final String strVal2,
             final String strVal3) {
         this.type = type;
@@ -216,6 +226,7 @@ class Constant {
      * @param bsmArgs
      *            bootstrap method constant arguments.
      */
+    @Impure
     void set(final String name, final String desc, final Handle bsm,
             final Object[] bsmArgs) {
         this.type = 'y';
@@ -231,6 +242,7 @@ class Constant {
         this.hashCode = 0x7FFFFFFF & hashCode;
     }
 
+    @Impure
     void write(final ClassWriter cw) {
         switch (type) {
         case 'I':
@@ -277,6 +289,7 @@ class Constant {
         }
     }
 
+    @Pure
     @Override
     public boolean equals(final Object o) {
         if (!(o instanceof Constant)) {
@@ -316,6 +329,7 @@ class Constant {
         return false;
     }
 
+    @Pure
     @Override
     public int hashCode() {
         return hashCode;

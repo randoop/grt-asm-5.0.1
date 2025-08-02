@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.tree;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -219,6 +221,7 @@ public class MethodNode extends MethodVisitor {
      * @throws IllegalStateException
      *             If a subclass calls this constructor.
      */
+    @Impure
     public MethodNode() {
         this(Opcodes.ASM5);
         if (getClass() != MethodNode.class) {
@@ -233,6 +236,7 @@ public class MethodNode extends MethodVisitor {
      *            the ASM API version implemented by this visitor. Must be one
      *            of {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
      */
+    @Impure
     public MethodNode(final int api) {
         super(api);
         this.instructions = new InsnList();
@@ -260,6 +264,7 @@ public class MethodNode extends MethodVisitor {
      * @throws IllegalStateException
      *             If a subclass calls this constructor.
      */
+    @Impure
     public MethodNode(final int access, final String name, final String desc,
             final String signature, final String[] exceptions) {
         this(Opcodes.ASM5, access, name, desc, signature, exceptions);
@@ -289,6 +294,7 @@ public class MethodNode extends MethodVisitor {
      *            {@link Type#getInternalName() getInternalName}). May be
      *            <tt>null</tt>.
      */
+    @Impure
     public MethodNode(final int api, final int access, final String name,
             final String desc, final String signature, final String[] exceptions) {
         super(api);
@@ -313,6 +319,7 @@ public class MethodNode extends MethodVisitor {
     // Implementation of the MethodVisitor abstract class
     // ------------------------------------------------------------------------
 
+    @Impure
     @Override
     public void visitParameter(String name, int access) {
         if (parameters == null) {
@@ -321,6 +328,7 @@ public class MethodNode extends MethodVisitor {
         parameters.add(new ParameterNode(name, access));
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitAnnotationDefault() {
         return new AnnotationNode(new ArrayList<Object>(0) {
@@ -332,6 +340,7 @@ public class MethodNode extends MethodVisitor {
         });
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitAnnotation(final String desc,
             final boolean visible) {
@@ -350,6 +359,7 @@ public class MethodNode extends MethodVisitor {
         return an;
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitTypeAnnotation(int typeRef,
             TypePath typePath, String desc, boolean visible) {
@@ -368,6 +378,7 @@ public class MethodNode extends MethodVisitor {
         return an;
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitParameterAnnotation(final int parameter,
             final String desc, final boolean visible) {
@@ -396,6 +407,7 @@ public class MethodNode extends MethodVisitor {
         return an;
     }
 
+    @Impure
     @Override
     public void visitAttribute(final Attribute attr) {
         if (attrs == null) {
@@ -404,10 +416,12 @@ public class MethodNode extends MethodVisitor {
         attrs.add(attr);
     }
 
+    @SideEffectFree
     @Override
     public void visitCode() {
     }
 
+    @Impure
     @Override
     public void visitFrame(final int type, final int nLocal,
             final Object[] local, final int nStack, final Object[] stack) {
@@ -416,32 +430,38 @@ public class MethodNode extends MethodVisitor {
                 : getLabelNodes(stack)));
     }
 
+    @Impure
     @Override
     public void visitInsn(final int opcode) {
         instructions.add(new InsnNode(opcode));
     }
 
+    @Impure
     @Override
     public void visitIntInsn(final int opcode, final int operand) {
         instructions.add(new IntInsnNode(opcode, operand));
     }
 
+    @Impure
     @Override
     public void visitVarInsn(final int opcode, final int var) {
         instructions.add(new VarInsnNode(opcode, var));
     }
 
+    @Impure
     @Override
     public void visitTypeInsn(final int opcode, final String type) {
         instructions.add(new TypeInsnNode(opcode, type));
     }
 
+    @Impure
     @Override
     public void visitFieldInsn(final int opcode, final String owner,
             final String name, final String desc) {
         instructions.add(new FieldInsnNode(opcode, owner, name, desc));
     }
 
+    @Impure
     @Deprecated
     @Override
     public void visitMethodInsn(int opcode, String owner, String name,
@@ -453,6 +473,7 @@ public class MethodNode extends MethodVisitor {
         instructions.add(new MethodInsnNode(opcode, owner, name, desc));
     }
 
+    @Impure
     @Override
     public void visitMethodInsn(int opcode, String owner, String name,
             String desc, boolean itf) {
@@ -463,32 +484,38 @@ public class MethodNode extends MethodVisitor {
         instructions.add(new MethodInsnNode(opcode, owner, name, desc, itf));
     }
 
+    @Impure
     @Override
     public void visitInvokeDynamicInsn(String name, String desc, Handle bsm,
             Object... bsmArgs) {
         instructions.add(new InvokeDynamicInsnNode(name, desc, bsm, bsmArgs));
     }
 
+    @Impure
     @Override
     public void visitJumpInsn(final int opcode, final Label label) {
         instructions.add(new JumpInsnNode(opcode, getLabelNode(label)));
     }
 
+    @Impure
     @Override
     public void visitLabel(final Label label) {
         instructions.add(getLabelNode(label));
     }
 
+    @Impure
     @Override
     public void visitLdcInsn(final Object cst) {
         instructions.add(new LdcInsnNode(cst));
     }
 
+    @Impure
     @Override
     public void visitIincInsn(final int var, final int increment) {
         instructions.add(new IincInsnNode(var, increment));
     }
 
+    @Impure
     @Override
     public void visitTableSwitchInsn(final int min, final int max,
             final Label dflt, final Label... labels) {
@@ -496,6 +523,7 @@ public class MethodNode extends MethodVisitor {
                 getLabelNodes(labels)));
     }
 
+    @Impure
     @Override
     public void visitLookupSwitchInsn(final Label dflt, final int[] keys,
             final Label[] labels) {
@@ -503,11 +531,13 @@ public class MethodNode extends MethodVisitor {
                 getLabelNodes(labels)));
     }
 
+    @Impure
     @Override
     public void visitMultiANewArrayInsn(final String desc, final int dims) {
         instructions.add(new MultiANewArrayInsnNode(desc, dims));
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitInsnAnnotation(int typeRef,
             TypePath typePath, String desc, boolean visible) {
@@ -535,6 +565,7 @@ public class MethodNode extends MethodVisitor {
         return an;
     }
 
+    @Impure
     @Override
     public void visitTryCatchBlock(final Label start, final Label end,
             final Label handler, final String type) {
@@ -542,6 +573,7 @@ public class MethodNode extends MethodVisitor {
                 getLabelNode(end), getLabelNode(handler), type));
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitTryCatchAnnotation(int typeRef,
             TypePath typePath, String desc, boolean visible) {
@@ -563,6 +595,7 @@ public class MethodNode extends MethodVisitor {
         return an;
     }
 
+    @Impure
     @Override
     public void visitLocalVariable(final String name, final String desc,
             final String signature, final Label start, final Label end,
@@ -571,6 +604,7 @@ public class MethodNode extends MethodVisitor {
                 getLabelNode(start), getLabelNode(end), index));
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitLocalVariableAnnotation(int typeRef,
             TypePath typePath, Label[] start, Label[] end, int[] index,
@@ -594,17 +628,20 @@ public class MethodNode extends MethodVisitor {
         return an;
     }
 
+    @Impure
     @Override
     public void visitLineNumber(final int line, final Label start) {
         instructions.add(new LineNumberNode(line, getLabelNode(start)));
     }
 
+    @Impure
     @Override
     public void visitMaxs(final int maxStack, final int maxLocals) {
         this.maxStack = maxStack;
         this.maxLocals = maxLocals;
     }
 
+    @Impure
     @Override
     public void visitEnd() {
     }
@@ -619,6 +656,7 @@ public class MethodNode extends MethodVisitor {
      *            a Label.
      * @return the LabelNode corresponding to l.
      */
+    @Impure
     protected LabelNode getLabelNode(final Label l) {
         if (!(l.info instanceof LabelNode)) {
             l.info = new LabelNode();
@@ -626,6 +664,7 @@ public class MethodNode extends MethodVisitor {
         return (LabelNode) l.info;
     }
 
+    @Impure
     private LabelNode[] getLabelNodes(final Label[] l) {
         LabelNode[] nodes = new LabelNode[l.length];
         for (int i = 0; i < l.length; ++i) {
@@ -634,6 +673,7 @@ public class MethodNode extends MethodVisitor {
         return nodes;
     }
 
+    @Impure
     private Object[] getLabelNodes(final Object[] objs) {
         Object[] nodes = new Object[objs.length];
         for (int i = 0; i < objs.length; ++i) {
@@ -660,6 +700,7 @@ public class MethodNode extends MethodVisitor {
      *            an ASM API version. Must be one of {@link Opcodes#ASM4} or
      *            {@link Opcodes#ASM5}.
      */
+    @Impure
     public void check(final int api) {
         if (api == Opcodes.ASM4) {
             if (visibleTypeAnnotations != null
@@ -716,6 +757,7 @@ public class MethodNode extends MethodVisitor {
      * @param cv
      *            a class visitor.
      */
+    @Impure
     public void accept(final ClassVisitor cv) {
         String[] exceptions = new String[this.exceptions.size()];
         this.exceptions.toArray(exceptions);
@@ -732,6 +774,7 @@ public class MethodNode extends MethodVisitor {
      * @param mv
      *            a method visitor.
      */
+    @Impure
     public void accept(final MethodVisitor mv) {
         // visits the method parameters
         int i, j, n;

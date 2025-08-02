@@ -30,6 +30,8 @@
 
 package org1.objectweb.asm.commons;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import org1.objectweb.asm.AnnotationVisitor;
 import org1.objectweb.asm.ClassVisitor;
 import org1.objectweb.asm.FieldVisitor;
@@ -48,16 +50,21 @@ public class RemappingClassAdapter extends ClassVisitor {
 
     protected String className;
 
+    @SideEffectFree
+    @Impure
     public RemappingClassAdapter(final ClassVisitor cv, final Remapper remapper) {
         this(Opcodes.ASM5, cv, remapper);
     }
 
+    @SideEffectFree
+    @Impure
     protected RemappingClassAdapter(final int api, final ClassVisitor cv,
             final Remapper remapper) {
         super(api, cv);
         this.remapper = remapper;
     }
 
+    @Impure
     @Override
     public void visit(int version, int access, String name, String signature,
             String superName, String[] interfaces) {
@@ -67,6 +74,7 @@ public class RemappingClassAdapter extends ClassVisitor {
                 interfaces == null ? null : remapper.mapTypes(interfaces));
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
         AnnotationVisitor av = super.visitAnnotation(remapper.mapDesc(desc),
@@ -74,6 +82,7 @@ public class RemappingClassAdapter extends ClassVisitor {
         return av == null ? null : createRemappingAnnotationAdapter(av);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitTypeAnnotation(int typeRef,
             TypePath typePath, String desc, boolean visible) {
@@ -82,6 +91,7 @@ public class RemappingClassAdapter extends ClassVisitor {
         return av == null ? null : createRemappingAnnotationAdapter(av);
     }
 
+    @Impure
     @Override
     public FieldVisitor visitField(int access, String name, String desc,
             String signature, Object value) {
@@ -92,6 +102,7 @@ public class RemappingClassAdapter extends ClassVisitor {
         return fv == null ? null : createRemappingFieldAdapter(fv);
     }
 
+    @Impure
     @Override
     public MethodVisitor visitMethod(int access, String name, String desc,
             String signature, String[] exceptions) {
@@ -104,6 +115,7 @@ public class RemappingClassAdapter extends ClassVisitor {
                 newDesc, mv);
     }
 
+    @Impure
     @Override
     public void visitInnerClass(String name, String outerName,
             String innerName, int access) {
@@ -112,6 +124,7 @@ public class RemappingClassAdapter extends ClassVisitor {
                 : remapper.mapType(outerName), innerName, access);
     }
 
+    @Impure
     @Override
     public void visitOuterClass(String owner, String name, String desc) {
         super.visitOuterClass(remapper.mapType(owner), name == null ? null
@@ -119,15 +132,20 @@ public class RemappingClassAdapter extends ClassVisitor {
                 desc == null ? null : remapper.mapMethodDesc(desc));
     }
 
+    @SideEffectFree
+    @Impure
     protected FieldVisitor createRemappingFieldAdapter(FieldVisitor fv) {
         return new RemappingFieldAdapter(fv, remapper);
     }
 
+    @Impure
     protected MethodVisitor createRemappingMethodAdapter(int access,
             String newDesc, MethodVisitor mv) {
         return new RemappingMethodAdapter(access, newDesc, mv, remapper);
     }
 
+    @SideEffectFree
+    @Impure
     protected AnnotationVisitor createRemappingAnnotationAdapter(
             AnnotationVisitor av) {
         return new RemappingAnnotationAdapter(av, remapper);

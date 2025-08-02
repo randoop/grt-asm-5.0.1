@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.util;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import java.io.FileInputStream;
 import java.io.PrintWriter;
 import java.util.HashMap;
@@ -152,6 +154,7 @@ public class Textifier extends Printer {
      * @throws IllegalStateException
      *             If a subclass calls this constructor.
      */
+    @Impure
     public Textifier() {
         this(Opcodes.ASM5);
         if (getClass() != Textifier.class) {
@@ -166,6 +169,7 @@ public class Textifier extends Printer {
      *            the ASM API version implemented by this visitor. Must be one
      *            of {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
      */
+    @Impure
     protected Textifier(final int api) {
         super(api);
     }
@@ -181,6 +185,7 @@ public class Textifier extends Printer {
      * @throws Exception
      *             if the class cannot be found, or if an IO exception occurs.
      */
+    @Impure
     public static void main(final String[] args) throws Exception {
         int i = 0;
         int flags = ClassReader.SKIP_DEBUG;
@@ -217,6 +222,7 @@ public class Textifier extends Printer {
     // Classes
     // ------------------------------------------------------------------------
 
+    @Impure
     @Override
     public void visit(final int version, final int access, final String name,
             final String signature, final String superName,
@@ -269,6 +275,7 @@ public class Textifier extends Printer {
         text.add(buf.toString());
     }
 
+    @Impure
     @Override
     public void visitSource(final String file, final String debug) {
         buf.setLength(0);
@@ -285,6 +292,7 @@ public class Textifier extends Printer {
         }
     }
 
+    @Impure
     @Override
     public void visitOuterClass(final String owner, final String name,
             final String desc) {
@@ -300,6 +308,7 @@ public class Textifier extends Printer {
         text.add(buf.toString());
     }
 
+    @Impure
     @Override
     public Textifier visitClassAnnotation(final String desc,
             final boolean visible) {
@@ -307,6 +316,7 @@ public class Textifier extends Printer {
         return visitAnnotation(desc, visible);
     }
 
+    @Impure
     @Override
     public Printer visitClassTypeAnnotation(int typeRef, TypePath typePath,
             String desc, boolean visible) {
@@ -314,12 +324,14 @@ public class Textifier extends Printer {
         return visitTypeAnnotation(typeRef, typePath, desc, visible);
     }
 
+    @Impure
     @Override
     public void visitClassAttribute(final Attribute attr) {
         text.add("\n");
         visitAttribute(attr);
     }
 
+    @Impure
     @Override
     public void visitInnerClass(final String name, final String outerName,
             final String innerName, final int access) {
@@ -340,6 +352,7 @@ public class Textifier extends Printer {
         text.add(buf.toString());
     }
 
+    @Impure
     @Override
     public Textifier visitField(final int access, final String name,
             final String desc, final String signature, final Object value) {
@@ -383,6 +396,7 @@ public class Textifier extends Printer {
         return t;
     }
 
+    @Impure
     @Override
     public Textifier visitMethod(final int access, final String name,
             final String desc, final String signature, final String[] exceptions) {
@@ -448,6 +462,7 @@ public class Textifier extends Printer {
         return t;
     }
 
+    @Impure
     @Override
     public void visitClassEnd() {
         text.add("}\n");
@@ -457,6 +472,7 @@ public class Textifier extends Printer {
     // Annotations
     // ------------------------------------------------------------------------
 
+    @Impure
     @Override
     public void visit(final String name, final Object value) {
         buf.setLength(0);
@@ -543,46 +559,57 @@ public class Textifier extends Printer {
         text.add(buf.toString());
     }
 
+    @Impure
     private void visitInt(final int value) {
         buf.append(value);
     }
 
+    @Impure
     private void visitLong(final long value) {
         buf.append(value).append('L');
     }
 
+    @Impure
     private void visitFloat(final float value) {
         buf.append(value).append('F');
     }
 
+    @Impure
     private void visitDouble(final double value) {
         buf.append(value).append('D');
     }
 
+    @Impure
     private void visitChar(final char value) {
         buf.append("(char)").append((int) value);
     }
 
+    @Impure
     private void visitShort(final short value) {
         buf.append("(short)").append(value);
     }
 
+    @Impure
     private void visitByte(final byte value) {
         buf.append("(byte)").append(value);
     }
 
+    @Impure
     private void visitBoolean(final boolean value) {
         buf.append(value);
     }
 
+    @Impure
     private void visitString(final String value) {
         appendString(buf, value);
     }
 
+    @Impure
     private void visitType(final Type value) {
         buf.append(value.getClassName()).append(".class");
     }
 
+    @Impure
     @Override
     public void visitEnum(final String name, final String desc,
             final String value) {
@@ -596,6 +623,7 @@ public class Textifier extends Printer {
         text.add(buf.toString());
     }
 
+    @Impure
     @Override
     public Textifier visitAnnotation(final String name, final String desc) {
         buf.setLength(0);
@@ -613,6 +641,7 @@ public class Textifier extends Printer {
         return t;
     }
 
+    @Impure
     @Override
     public Textifier visitArray(final String name) {
         buf.setLength(0);
@@ -628,6 +657,7 @@ public class Textifier extends Printer {
         return t;
     }
 
+    @SideEffectFree
     @Override
     public void visitAnnotationEnd() {
     }
@@ -636,23 +666,27 @@ public class Textifier extends Printer {
     // Fields
     // ------------------------------------------------------------------------
 
+    @Impure
     @Override
     public Textifier visitFieldAnnotation(final String desc,
             final boolean visible) {
         return visitAnnotation(desc, visible);
     }
 
+    @Impure
     @Override
     public Printer visitFieldTypeAnnotation(int typeRef, TypePath typePath,
             String desc, boolean visible) {
         return visitTypeAnnotation(typeRef, typePath, desc, visible);
     }
 
+    @Impure
     @Override
     public void visitFieldAttribute(final Attribute attr) {
         visitAttribute(attr);
     }
 
+    @SideEffectFree
     @Override
     public void visitFieldEnd() {
     }
@@ -661,6 +695,7 @@ public class Textifier extends Printer {
     // Methods
     // ------------------------------------------------------------------------
 
+    @Impure
     @Override
     public void visitParameter(final String name, final int access) {
         buf.setLength(0);
@@ -671,6 +706,7 @@ public class Textifier extends Printer {
         text.add(buf.toString());
     }
 
+    @Impure
     @Override
     public Textifier visitAnnotationDefault() {
         text.add(tab2 + "default=");
@@ -680,18 +716,21 @@ public class Textifier extends Printer {
         return t;
     }
 
+    @Impure
     @Override
     public Textifier visitMethodAnnotation(final String desc,
             final boolean visible) {
         return visitAnnotation(desc, visible);
     }
 
+    @Impure
     @Override
     public Printer visitMethodTypeAnnotation(int typeRef, TypePath typePath,
             String desc, boolean visible) {
         return visitTypeAnnotation(typeRef, typePath, desc, visible);
     }
 
+    @Impure
     @Override
     public Textifier visitParameterAnnotation(final int parameter,
             final String desc, final boolean visible) {
@@ -708,6 +747,7 @@ public class Textifier extends Printer {
         return t;
     }
 
+    @Impure
     @Override
     public void visitMethodAttribute(final Attribute attr) {
         buf.setLength(0);
@@ -723,10 +763,12 @@ public class Textifier extends Printer {
         text.add(buf.toString());
     }
 
+    @SideEffectFree
     @Override
     public void visitCode() {
     }
 
+    @Impure
     @Override
     public void visitFrame(final int type, final int nLocal,
             final Object[] local, final int nStack, final Object[] stack) {
@@ -762,6 +804,7 @@ public class Textifier extends Printer {
         text.add(buf.toString());
     }
 
+    @Impure
     @Override
     public void visitInsn(final int opcode) {
         buf.setLength(0);
@@ -769,6 +812,7 @@ public class Textifier extends Printer {
         text.add(buf.toString());
     }
 
+    @Impure
     @Override
     public void visitIntInsn(final int opcode, final int operand) {
         buf.setLength(0);
@@ -780,6 +824,7 @@ public class Textifier extends Printer {
         text.add(buf.toString());
     }
 
+    @Impure
     @Override
     public void visitVarInsn(final int opcode, final int var) {
         buf.setLength(0);
@@ -788,6 +833,7 @@ public class Textifier extends Printer {
         text.add(buf.toString());
     }
 
+    @Impure
     @Override
     public void visitTypeInsn(final int opcode, final String type) {
         buf.setLength(0);
@@ -797,6 +843,7 @@ public class Textifier extends Printer {
         text.add(buf.toString());
     }
 
+    @Impure
     @Override
     public void visitFieldInsn(final int opcode, final String owner,
             final String name, final String desc) {
@@ -809,6 +856,7 @@ public class Textifier extends Printer {
         text.add(buf.toString());
     }
 
+    @Impure
     @Deprecated
     @Override
     public void visitMethodInsn(final int opcode, final String owner,
@@ -821,6 +869,7 @@ public class Textifier extends Printer {
                 opcode == Opcodes.INVOKEINTERFACE);
     }
 
+    @Impure
     @Override
     public void visitMethodInsn(final int opcode, final String owner,
             final String name, final String desc, final boolean itf) {
@@ -831,6 +880,7 @@ public class Textifier extends Printer {
         doVisitMethodInsn(opcode, owner, name, desc, itf);
     }
 
+    @Impure
     private void doVisitMethodInsn(final int opcode, final String owner,
             final String name, final String desc, final boolean itf) {
         buf.setLength(0);
@@ -842,6 +892,7 @@ public class Textifier extends Printer {
         text.add(buf.toString());
     }
 
+    @Impure
     @Override
     public void visitInvokeDynamicInsn(String name, String desc, Handle bsm,
             Object... bsmArgs) {
@@ -885,6 +936,7 @@ public class Textifier extends Printer {
         text.add(buf.toString());
     }
 
+    @Impure
     @Override
     public void visitJumpInsn(final int opcode, final Label label) {
         buf.setLength(0);
@@ -894,6 +946,7 @@ public class Textifier extends Printer {
         text.add(buf.toString());
     }
 
+    @Impure
     @Override
     public void visitLabel(final Label label) {
         buf.setLength(0);
@@ -903,6 +956,7 @@ public class Textifier extends Printer {
         text.add(buf.toString());
     }
 
+    @Impure
     @Override
     public void visitLdcInsn(final Object cst) {
         buf.setLength(0);
@@ -918,6 +972,7 @@ public class Textifier extends Printer {
         text.add(buf.toString());
     }
 
+    @Impure
     @Override
     public void visitIincInsn(final int var, final int increment) {
         buf.setLength(0);
@@ -926,6 +981,7 @@ public class Textifier extends Printer {
         text.add(buf.toString());
     }
 
+    @Impure
     @Override
     public void visitTableSwitchInsn(final int min, final int max,
             final Label dflt, final Label... labels) {
@@ -942,6 +998,7 @@ public class Textifier extends Printer {
         text.add(buf.toString());
     }
 
+    @Impure
     @Override
     public void visitLookupSwitchInsn(final Label dflt, final int[] keys,
             final Label[] labels) {
@@ -958,6 +1015,7 @@ public class Textifier extends Printer {
         text.add(buf.toString());
     }
 
+    @Impure
     @Override
     public void visitMultiANewArrayInsn(final String desc, final int dims) {
         buf.setLength(0);
@@ -967,12 +1025,14 @@ public class Textifier extends Printer {
         text.add(buf.toString());
     }
 
+    @Impure
     @Override
     public Printer visitInsnAnnotation(int typeRef, TypePath typePath,
             String desc, boolean visible) {
         return visitTypeAnnotation(typeRef, typePath, desc, visible);
     }
 
+    @Impure
     @Override
     public void visitTryCatchBlock(final Label start, final Label end,
             final Label handler, final String type) {
@@ -989,6 +1049,7 @@ public class Textifier extends Printer {
         text.add(buf.toString());
     }
 
+    @Impure
     @Override
     public Printer visitTryCatchAnnotation(int typeRef, TypePath typePath,
             String desc, boolean visible) {
@@ -1008,6 +1069,7 @@ public class Textifier extends Printer {
         return t;
     }
 
+    @Impure
     @Override
     public void visitLocalVariable(final String name, final String desc,
             final String signature, final Label start, final Label end,
@@ -1034,6 +1096,7 @@ public class Textifier extends Printer {
         text.add(buf.toString());
     }
 
+    @Impure
     @Override
     public Printer visitLocalVariableAnnotation(int typeRef, TypePath typePath,
             Label[] start, Label[] end, int[] index, String desc,
@@ -1061,6 +1124,7 @@ public class Textifier extends Printer {
         return t;
     }
 
+    @Impure
     @Override
     public void visitLineNumber(final int line, final Label start) {
         buf.setLength(0);
@@ -1070,6 +1134,7 @@ public class Textifier extends Printer {
         text.add(buf.toString());
     }
 
+    @Impure
     @Override
     public void visitMaxs(final int maxStack, final int maxLocals) {
         buf.setLength(0);
@@ -1081,6 +1146,7 @@ public class Textifier extends Printer {
         text.add(buf.toString());
     }
 
+    @SideEffectFree
     @Override
     public void visitMethodEnd() {
     }
@@ -1098,6 +1164,7 @@ public class Textifier extends Printer {
      *            <tt>true</tt> if the annotation is visible at runtime.
      * @return a visitor to visit the annotation values.
      */
+    @Impure
     public Textifier visitAnnotation(final String desc, final boolean visible) {
         buf.setLength(0);
         buf.append(tab).append('@');
@@ -1125,6 +1192,7 @@ public class Textifier extends Printer {
      *            <tt>true</tt> if the annotation is visible at runtime.
      * @return a visitor to visit the annotation values.
      */
+    @Impure
     public Textifier visitTypeAnnotation(final int typeRef,
             final TypePath typePath, final String desc, final boolean visible) {
         buf.setLength(0);
@@ -1149,6 +1217,7 @@ public class Textifier extends Printer {
      * @param attr
      *            an attribute.
      */
+    @Impure
     public void visitAttribute(final Attribute attr) {
         buf.setLength(0);
         buf.append(tab).append("ATTRIBUTE ");
@@ -1172,6 +1241,7 @@ public class Textifier extends Printer {
      *
      * @return a new TraceVisitor.
      */
+    @Impure
     protected Textifier createTextifier() {
         return new Textifier();
     }
@@ -1187,6 +1257,7 @@ public class Textifier extends Printer {
      *            an internal name, type descriptor, or type signature. May be
      *            <tt>null</tt>.
      */
+    @Impure
     protected void appendDescriptor(final int type, final String desc) {
         if (type == CLASS_SIGNATURE || type == FIELD_SIGNATURE
                 || type == METHOD_SIGNATURE) {
@@ -1205,6 +1276,7 @@ public class Textifier extends Printer {
      * @param l
      *            a label.
      */
+    @Impure
     protected void appendLabel(final Label l) {
         if (labelNames == null) {
             labelNames = new HashMap<Label, String>();
@@ -1223,6 +1295,7 @@ public class Textifier extends Printer {
      * @param h
      *            a handle, non null.
      */
+    @Impure
     protected void appendHandle(final Handle h) {
         int tag = h.getTag();
         buf.append("// handle kind 0x").append(Integer.toHexString(tag))
@@ -1283,6 +1356,7 @@ public class Textifier extends Printer {
      * @param access
      *            some access modifiers.
      */
+    @Impure
     private void appendAccess(final int access) {
         if ((access & Opcodes.ACC_PUBLIC) != 0) {
             buf.append("public ");
@@ -1325,12 +1399,14 @@ public class Textifier extends Printer {
         }
     }
 
+    @Impure
     private void appendComa(final int i) {
         if (i != 0) {
             buf.append(", ");
         }
     }
 
+    @Impure
     private void appendTypeReference(final int typeRef) {
         TypeReference ref = new TypeReference(typeRef);
         switch (ref.getSort()) {
@@ -1415,6 +1491,7 @@ public class Textifier extends Printer {
         }
     }
 
+    @Impure
     private void appendFrameTypes(final int n, final Object[] o) {
         for (int i = 0; i < n; ++i) {
             if (i > 0) {

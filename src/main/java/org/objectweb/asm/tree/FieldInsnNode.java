@@ -29,6 +29,9 @@
  */
 package org1.objectweb.asm.tree;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
 import java.util.Map;
 
 import org1.objectweb.asm.MethodVisitor;
@@ -72,6 +75,8 @@ public class FieldInsnNode extends AbstractInsnNode {
      * @param desc
      *            the field's descriptor (see {@link org1.objectweb.asm.Type}).
      */
+    @SideEffectFree
+    @Impure
     public FieldInsnNode(final int opcode, final String owner,
             final String name, final String desc) {
         super(opcode);
@@ -87,21 +92,25 @@ public class FieldInsnNode extends AbstractInsnNode {
      *            the new instruction opcode. This opcode must be GETSTATIC,
      *            PUTSTATIC, GETFIELD or PUTFIELD.
      */
+    @Impure
     public void setOpcode(final int opcode) {
         this.opcode = opcode;
     }
 
+    @Pure
     @Override
     public int getType() {
         return FIELD_INSN;
     }
 
+    @Impure
     @Override
     public void accept(final MethodVisitor mv) {
         mv.visitFieldInsn(opcode, owner, name, desc);
         acceptAnnotations(mv);
     }
 
+    @Impure
     @Override
     public AbstractInsnNode clone(final Map<LabelNode, LabelNode> labels) {
         return new FieldInsnNode(opcode, owner, name, desc)

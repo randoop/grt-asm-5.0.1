@@ -29,6 +29,9 @@
  */
 
 package org1.objectweb.asm;
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
  * A reference to a type appearing in a class, field or method declaration, or
@@ -186,6 +189,7 @@ public class TypeReference {
      *            visit method related to type annotations, like
      *            visitTypeAnnotation.
      */
+    @SideEffectFree
     public TypeReference(int typeRef) {
         this.value = typeRef;
     }
@@ -203,6 +207,8 @@ public class TypeReference {
      *            {@link #METHOD_REFERENCE METHOD_REFERENCE}.
      * @return a type reference of the given sort.
      */
+    @SideEffectFree
+    @Impure
     public static TypeReference newTypeReference(int sort) {
         return new TypeReference(sort << 24);
     }
@@ -217,6 +223,8 @@ public class TypeReference {
      *            the type parameter index.
      * @return a reference to the given generic class or method type parameter.
      */
+    @SideEffectFree
+    @Impure
     public static TypeReference newTypeParameterReference(int sort,
             int paramIndex) {
         return new TypeReference((sort << 24) | (paramIndex << 16));
@@ -236,6 +244,8 @@ public class TypeReference {
      * @return a reference to the given generic class or method type parameter
      *         bound.
      */
+    @SideEffectFree
+    @Impure
     public static TypeReference newTypeParameterBoundReference(int sort,
             int paramIndex, int boundIndex) {
         return new TypeReference((sort << 24) | (paramIndex << 16)
@@ -251,6 +261,8 @@ public class TypeReference {
      *            class, or -1 to reference the super class of the class.
      * @return a reference to the given super type of a class.
      */
+    @SideEffectFree
+    @Impure
     public static TypeReference newSuperTypeReference(int itfIndex) {
         itfIndex &= 0xFFFF;
         return new TypeReference((CLASS_EXTENDS << 24) | (itfIndex << 8));
@@ -264,6 +276,8 @@ public class TypeReference {
      * 
      * @return a reference to the type of the given method formal parameter.
      */
+    @SideEffectFree
+    @Impure
     public static TypeReference newFormalParameterReference(int paramIndex) {
         return new TypeReference((METHOD_FORMAL_PARAMETER << 24)
                 | (paramIndex << 16));
@@ -278,6 +292,8 @@ public class TypeReference {
      * 
      * @return a reference to the type of the given exception.
      */
+    @SideEffectFree
+    @Impure
     public static TypeReference newExceptionReference(int exceptionIndex) {
         return new TypeReference((THROWS << 24) | (exceptionIndex << 8));
     }
@@ -292,6 +308,8 @@ public class TypeReference {
      * 
      * @return a reference to the type of the given exception.
      */
+    @SideEffectFree
+    @Impure
     public static TypeReference newTryCatchReference(int tryCatchBlockIndex) {
         return new TypeReference((EXCEPTION_PARAMETER << 24)
                 | (tryCatchBlockIndex << 8));
@@ -316,6 +334,8 @@ public class TypeReference {
      * 
      * @return a reference to the type of the given type argument.
      */
+    @SideEffectFree
+    @Impure
     public static TypeReference newTypeArgumentReference(int sort, int argIndex) {
         return new TypeReference((sort << 24) | argIndex);
     }
@@ -346,6 +366,7 @@ public class TypeReference {
      *         {@link #METHOD_REFERENCE_TYPE_ARGUMENT
      *         METHOD_REFERENCE_TYPE_ARGUMENT}.
      */
+    @Pure
     public int getSort() {
         return value >>> 24;
     }
@@ -360,6 +381,7 @@ public class TypeReference {
      * 
      * @return a type parameter index.
      */
+    @Pure
     public int getTypeParameterIndex() {
         return (value & 0x00FF0000) >> 16;
     }
@@ -373,6 +395,7 @@ public class TypeReference {
      * 
      * @return a type parameter bound index.
      */
+    @Pure
     public int getTypeParameterBoundIndex() {
         return (value & 0x0000FF00) >> 8;
     }
@@ -386,6 +409,7 @@ public class TypeReference {
      *         or -1 if this type reference references the type of the super
      *         class.
      */
+    @Pure
     public int getSuperTypeIndex() {
         return (short) ((value & 0x00FFFF00) >> 8);
     }
@@ -397,6 +421,7 @@ public class TypeReference {
      * 
      * @return a formal parameter index.
      */
+    @Pure
     public int getFormalParameterIndex() {
         return (value & 0x00FF0000) >> 16;
     }
@@ -408,6 +433,7 @@ public class TypeReference {
      * 
      * @return the index of an exception in the 'throws' clause of a method.
      */
+    @Pure
     public int getExceptionIndex() {
         return (value & 0x00FFFF00) >> 8;
     }
@@ -420,6 +446,7 @@ public class TypeReference {
      * 
      * @return the index of an exception in the 'throws' clause of a method.
      */
+    @Pure
     public int getTryCatchBlockIndex() {
         return (value & 0x00FFFF00) >> 8;
     }
@@ -436,6 +463,7 @@ public class TypeReference {
      * 
      * @return a type parameter index.
      */
+    @Pure
     public int getTypeArgumentIndex() {
         return value & 0xFF;
     }
@@ -446,6 +474,7 @@ public class TypeReference {
      * 
      * @return the int encoded value of this type reference.
      */
+    @Pure
     public int getValue() {
         return value;
     }

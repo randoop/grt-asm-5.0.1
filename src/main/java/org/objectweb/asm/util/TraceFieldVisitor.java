@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.util;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import org1.objectweb.asm.AnnotationVisitor;
 import org1.objectweb.asm.Attribute;
 import org1.objectweb.asm.FieldVisitor;
@@ -45,15 +47,20 @@ public final class TraceFieldVisitor extends FieldVisitor {
 
     public final Printer p;
 
+    @SideEffectFree
+    @Impure
     public TraceFieldVisitor(final Printer p) {
         this(null, p);
     }
 
+    @SideEffectFree
+    @Impure
     public TraceFieldVisitor(final FieldVisitor fv, final Printer p) {
         super(Opcodes.ASM5, fv);
         this.p = p;
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitAnnotation(final String desc,
             final boolean visible) {
@@ -63,6 +70,7 @@ public final class TraceFieldVisitor extends FieldVisitor {
         return new TraceAnnotationVisitor(av, p);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitTypeAnnotation(int typeRef,
             TypePath typePath, String desc, boolean visible) {
@@ -73,12 +81,14 @@ public final class TraceFieldVisitor extends FieldVisitor {
         return new TraceAnnotationVisitor(av, p);
     }
 
+    @Impure
     @Override
     public void visitAttribute(final Attribute attr) {
         p.visitFieldAttribute(attr);
         super.visitAttribute(attr);
     }
 
+    @Impure
     @Override
     public void visitEnd() {
         p.visitFieldEnd();

@@ -30,6 +30,7 @@
 
 package org1.objectweb.asm.commons;
 
+import org.checkerframework.dataflow.qual.Impure;
 import java.util.Collections;
 import java.util.Map;
 
@@ -42,26 +43,31 @@ public class SimpleRemapper extends Remapper {
 
     private final Map<String, String> mapping;
 
+    @Impure
     public SimpleRemapper(Map<String, String> mapping) {
         this.mapping = mapping;
     }
 
+    @Impure
     public SimpleRemapper(String oldName, String newName) {
         this.mapping = Collections.singletonMap(oldName, newName);
     }
 
+    @Impure
     @Override
     public String mapMethodName(String owner, String name, String desc) {
         String s = map(owner + '.' + name + desc);
         return s == null ? name : s;
     }
 
+    @Impure
     @Override
     public String mapFieldName(String owner, String name, String desc) {
         String s = map(owner + '.' + name);
         return s == null ? name : s;
     }
 
+    @Impure
     @Override
     public String map(String key) {
         return mapping.get(key);

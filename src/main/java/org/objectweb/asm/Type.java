@@ -29,6 +29,9 @@
  */
 package org1.objectweb.asm;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
@@ -199,6 +202,7 @@ public class Type {
      * @param len
      *            the length of this descriptor.
      */
+    @SideEffectFree
     private Type(final int sort, final char[] buf, final int off, final int len) {
         this.sort = sort;
         this.buf = buf;
@@ -213,6 +217,8 @@ public class Type {
      *            a field or method type descriptor.
      * @return the Java type corresponding to the given type descriptor.
      */
+    @SideEffectFree
+    @Impure
     public static Type getType(final String typeDescriptor) {
         return getType(typeDescriptor.toCharArray(), 0);
     }
@@ -224,6 +230,8 @@ public class Type {
      *            an internal name.
      * @return the Java type corresponding to the given internal name.
      */
+    @SideEffectFree
+    @Impure
     public static Type getObjectType(final String internalName) {
         char[] buf = internalName.toCharArray();
         return new Type(buf[0] == '[' ? ARRAY : OBJECT, buf, 0, buf.length);
@@ -237,6 +245,8 @@ public class Type {
      *            a method descriptor.
      * @return the Java type corresponding to the given method descriptor.
      */
+    @SideEffectFree
+    @Impure
     public static Type getMethodType(final String methodDescriptor) {
         return getType(methodDescriptor.toCharArray(), 0);
     }
@@ -252,6 +262,7 @@ public class Type {
      * @return the Java type corresponding to the given argument and return
      *         types.
      */
+    @Impure
     public static Type getMethodType(final Type returnType,
             final Type... argumentTypes) {
         return getType(getMethodDescriptor(returnType, argumentTypes));
@@ -264,6 +275,7 @@ public class Type {
      *            a class.
      * @return the Java type corresponding to the given class.
      */
+    @Impure
     public static Type getType(final Class<?> c) {
         if (c.isPrimitive()) {
             if (c == Integer.TYPE) {
@@ -297,6 +309,7 @@ public class Type {
      *            a {@link Constructor Constructor} object.
      * @return the Java method type corresponding to the given constructor.
      */
+    @Impure
     public static Type getType(final Constructor<?> c) {
         return getType(getConstructorDescriptor(c));
     }
@@ -308,6 +321,7 @@ public class Type {
      *            a {@link Method Method} object.
      * @return the Java method type corresponding to the given method.
      */
+    @Impure
     public static Type getType(final Method m) {
         return getType(getMethodDescriptor(m));
     }
@@ -321,6 +335,7 @@ public class Type {
      * @return the Java types corresponding to the argument types of the given
      *         method descriptor.
      */
+    @Impure
     public static Type[] getArgumentTypes(final String methodDescriptor) {
         char[] buf = methodDescriptor.toCharArray();
         int off = 1;
@@ -357,6 +372,7 @@ public class Type {
      * @return the Java types corresponding to the argument types of the given
      *         method.
      */
+    @Impure
     public static Type[] getArgumentTypes(final Method method) {
         Class<?>[] classes = method.getParameterTypes();
         Type[] types = new Type[classes.length];
@@ -375,6 +391,8 @@ public class Type {
      * @return the Java type corresponding to the return type of the given
      *         method descriptor.
      */
+    @SideEffectFree
+    @Impure
     public static Type getReturnType(final String methodDescriptor) {
         char[] buf = methodDescriptor.toCharArray();
         return getType(buf, methodDescriptor.indexOf(')') + 1);
@@ -389,6 +407,7 @@ public class Type {
      * @return the Java type corresponding to the return type of the given
      *         method.
      */
+    @Impure
     public static Type getReturnType(final Method method) {
         return getType(method.getReturnType());
     }
@@ -404,6 +423,7 @@ public class Type {
      *         <tt>(argSize &lt;&lt; 2) | retSize</tt> (argSize is therefore equal to
      *         <tt>i &gt;&gt; 2</tt>, and retSize to <tt>i &amp; 0x03</tt>).
      */
+    @Pure
     public static int getArgumentsAndReturnSizes(final String desc) {
         int n = 1;
         int c = 1;
@@ -443,6 +463,8 @@ public class Type {
      *            the offset of this descriptor in the previous buffer.
      * @return the Java type corresponding to the given type descriptor.
      */
+    @SideEffectFree
+    @Impure
     private static Type getType(final char[] buf, final int off) {
         int len;
         switch (buf[off]) {
@@ -501,6 +523,7 @@ public class Type {
      *         {@link #ARRAY ARRAY}, {@link #OBJECT OBJECT} or {@link #METHOD
      *         METHOD}.
      */
+    @Pure
     public int getSort() {
         return sort;
     }
@@ -511,6 +534,7 @@ public class Type {
      * 
      * @return the number of dimensions of this array type.
      */
+    @Pure
     public int getDimensions() {
         int i = 1;
         while (buf[off + i] == '[') {
@@ -525,6 +549,8 @@ public class Type {
      * 
      * @return Returns the type of the elements of this array type.
      */
+    @SideEffectFree
+    @Impure
     public Type getElementType() {
         return getType(buf, off + getDimensions());
     }
@@ -535,6 +561,7 @@ public class Type {
      * 
      * @return the binary name of the class corresponding to this type.
      */
+    @Impure
     public String getClassName() {
         switch (sort) {
         case VOID:
@@ -576,6 +603,7 @@ public class Type {
      * 
      * @return the internal name of the class corresponding to this object type.
      */
+    @SideEffectFree
     public String getInternalName() {
         return new String(buf, off, len);
     }
@@ -586,6 +614,7 @@ public class Type {
      * 
      * @return the argument types of methods of this type.
      */
+    @Impure
     public Type[] getArgumentTypes() {
         return getArgumentTypes(getDescriptor());
     }
@@ -596,6 +625,7 @@ public class Type {
      * 
      * @return the return type of methods of this type.
      */
+    @Impure
     public Type getReturnType() {
         return getReturnType(getDescriptor());
     }
@@ -611,6 +641,7 @@ public class Type {
      *         (argSize is therefore equal to <tt>i &gt;&gt; 2</tt>,
      *         and retSize to <tt>i &amp; 0x03</tt>).
      */
+    @Impure
     public int getArgumentsAndReturnSizes() {
         return getArgumentsAndReturnSizes(getDescriptor());
     }
@@ -624,6 +655,7 @@ public class Type {
      * 
      * @return the descriptor corresponding to this Java type.
      */
+    @Impure
     public String getDescriptor() {
         StringBuffer buf = new StringBuffer();
         getDescriptor(buf);
@@ -641,6 +673,7 @@ public class Type {
      * @return the descriptor corresponding to the given argument and return
      *         types.
      */
+    @Impure
     public static String getMethodDescriptor(final Type returnType,
             final Type... argumentTypes) {
         StringBuffer buf = new StringBuffer();
@@ -660,6 +693,7 @@ public class Type {
      * @param buf
      *            the string buffer to which the descriptor must be appended.
      */
+    @Impure
     private void getDescriptor(final StringBuffer buf) {
         if (this.buf == null) {
             // descriptor is in byte 3 of 'off' for primitive types (buf ==
@@ -688,6 +722,7 @@ public class Type {
      *            an object or array class.
      * @return the internal name of the given class.
      */
+    @SideEffectFree
     public static String getInternalName(final Class<?> c) {
         return c.getName().replace('.', '/');
     }
@@ -699,6 +734,7 @@ public class Type {
      *            an object class, a primitive class or an array class.
      * @return the descriptor corresponding to the given class.
      */
+    @Impure
     public static String getDescriptor(final Class<?> c) {
         StringBuffer buf = new StringBuffer();
         getDescriptor(buf, c);
@@ -712,6 +748,7 @@ public class Type {
      *            a {@link Constructor Constructor} object.
      * @return the descriptor of the given constructor.
      */
+    @Impure
     public static String getConstructorDescriptor(final Constructor<?> c) {
         Class<?>[] parameters = c.getParameterTypes();
         StringBuffer buf = new StringBuffer();
@@ -729,6 +766,7 @@ public class Type {
      *            a {@link Method Method} object.
      * @return the descriptor of the given method.
      */
+    @Impure
     public static String getMethodDescriptor(final Method m) {
         Class<?>[] parameters = m.getParameterTypes();
         StringBuffer buf = new StringBuffer();
@@ -749,6 +787,7 @@ public class Type {
      * @param c
      *            the class whose descriptor must be computed.
      */
+    @Impure
     private static void getDescriptor(final StringBuffer buf, final Class<?> c) {
         Class<?> d = c;
         while (true) {
@@ -803,6 +842,7 @@ public class Type {
      * @return the size of values of this type, i.e., 2 for <tt>long</tt> and
      *         <tt>double</tt>, 0 for <tt>void</tt> and 1 otherwise.
      */
+    @Pure
     public int getSize() {
         // the size is in byte 0 of 'off' for primitive types (buf == null)
         return buf == null ? (off & 0xFF) : 1;
@@ -820,6 +860,7 @@ public class Type {
      *         this Java type. For example, if this type is <tt>float</tt> and
      *         <tt>opcode</tt> is IRETURN, this method returns FRETURN.
      */
+    @Pure
     public int getOpcode(final int opcode) {
         if (opcode == Opcodes.IALOAD || opcode == Opcodes.IASTORE) {
             // the offset for IALOAD or IASTORE is in byte 1 of 'off' for
@@ -843,6 +884,7 @@ public class Type {
      *            the object to be compared to this type.
      * @return <tt>true</tt> if the given object is equal to this type.
      */
+    @Pure
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -873,6 +915,7 @@ public class Type {
      * 
      * @return a hash code value for this type.
      */
+    @Pure
     @Override
     public int hashCode() {
         int hc = 13 * sort;
@@ -889,6 +932,7 @@ public class Type {
      * 
      * @return the descriptor of this type.
      */
+    @Impure
     @Override
     public String toString() {
         return getDescriptor();

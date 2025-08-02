@@ -29,6 +29,9 @@
  */
 package org1.objectweb.asm.tree.analysis;
 
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import java.util.List;
 
 import org1.objectweb.asm.Type;
@@ -46,14 +49,20 @@ import org1.objectweb.asm.tree.MethodInsnNode;
  */
 public class BasicVerifier extends BasicInterpreter {
 
+    @SideEffectFree
+    @Impure
     public BasicVerifier() {
         super(ASM5);
     }
 
+    @SideEffectFree
+    @Impure
     protected BasicVerifier(final int api) {
         super(api);
     }
 
+    @Pure
+    @Impure
     @Override
     public BasicValue copyOperation(final AbstractInsnNode insn,
             final BasicValue value) throws AnalyzerException {
@@ -97,6 +106,7 @@ public class BasicVerifier extends BasicInterpreter {
         return value;
     }
 
+    @Impure
     @Override
     public BasicValue unaryOperation(final AbstractInsnNode insn,
             final BasicValue value) throws AnalyzerException {
@@ -184,6 +194,7 @@ public class BasicVerifier extends BasicInterpreter {
         return super.unaryOperation(insn, value);
     }
 
+    @Impure
     @Override
     public BasicValue binaryOperation(final AbstractInsnNode insn,
             final BasicValue value1, final BasicValue value2)
@@ -312,6 +323,7 @@ public class BasicVerifier extends BasicInterpreter {
         }
     }
 
+    @Impure
     @Override
     public BasicValue ternaryOperation(final AbstractInsnNode insn,
             final BasicValue value1, final BasicValue value2,
@@ -371,6 +383,7 @@ public class BasicVerifier extends BasicInterpreter {
         return null;
     }
 
+    @Impure
     @Override
     public BasicValue naryOperation(final AbstractInsnNode insn,
             final List<? extends BasicValue> values) throws AnalyzerException {
@@ -407,6 +420,7 @@ public class BasicVerifier extends BasicInterpreter {
         return super.naryOperation(insn, values);
     }
 
+    @Impure
     @Override
     public void returnOperation(final AbstractInsnNode insn,
             final BasicValue value, final BasicValue expected)
@@ -417,15 +431,18 @@ public class BasicVerifier extends BasicInterpreter {
         }
     }
 
+    @Impure
     protected boolean isArrayValue(final BasicValue value) {
         return value.isReference();
     }
 
+    @Impure
     protected BasicValue getElementValue(final BasicValue objectArrayValue)
             throws AnalyzerException {
         return BasicValue.REFERENCE_VALUE;
     }
 
+    @Impure
     protected boolean isSubTypeOf(final BasicValue value,
             final BasicValue expected) {
         return value.equals(expected);

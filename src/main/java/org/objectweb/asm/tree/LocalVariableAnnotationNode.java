@@ -30,6 +30,7 @@
 
 package org1.objectweb.asm.tree;
 
+import org.checkerframework.dataflow.qual.Impure;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -91,6 +92,7 @@ public class LocalVariableAnnotationNode extends TypeAnnotationNode {
      * @param desc
      *            the class descriptor of the annotation class.
      */
+    @Impure
     public LocalVariableAnnotationNode(int typeRef, TypePath typePath,
             LabelNode[] start, LabelNode[] end, int[] index, String desc) {
         this(Opcodes.ASM5, typeRef, typePath, start, end, index, desc);
@@ -121,6 +123,7 @@ public class LocalVariableAnnotationNode extends TypeAnnotationNode {
      * @param desc
      *            the class descriptor of the annotation class.
      */
+    @Impure
     public LocalVariableAnnotationNode(int api, int typeRef, TypePath typePath,
             LabelNode[] start, LabelNode[] end, int[] index, String desc) {
         super(api, typeRef, typePath, desc);
@@ -142,6 +145,7 @@ public class LocalVariableAnnotationNode extends TypeAnnotationNode {
      * @param visible
      *            <tt>true</tt> if the annotation is visible at runtime.
      */
+    @Impure
     public void accept(final MethodVisitor mv, boolean visible) {
         Label[] start = new Label[this.start.size()];
         Label[] end = new Label[this.end.size()];

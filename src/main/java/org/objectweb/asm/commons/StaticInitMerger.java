@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.commons;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import org1.objectweb.asm.ClassVisitor;
 import org1.objectweb.asm.MethodVisitor;
 import org1.objectweb.asm.Opcodes;
@@ -48,16 +50,21 @@ public class StaticInitMerger extends ClassVisitor {
 
     private int counter;
 
+    @SideEffectFree
+    @Impure
     public StaticInitMerger(final String prefix, final ClassVisitor cv) {
         this(Opcodes.ASM5, prefix, cv);
     }
 
+    @SideEffectFree
+    @Impure
     protected StaticInitMerger(final int api, final String prefix,
             final ClassVisitor cv) {
         super(api, cv);
         this.prefix = prefix;
     }
 
+    @Impure
     @Override
     public void visit(final int version, final int access, final String name,
             final String signature, final String superName,
@@ -66,6 +73,7 @@ public class StaticInitMerger extends ClassVisitor {
         this.name = name;
     }
 
+    @Impure
     @Override
     public MethodVisitor visitMethod(final int access, final String name,
             final String desc, final String signature, final String[] exceptions) {
@@ -86,6 +94,7 @@ public class StaticInitMerger extends ClassVisitor {
         return mv;
     }
 
+    @Impure
     @Override
     public void visitEnd() {
         if (clinit != null) {

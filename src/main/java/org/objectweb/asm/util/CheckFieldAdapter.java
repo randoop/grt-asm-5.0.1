@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.util;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import org1.objectweb.asm.AnnotationVisitor;
 import org1.objectweb.asm.Attribute;
 import org1.objectweb.asm.FieldVisitor;
@@ -53,6 +55,8 @@ public class CheckFieldAdapter extends FieldVisitor {
      * @throws IllegalStateException
      *             If a subclass calls this constructor.
      */
+    @SideEffectFree
+    @Impure
     public CheckFieldAdapter(final FieldVisitor fv) {
         this(Opcodes.ASM5, fv);
         if (getClass() != CheckFieldAdapter.class) {
@@ -69,10 +73,13 @@ public class CheckFieldAdapter extends FieldVisitor {
      * @param fv
      *            the field visitor to which this adapter must delegate calls.
      */
+    @SideEffectFree
+    @Impure
     protected CheckFieldAdapter(final int api, final FieldVisitor fv) {
         super(api, fv);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitAnnotation(final String desc,
             final boolean visible) {
@@ -81,6 +88,7 @@ public class CheckFieldAdapter extends FieldVisitor {
         return new CheckAnnotationAdapter(super.visitAnnotation(desc, visible));
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitTypeAnnotation(final int typeRef,
             final TypePath typePath, final String desc, final boolean visible) {
@@ -96,6 +104,7 @@ public class CheckFieldAdapter extends FieldVisitor {
                 typePath, desc, visible));
     }
 
+    @Impure
     @Override
     public void visitAttribute(final Attribute attr) {
         checkEnd();
@@ -106,6 +115,7 @@ public class CheckFieldAdapter extends FieldVisitor {
         super.visitAttribute(attr);
     }
 
+    @Impure
     @Override
     public void visitEnd() {
         checkEnd();
@@ -113,6 +123,7 @@ public class CheckFieldAdapter extends FieldVisitor {
         super.visitEnd();
     }
 
+    @SideEffectFree
     private void checkEnd() {
         if (end) {
             throw new IllegalStateException(

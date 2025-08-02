@@ -30,6 +30,8 @@
 
 package org1.objectweb.asm.commons;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import org1.objectweb.asm.Handle;
 import org1.objectweb.asm.Label;
 import org1.objectweb.asm.MethodVisitor;
@@ -56,6 +58,8 @@ public class InstructionAdapter extends MethodVisitor {
      * @throws IllegalStateException
      *             If a subclass calls this constructor.
      */
+    @SideEffectFree
+    @Impure
     public InstructionAdapter(final MethodVisitor mv) {
         this(Opcodes.ASM5, mv);
         if (getClass() != InstructionAdapter.class) {
@@ -72,10 +76,13 @@ public class InstructionAdapter extends MethodVisitor {
      * @param mv
      *            the method visitor to which this adapter delegates calls.
      */
+    @SideEffectFree
+    @Impure
     protected InstructionAdapter(final int api, final MethodVisitor mv) {
         super(api, mv);
     }
 
+    @Impure
     @Override
     public void visitInsn(final int opcode) {
         switch (opcode) {
@@ -385,6 +392,7 @@ public class InstructionAdapter extends MethodVisitor {
         }
     }
 
+    @Impure
     @Override
     public void visitIntInsn(final int opcode, final int operand) {
         switch (opcode) {
@@ -429,6 +437,7 @@ public class InstructionAdapter extends MethodVisitor {
         }
     }
 
+    @Impure
     @Override
     public void visitVarInsn(final int opcode, final int var) {
         switch (opcode) {
@@ -470,6 +479,7 @@ public class InstructionAdapter extends MethodVisitor {
         }
     }
 
+    @Impure
     @Override
     public void visitTypeInsn(final int opcode, final String type) {
         Type t = Type.getObjectType(type);
@@ -491,6 +501,7 @@ public class InstructionAdapter extends MethodVisitor {
         }
     }
 
+    @Impure
     @Override
     public void visitFieldInsn(final int opcode, final String owner,
             final String name, final String desc) {
@@ -512,6 +523,7 @@ public class InstructionAdapter extends MethodVisitor {
         }
     }
 
+    @Impure
     @Deprecated
     @Override
     public void visitMethodInsn(final int opcode, final String owner,
@@ -524,6 +536,7 @@ public class InstructionAdapter extends MethodVisitor {
                 opcode == Opcodes.INVOKEINTERFACE);
     }
 
+    @Impure
     @Override
     public void visitMethodInsn(final int opcode, final String owner,
             final String name, final String desc, final boolean itf) {
@@ -534,6 +547,7 @@ public class InstructionAdapter extends MethodVisitor {
         doVisitMethodInsn(opcode, owner, name, desc, itf);
     }
 
+    @Impure
     private void doVisitMethodInsn(int opcode, final String owner,
             final String name, final String desc, final boolean itf) {
         switch (opcode) {
@@ -554,12 +568,14 @@ public class InstructionAdapter extends MethodVisitor {
         }
     }
 
+    @Impure
     @Override
     public void visitInvokeDynamicInsn(String name, String desc, Handle bsm,
             Object... bsmArgs) {
         invokedynamic(name, desc, bsm, bsmArgs);
     }
 
+    @Impure
     @Override
     public void visitJumpInsn(final int opcode, final Label label) {
         switch (opcode) {
@@ -622,11 +638,13 @@ public class InstructionAdapter extends MethodVisitor {
         }
     }
 
+    @Impure
     @Override
     public void visitLabel(final Label label) {
         mark(label);
     }
 
+    @Impure
     @Override
     public void visitLdcInsn(final Object cst) {
         if (cst instanceof Integer) {
@@ -664,23 +682,27 @@ public class InstructionAdapter extends MethodVisitor {
         }
     }
 
+    @Impure
     @Override
     public void visitIincInsn(final int var, final int increment) {
         iinc(var, increment);
     }
 
+    @Impure
     @Override
     public void visitTableSwitchInsn(final int min, final int max,
             final Label dflt, final Label... labels) {
         tableswitch(min, max, dflt, labels);
     }
 
+    @Impure
     @Override
     public void visitLookupSwitchInsn(final Label dflt, final int[] keys,
             final Label[] labels) {
         lookupswitch(dflt, keys, labels);
     }
 
+    @Impure
     @Override
     public void visitMultiANewArrayInsn(final String desc, final int dims) {
         multianewarray(desc, dims);
@@ -688,10 +710,12 @@ public class InstructionAdapter extends MethodVisitor {
 
     // -----------------------------------------------------------------------
 
+    @Impure
     public void nop() {
         mv.visitInsn(Opcodes.NOP);
     }
 
+    @Impure
     public void aconst(final Object cst) {
         if (cst == null) {
             mv.visitInsn(Opcodes.ACONST_NULL);
@@ -700,6 +724,7 @@ public class InstructionAdapter extends MethodVisitor {
         }
     }
 
+    @Impure
     public void iconst(final int cst) {
         if (cst >= -1 && cst <= 5) {
             mv.visitInsn(Opcodes.ICONST_0 + cst);
@@ -712,6 +737,7 @@ public class InstructionAdapter extends MethodVisitor {
         }
     }
 
+    @Impure
     public void lconst(final long cst) {
         if (cst == 0L || cst == 1L) {
             mv.visitInsn(Opcodes.LCONST_0 + (int) cst);
@@ -720,6 +746,7 @@ public class InstructionAdapter extends MethodVisitor {
         }
     }
 
+    @Impure
     public void fconst(final float cst) {
         int bits = Float.floatToIntBits(cst);
         if (bits == 0L || bits == 0x3f800000 || bits == 0x40000000) { // 0..2
@@ -729,6 +756,7 @@ public class InstructionAdapter extends MethodVisitor {
         }
     }
 
+    @Impure
     public void dconst(final double cst) {
         long bits = Double.doubleToLongBits(cst);
         if (bits == 0L || bits == 0x3ff0000000000000L) { // +0.0d and 1.0d
@@ -738,118 +766,147 @@ public class InstructionAdapter extends MethodVisitor {
         }
     }
 
+    @Impure
     public void tconst(final Type type) {
         mv.visitLdcInsn(type);
     }
 
+    @Impure
     public void hconst(final Handle handle) {
         mv.visitLdcInsn(handle);
     }
 
+    @Impure
     public void load(final int var, final Type type) {
         mv.visitVarInsn(type.getOpcode(Opcodes.ILOAD), var);
     }
 
+    @Impure
     public void aload(final Type type) {
         mv.visitInsn(type.getOpcode(Opcodes.IALOAD));
     }
 
+    @Impure
     public void store(final int var, final Type type) {
         mv.visitVarInsn(type.getOpcode(Opcodes.ISTORE), var);
     }
 
+    @Impure
     public void astore(final Type type) {
         mv.visitInsn(type.getOpcode(Opcodes.IASTORE));
     }
 
+    @Impure
     public void pop() {
         mv.visitInsn(Opcodes.POP);
     }
 
+    @Impure
     public void pop2() {
         mv.visitInsn(Opcodes.POP2);
     }
 
+    @Impure
     public void dup() {
         mv.visitInsn(Opcodes.DUP);
     }
 
+    @Impure
     public void dup2() {
         mv.visitInsn(Opcodes.DUP2);
     }
 
+    @Impure
     public void dupX1() {
         mv.visitInsn(Opcodes.DUP_X1);
     }
 
+    @Impure
     public void dupX2() {
         mv.visitInsn(Opcodes.DUP_X2);
     }
 
+    @Impure
     public void dup2X1() {
         mv.visitInsn(Opcodes.DUP2_X1);
     }
 
+    @Impure
     public void dup2X2() {
         mv.visitInsn(Opcodes.DUP2_X2);
     }
 
+    @Impure
     public void swap() {
         mv.visitInsn(Opcodes.SWAP);
     }
 
+    @Impure
     public void add(final Type type) {
         mv.visitInsn(type.getOpcode(Opcodes.IADD));
     }
 
+    @Impure
     public void sub(final Type type) {
         mv.visitInsn(type.getOpcode(Opcodes.ISUB));
     }
 
+    @Impure
     public void mul(final Type type) {
         mv.visitInsn(type.getOpcode(Opcodes.IMUL));
     }
 
+    @Impure
     public void div(final Type type) {
         mv.visitInsn(type.getOpcode(Opcodes.IDIV));
     }
 
+    @Impure
     public void rem(final Type type) {
         mv.visitInsn(type.getOpcode(Opcodes.IREM));
     }
 
+    @Impure
     public void neg(final Type type) {
         mv.visitInsn(type.getOpcode(Opcodes.INEG));
     }
 
+    @Impure
     public void shl(final Type type) {
         mv.visitInsn(type.getOpcode(Opcodes.ISHL));
     }
 
+    @Impure
     public void shr(final Type type) {
         mv.visitInsn(type.getOpcode(Opcodes.ISHR));
     }
 
+    @Impure
     public void ushr(final Type type) {
         mv.visitInsn(type.getOpcode(Opcodes.IUSHR));
     }
 
+    @Impure
     public void and(final Type type) {
         mv.visitInsn(type.getOpcode(Opcodes.IAND));
     }
 
+    @Impure
     public void or(final Type type) {
         mv.visitInsn(type.getOpcode(Opcodes.IOR));
     }
 
+    @Impure
     public void xor(final Type type) {
         mv.visitInsn(type.getOpcode(Opcodes.IXOR));
     }
 
+    @Impure
     public void iinc(final int var, final int increment) {
         mv.visitIincInsn(var, increment);
     }
 
+    @Impure
     public void cast(final Type from, final Type to) {
         if (from != to) {
             if (from == Type.DOUBLE_TYPE) {
@@ -897,120 +954,148 @@ public class InstructionAdapter extends MethodVisitor {
         }
     }
 
+    @Impure
     public void lcmp() {
         mv.visitInsn(Opcodes.LCMP);
     }
 
+    @Impure
     public void cmpl(final Type type) {
         mv.visitInsn(type == Type.FLOAT_TYPE ? Opcodes.FCMPL : Opcodes.DCMPL);
     }
 
+    @Impure
     public void cmpg(final Type type) {
         mv.visitInsn(type == Type.FLOAT_TYPE ? Opcodes.FCMPG : Opcodes.DCMPG);
     }
 
+    @Impure
     public void ifeq(final Label label) {
         mv.visitJumpInsn(Opcodes.IFEQ, label);
     }
 
+    @Impure
     public void ifne(final Label label) {
         mv.visitJumpInsn(Opcodes.IFNE, label);
     }
 
+    @Impure
     public void iflt(final Label label) {
         mv.visitJumpInsn(Opcodes.IFLT, label);
     }
 
+    @Impure
     public void ifge(final Label label) {
         mv.visitJumpInsn(Opcodes.IFGE, label);
     }
 
+    @Impure
     public void ifgt(final Label label) {
         mv.visitJumpInsn(Opcodes.IFGT, label);
     }
 
+    @Impure
     public void ifle(final Label label) {
         mv.visitJumpInsn(Opcodes.IFLE, label);
     }
 
+    @Impure
     public void ificmpeq(final Label label) {
         mv.visitJumpInsn(Opcodes.IF_ICMPEQ, label);
     }
 
+    @Impure
     public void ificmpne(final Label label) {
         mv.visitJumpInsn(Opcodes.IF_ICMPNE, label);
     }
 
+    @Impure
     public void ificmplt(final Label label) {
         mv.visitJumpInsn(Opcodes.IF_ICMPLT, label);
     }
 
+    @Impure
     public void ificmpge(final Label label) {
         mv.visitJumpInsn(Opcodes.IF_ICMPGE, label);
     }
 
+    @Impure
     public void ificmpgt(final Label label) {
         mv.visitJumpInsn(Opcodes.IF_ICMPGT, label);
     }
 
+    @Impure
     public void ificmple(final Label label) {
         mv.visitJumpInsn(Opcodes.IF_ICMPLE, label);
     }
 
+    @Impure
     public void ifacmpeq(final Label label) {
         mv.visitJumpInsn(Opcodes.IF_ACMPEQ, label);
     }
 
+    @Impure
     public void ifacmpne(final Label label) {
         mv.visitJumpInsn(Opcodes.IF_ACMPNE, label);
     }
 
+    @Impure
     public void goTo(final Label label) {
         mv.visitJumpInsn(Opcodes.GOTO, label);
     }
 
+    @Impure
     public void jsr(final Label label) {
         mv.visitJumpInsn(Opcodes.JSR, label);
     }
 
+    @Impure
     public void ret(final int var) {
         mv.visitVarInsn(Opcodes.RET, var);
     }
 
+    @Impure
     public void tableswitch(final int min, final int max, final Label dflt,
             final Label... labels) {
         mv.visitTableSwitchInsn(min, max, dflt, labels);
     }
 
+    @Impure
     public void lookupswitch(final Label dflt, final int[] keys,
             final Label[] labels) {
         mv.visitLookupSwitchInsn(dflt, keys, labels);
     }
 
+    @Impure
     public void areturn(final Type t) {
         mv.visitInsn(t.getOpcode(Opcodes.IRETURN));
     }
 
+    @Impure
     public void getstatic(final String owner, final String name,
             final String desc) {
         mv.visitFieldInsn(Opcodes.GETSTATIC, owner, name, desc);
     }
 
+    @Impure
     public void putstatic(final String owner, final String name,
             final String desc) {
         mv.visitFieldInsn(Opcodes.PUTSTATIC, owner, name, desc);
     }
 
+    @Impure
     public void getfield(final String owner, final String name,
             final String desc) {
         mv.visitFieldInsn(Opcodes.GETFIELD, owner, name, desc);
     }
 
+    @Impure
     public void putfield(final String owner, final String name,
             final String desc) {
         mv.visitFieldInsn(Opcodes.PUTFIELD, owner, name, desc);
     }
 
+    @Impure
     @Deprecated
     public void invokevirtual(final String owner, final String name,
             final String desc) {
@@ -1021,6 +1106,7 @@ public class InstructionAdapter extends MethodVisitor {
         mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, owner, name, desc);
     }
 
+    @Impure
     public void invokevirtual(final String owner, final String name,
             final String desc, final boolean itf) {
         if (api < Opcodes.ASM5) {
@@ -1034,6 +1120,7 @@ public class InstructionAdapter extends MethodVisitor {
         mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, owner, name, desc, itf);
     }
 
+    @Impure
     @Deprecated
     public void invokespecial(final String owner, final String name,
             final String desc) {
@@ -1044,6 +1131,7 @@ public class InstructionAdapter extends MethodVisitor {
         mv.visitMethodInsn(Opcodes.INVOKESPECIAL, owner, name, desc, false);
     }
 
+    @Impure
     public void invokespecial(final String owner, final String name,
             final String desc, final boolean itf) {
         if (api < Opcodes.ASM5) {
@@ -1057,6 +1145,7 @@ public class InstructionAdapter extends MethodVisitor {
         mv.visitMethodInsn(Opcodes.INVOKESPECIAL, owner, name, desc, itf);
     }
 
+    @Impure
     @Deprecated
     public void invokestatic(final String owner, final String name,
             final String desc) {
@@ -1067,6 +1156,7 @@ public class InstructionAdapter extends MethodVisitor {
         mv.visitMethodInsn(Opcodes.INVOKESTATIC, owner, name, desc, false);
     }
 
+    @Impure
     public void invokestatic(final String owner, final String name,
             final String desc, final boolean itf) {
         if (api < Opcodes.ASM5) {
@@ -1080,20 +1170,24 @@ public class InstructionAdapter extends MethodVisitor {
         mv.visitMethodInsn(Opcodes.INVOKESTATIC, owner, name, desc, itf);
     }
 
+    @Impure
     public void invokeinterface(final String owner, final String name,
             final String desc) {
         mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, owner, name, desc, true);
     }
 
+    @Impure
     public void invokedynamic(String name, String desc, Handle bsm,
             Object[] bsmArgs) {
         mv.visitInvokeDynamicInsn(name, desc, bsm, bsmArgs);
     }
 
+    @Impure
     public void anew(final Type type) {
         mv.visitTypeInsn(Opcodes.NEW, type.getInternalName());
     }
 
+    @Impure
     public void newarray(final Type type) {
         int typ;
         switch (type.getSort()) {
@@ -1128,42 +1222,52 @@ public class InstructionAdapter extends MethodVisitor {
         mv.visitIntInsn(Opcodes.NEWARRAY, typ);
     }
 
+    @Impure
     public void arraylength() {
         mv.visitInsn(Opcodes.ARRAYLENGTH);
     }
 
+    @Impure
     public void athrow() {
         mv.visitInsn(Opcodes.ATHROW);
     }
 
+    @Impure
     public void checkcast(final Type type) {
         mv.visitTypeInsn(Opcodes.CHECKCAST, type.getInternalName());
     }
 
+    @Impure
     public void instanceOf(final Type type) {
         mv.visitTypeInsn(Opcodes.INSTANCEOF, type.getInternalName());
     }
 
+    @Impure
     public void monitorenter() {
         mv.visitInsn(Opcodes.MONITORENTER);
     }
 
+    @Impure
     public void monitorexit() {
         mv.visitInsn(Opcodes.MONITOREXIT);
     }
 
+    @Impure
     public void multianewarray(final String desc, final int dims) {
         mv.visitMultiANewArrayInsn(desc, dims);
     }
 
+    @Impure
     public void ifnull(final Label label) {
         mv.visitJumpInsn(Opcodes.IFNULL, label);
     }
 
+    @Impure
     public void ifnonnull(final Label label) {
         mv.visitJumpInsn(Opcodes.IFNONNULL, label);
     }
 
+    @Impure
     public void mark(final Label label) {
         mv.visitLabel(label);
     }

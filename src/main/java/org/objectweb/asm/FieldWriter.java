@@ -28,6 +28,8 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org1.objectweb.asm;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
  * An {@link FieldVisitor} that generates Java fields in bytecode form.
@@ -116,6 +118,7 @@ final class FieldWriter extends FieldVisitor {
      * @param value
      *            the field's constant value. May be <tt>null</tt>.
      */
+    @Impure
     FieldWriter(final ClassWriter cw, final int access, final String name,
             final String desc, final String signature, final Object value) {
         super(Opcodes.ASM5);
@@ -141,6 +144,7 @@ final class FieldWriter extends FieldVisitor {
     // Implementation of the FieldVisitor abstract class
     // ------------------------------------------------------------------------
 
+    @Impure
     @Override
     public AnnotationVisitor visitAnnotation(final String desc,
             final boolean visible) {
@@ -161,6 +165,7 @@ final class FieldWriter extends FieldVisitor {
         return aw;
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitTypeAnnotation(final int typeRef,
             final TypePath typePath, final String desc, final boolean visible) {
@@ -184,12 +189,14 @@ final class FieldWriter extends FieldVisitor {
         return aw;
     }
 
+    @Impure
     @Override
     public void visitAttribute(final Attribute attr) {
         attr.next = attrs;
         attrs = attr;
     }
 
+    @SideEffectFree
     @Override
     public void visitEnd() {
     }
@@ -203,6 +210,7 @@ final class FieldWriter extends FieldVisitor {
      * 
      * @return the size of this field.
      */
+    @Impure
     int getSize() {
         int size = 8;
         if (value != 0) {
@@ -252,6 +260,7 @@ final class FieldWriter extends FieldVisitor {
      * @param out
      *            where the content of this field must be put.
      */
+    @Impure
     void put(final ByteVector out) {
         final int FACTOR = ClassWriter.TO_ACC_SYNTHETIC;
         int mask = Opcodes.ACC_DEPRECATED | ClassWriter.ACC_SYNTHETIC_ATTRIBUTE

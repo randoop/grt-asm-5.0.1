@@ -29,6 +29,9 @@
  */
 package org1.objectweb.asm.tree;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
 import java.util.Map;
 
 import org1.objectweb.asm.MethodVisitor;
@@ -60,10 +63,13 @@ public class InsnNode extends AbstractInsnNode {
      *            DRETURN, ARETURN, RETURN, ARRAYLENGTH, ATHROW, MONITORENTER,
      *            or MONITOREXIT.
      */
+    @SideEffectFree
+    @Impure
     public InsnNode(final int opcode) {
         super(opcode);
     }
 
+    @Pure
     @Override
     public int getType() {
         return INSN;
@@ -75,12 +81,14 @@ public class InsnNode extends AbstractInsnNode {
      * @param mv
      *            a method visitor.
      */
+    @Impure
     @Override
     public void accept(final MethodVisitor mv) {
         mv.visitInsn(opcode);
         acceptAnnotations(mv);
     }
 
+    @Impure
     @Override
     public AbstractInsnNode clone(final Map<LabelNode, LabelNode> labels) {
         return new InsnNode(opcode).cloneAnnotations(this);

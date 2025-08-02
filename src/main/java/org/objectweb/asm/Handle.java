@@ -29,6 +29,8 @@
  */
 
 package org1.objectweb.asm;
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
  * A reference to a field or a method.
@@ -85,6 +87,7 @@ public final class Handle {
      *            the descriptor of the field or method designated by this
      *            handle.
      */
+    @SideEffectFree
     public Handle(int tag, String owner, String name, String desc) {
         this.tag = tag;
         this.owner = owner;
@@ -102,6 +105,7 @@ public final class Handle {
      *         {@link Opcodes#H_NEWINVOKESPECIAL} or
      *         {@link Opcodes#H_INVOKEINTERFACE}.
      */
+    @Pure
     public int getTag() {
         return tag;
     }
@@ -113,6 +117,7 @@ public final class Handle {
      * @return the internal name of the class that owns the field or method
      *         designated by this handle.
      */
+    @Pure
     public String getOwner() {
         return owner;
     }
@@ -122,6 +127,7 @@ public final class Handle {
      * 
      * @return the name of the field or method designated by this handle.
      */
+    @Pure
     public String getName() {
         return name;
     }
@@ -131,10 +137,12 @@ public final class Handle {
      * 
      * @return the descriptor of the field or method designated by this handle.
      */
+    @Pure
     public String getDesc() {
         return desc;
     }
 
+    @Pure
     @Override
     public boolean equals(Object obj) {
         if (obj == this) {
@@ -148,6 +156,7 @@ public final class Handle {
                 && desc.equals(h.desc);
     }
 
+    @Pure
     @Override
     public int hashCode() {
         return tag + owner.hashCode() * name.hashCode() * desc.hashCode();
@@ -163,6 +172,7 @@ public final class Handle {
      * 
      * . As this format is unambiguous, it can be parsed if necessary.
      */
+    @Pure
     @Override
     public String toString() {
         return owner + '.' + name + desc + " (" + tag + ')';

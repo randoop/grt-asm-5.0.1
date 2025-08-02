@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.optimizer;
 
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.Impure;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -60,6 +62,7 @@ public class Shrinker {
 
     static final HashMap<String, String> MAPPING = new HashMap<String, String>();
 
+    @Impure
     public static void main(final String[] args) throws IOException {
         Properties properties = new Properties();
         int n = args.length - 1;
@@ -77,6 +80,7 @@ public class Shrinker {
         File d = new File(args[n]);
 
         optimize(f, d, new SimpleRemapper(MAPPING) {
+            @Impure
             @Override
             public String map(String key) {
                 String s = super.map(key);
@@ -96,6 +100,7 @@ public class Shrinker {
         }
     }
 
+    @Impure
     static void optimize(final File f, final File d, final Remapper remapper)
             throws IOException {
         if (f.isDirectory()) {
@@ -146,6 +151,7 @@ public class Shrinker {
 
     static class ConstantComparator implements Comparator<Constant> {
 
+        @Impure
         public int compare(final Constant c1, final Constant c2) {
             int d = getSort(c1) - getSort(c2);
             if (d == 0) {
@@ -201,6 +207,8 @@ public class Shrinker {
             return d;
         }
 
+        @Pure
+        @Impure
         private static int compareHandle(Handle h1, Handle h2) {
             int d = h1.getTag() - h2.getTag();
             if (d == 0) {
@@ -215,10 +223,12 @@ public class Shrinker {
             return d;
         }
 
+        @Impure
         private static int compareType(Type mtype1, Type mtype2) {
             return mtype1.getDescriptor().compareTo(mtype2.getDescriptor());
         }
 
+        @Impure
         private static int compareObjects(Object[] objVals1, Object[] objVals2) {
             int length = objVals1.length;
             int d = length - objVals2.length;
@@ -247,6 +257,7 @@ public class Shrinker {
             return 0;
         }
 
+        @Pure
         private static int getSort(final Constant c) {
             switch (c.type) {
             case 'I':

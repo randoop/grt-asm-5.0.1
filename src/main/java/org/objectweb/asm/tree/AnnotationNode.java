@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.tree;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,6 +72,8 @@ public class AnnotationNode extends AnnotationVisitor {
      * @throws IllegalStateException
      *             If a subclass calls this constructor.
      */
+    @SideEffectFree
+    @Impure
     public AnnotationNode(final String desc) {
         this(Opcodes.ASM5, desc);
         if (getClass() != AnnotationNode.class) {
@@ -86,6 +90,8 @@ public class AnnotationNode extends AnnotationVisitor {
      * @param desc
      *            the class descriptor of the annotation class.
      */
+    @SideEffectFree
+    @Impure
     public AnnotationNode(final int api, final String desc) {
         super(api);
         this.desc = desc;
@@ -97,6 +103,8 @@ public class AnnotationNode extends AnnotationVisitor {
      * @param values
      *            where the visited values must be stored.
      */
+    @SideEffectFree
+    @Impure
     AnnotationNode(final List<Object> values) {
         super(Opcodes.ASM5);
         this.values = values;
@@ -106,6 +114,7 @@ public class AnnotationNode extends AnnotationVisitor {
     // Implementation of the AnnotationVisitor abstract class
     // ------------------------------------------------------------------------
 
+    @Impure
     @Override
     public void visit(final String name, final Object value) {
         if (values == null) {
@@ -117,6 +126,7 @@ public class AnnotationNode extends AnnotationVisitor {
         values.add(value);
     }
 
+    @Impure
     @Override
     public void visitEnum(final String name, final String desc,
             final String value) {
@@ -129,6 +139,7 @@ public class AnnotationNode extends AnnotationVisitor {
         values.add(new String[] { desc, value });
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitAnnotation(final String name,
             final String desc) {
@@ -143,6 +154,7 @@ public class AnnotationNode extends AnnotationVisitor {
         return annotation;
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitArray(final String name) {
         if (values == null) {
@@ -156,6 +168,7 @@ public class AnnotationNode extends AnnotationVisitor {
         return new AnnotationNode(array);
     }
 
+    @SideEffectFree
     @Override
     public void visitEnd() {
     }
@@ -174,6 +187,7 @@ public class AnnotationNode extends AnnotationVisitor {
      *            an ASM API version. Must be one of {@link Opcodes#ASM4} or
      *            {@link Opcodes#ASM5}.
      */
+    @SideEffectFree
     public void check(final int api) {
         // nothing to do
     }
@@ -184,6 +198,7 @@ public class AnnotationNode extends AnnotationVisitor {
      * @param av
      *            an annotation visitor. Maybe <tt>null</tt>.
      */
+    @Impure
     public void accept(final AnnotationVisitor av) {
         if (av != null) {
             if (values != null) {
@@ -207,6 +222,7 @@ public class AnnotationNode extends AnnotationVisitor {
      * @param value
      *            the actual value.
      */
+    @Impure
     static void accept(final AnnotationVisitor av, final String name,
             final Object value) {
         if (av != null) {

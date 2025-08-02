@@ -29,6 +29,7 @@
  */
 package org1.objectweb.asm.commons;
 
+import org.checkerframework.dataflow.qual.Impure;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -139,6 +140,7 @@ public class AnalyzerAdapter extends MethodVisitor {
      * @throws IllegalStateException
      *             If a subclass calls this constructor.
      */
+    @Impure
     public AnalyzerAdapter(final String owner, final int access,
             final String name, final String desc, final MethodVisitor mv) {
         this(Opcodes.ASM5, owner, access, name, desc, mv);
@@ -165,6 +167,7 @@ public class AnalyzerAdapter extends MethodVisitor {
      *            the method visitor to which this adapter delegates calls. May
      *            be <tt>null</tt>.
      */
+    @Impure
     protected AnalyzerAdapter(final int api, final String owner,
             final int access, final String name, final String desc,
             final MethodVisitor mv) {
@@ -214,6 +217,7 @@ public class AnalyzerAdapter extends MethodVisitor {
         maxLocals = locals.size();
     }
 
+    @Impure
     @Override
     public void visitFrame(final int type, final int nLocal,
             final Object[] local, final int nStack, final Object[] stack) {
@@ -238,6 +242,7 @@ public class AnalyzerAdapter extends MethodVisitor {
         maxStack = Math.max(maxStack, this.stack.size());
     }
 
+    @Impure
     private static void visitFrameTypes(final int n, final Object[] types,
             final List<Object> result) {
         for (int i = 0; i < n; ++i) {
@@ -249,6 +254,7 @@ public class AnalyzerAdapter extends MethodVisitor {
         }
     }
 
+    @Impure
     @Override
     public void visitInsn(final int opcode) {
         if (mv != null) {
@@ -262,6 +268,7 @@ public class AnalyzerAdapter extends MethodVisitor {
         }
     }
 
+    @Impure
     @Override
     public void visitIntInsn(final int opcode, final int operand) {
         if (mv != null) {
@@ -270,6 +277,7 @@ public class AnalyzerAdapter extends MethodVisitor {
         execute(opcode, operand, null);
     }
 
+    @Impure
     @Override
     public void visitVarInsn(final int opcode, final int var) {
         if (mv != null) {
@@ -278,6 +286,7 @@ public class AnalyzerAdapter extends MethodVisitor {
         execute(opcode, var, null);
     }
 
+    @Impure
     @Override
     public void visitTypeInsn(final int opcode, final String type) {
         if (opcode == Opcodes.NEW) {
@@ -299,6 +308,7 @@ public class AnalyzerAdapter extends MethodVisitor {
         execute(opcode, 0, type);
     }
 
+    @Impure
     @Override
     public void visitFieldInsn(final int opcode, final String owner,
             final String name, final String desc) {
@@ -308,6 +318,7 @@ public class AnalyzerAdapter extends MethodVisitor {
         execute(opcode, 0, desc);
     }
 
+    @Impure
     @Deprecated
     @Override
     public void visitMethodInsn(final int opcode, final String owner,
@@ -320,6 +331,7 @@ public class AnalyzerAdapter extends MethodVisitor {
                 opcode == Opcodes.INVOKEINTERFACE);
     }
 
+    @Impure
     @Override
     public void visitMethodInsn(final int opcode, final String owner,
             final String name, final String desc, final boolean itf) {
@@ -330,6 +342,7 @@ public class AnalyzerAdapter extends MethodVisitor {
         doVisitMethodInsn(opcode, owner, name, desc, itf);
     }
 
+    @Impure
     private void doVisitMethodInsn(int opcode, final String owner,
             final String name, final String desc, final boolean itf) {
         if (mv != null) {
@@ -365,6 +378,7 @@ public class AnalyzerAdapter extends MethodVisitor {
         labels = null;
     }
 
+    @Impure
     @Override
     public void visitInvokeDynamicInsn(String name, String desc, Handle bsm,
             Object... bsmArgs) {
@@ -380,6 +394,7 @@ public class AnalyzerAdapter extends MethodVisitor {
         labels = null;
     }
 
+    @Impure
     @Override
     public void visitJumpInsn(final int opcode, final Label label) {
         if (mv != null) {
@@ -392,6 +407,7 @@ public class AnalyzerAdapter extends MethodVisitor {
         }
     }
 
+    @Impure
     @Override
     public void visitLabel(final Label label) {
         if (mv != null) {
@@ -403,6 +419,7 @@ public class AnalyzerAdapter extends MethodVisitor {
         labels.add(label);
     }
 
+    @Impure
     @Override
     public void visitLdcInsn(final Object cst) {
         if (mv != null) {
@@ -441,6 +458,7 @@ public class AnalyzerAdapter extends MethodVisitor {
         labels = null;
     }
 
+    @Impure
     @Override
     public void visitIincInsn(final int var, final int increment) {
         if (mv != null) {
@@ -449,6 +467,7 @@ public class AnalyzerAdapter extends MethodVisitor {
         execute(Opcodes.IINC, var, null);
     }
 
+    @Impure
     @Override
     public void visitTableSwitchInsn(final int min, final int max,
             final Label dflt, final Label... labels) {
@@ -460,6 +479,7 @@ public class AnalyzerAdapter extends MethodVisitor {
         this.stack = null;
     }
 
+    @Impure
     @Override
     public void visitLookupSwitchInsn(final Label dflt, final int[] keys,
             final Label[] labels) {
@@ -471,6 +491,7 @@ public class AnalyzerAdapter extends MethodVisitor {
         this.stack = null;
     }
 
+    @Impure
     @Override
     public void visitMultiANewArrayInsn(final String desc, final int dims) {
         if (mv != null) {
@@ -479,6 +500,7 @@ public class AnalyzerAdapter extends MethodVisitor {
         execute(Opcodes.MULTIANEWARRAY, dims, desc);
     }
 
+    @Impure
     @Override
     public void visitMaxs(final int maxStack, final int maxLocals) {
         if (mv != null) {
@@ -490,11 +512,13 @@ public class AnalyzerAdapter extends MethodVisitor {
 
     // ------------------------------------------------------------------------
 
+    @Impure
     private Object get(final int local) {
         maxLocals = Math.max(maxLocals, local + 1);
         return local < locals.size() ? locals.get(local) : Opcodes.TOP;
     }
 
+    @Impure
     private void set(final int local, final Object type) {
         maxLocals = Math.max(maxLocals, local + 1);
         while (local >= locals.size()) {
@@ -503,11 +527,13 @@ public class AnalyzerAdapter extends MethodVisitor {
         locals.set(local, type);
     }
 
+    @Impure
     private void push(final Object type) {
         stack.add(type);
         maxStack = Math.max(maxStack, stack.size());
     }
 
+    @Impure
     private void pushDesc(final String desc) {
         int index = desc.charAt(0) == '(' ? desc.indexOf(')') + 1 : 0;
         switch (desc.charAt(index)) {
@@ -548,10 +574,12 @@ public class AnalyzerAdapter extends MethodVisitor {
         }
     }
 
+    @Impure
     private Object pop() {
         return stack.remove(stack.size() - 1);
     }
 
+    @Impure
     private void pop(final int n) {
         int size = stack.size();
         int end = size - n;
@@ -560,6 +588,7 @@ public class AnalyzerAdapter extends MethodVisitor {
         }
     }
 
+    @Impure
     private void pop(final String desc) {
         char c = desc.charAt(0);
         if (c == '(') {
@@ -576,6 +605,7 @@ public class AnalyzerAdapter extends MethodVisitor {
         }
     }
 
+    @Impure
     private void execute(final int opcode, final int iarg, final String sarg) {
         if (this.locals == null) {
             labels = null;

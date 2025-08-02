@@ -29,6 +29,9 @@
  */
 package org1.objectweb.asm.commons;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
 import org1.objectweb.asm.Handle;
 import org1.objectweb.asm.Label;
 import org1.objectweb.asm.MethodVisitor;
@@ -45,22 +48,29 @@ public class CodeSizeEvaluator extends MethodVisitor implements Opcodes {
 
     private int maxSize;
 
+    @SideEffectFree
+    @Impure
     public CodeSizeEvaluator(final MethodVisitor mv) {
         this(Opcodes.ASM5, mv);
     }
 
+    @SideEffectFree
+    @Impure
     protected CodeSizeEvaluator(final int api, final MethodVisitor mv) {
         super(api, mv);
     }
 
+    @Pure
     public int getMinSize() {
         return this.minSize;
     }
 
+    @Pure
     public int getMaxSize() {
         return this.maxSize;
     }
 
+    @Impure
     @Override
     public void visitInsn(final int opcode) {
         minSize += 1;
@@ -70,6 +80,7 @@ public class CodeSizeEvaluator extends MethodVisitor implements Opcodes {
         }
     }
 
+    @Impure
     @Override
     public void visitIntInsn(final int opcode, final int operand) {
         if (opcode == SIPUSH) {
@@ -84,6 +95,7 @@ public class CodeSizeEvaluator extends MethodVisitor implements Opcodes {
         }
     }
 
+    @Impure
     @Override
     public void visitVarInsn(final int opcode, final int var) {
         if (var < 4 && opcode != RET) {
@@ -101,6 +113,7 @@ public class CodeSizeEvaluator extends MethodVisitor implements Opcodes {
         }
     }
 
+    @Impure
     @Override
     public void visitTypeInsn(final int opcode, final String type) {
         minSize += 3;
@@ -110,6 +123,7 @@ public class CodeSizeEvaluator extends MethodVisitor implements Opcodes {
         }
     }
 
+    @Impure
     @Override
     public void visitFieldInsn(final int opcode, final String owner,
             final String name, final String desc) {
@@ -120,6 +134,7 @@ public class CodeSizeEvaluator extends MethodVisitor implements Opcodes {
         }
     }
 
+    @Impure
     @Deprecated
     @Override
     public void visitMethodInsn(final int opcode, final String owner,
@@ -132,6 +147,7 @@ public class CodeSizeEvaluator extends MethodVisitor implements Opcodes {
                 opcode == Opcodes.INVOKEINTERFACE);
     }
 
+    @Impure
     @Override
     public void visitMethodInsn(final int opcode, final String owner,
             final String name, final String desc, final boolean itf) {
@@ -142,6 +158,7 @@ public class CodeSizeEvaluator extends MethodVisitor implements Opcodes {
         doVisitMethodInsn(opcode, owner, name, desc, itf);
     }
 
+    @Impure
     private void doVisitMethodInsn(int opcode, final String owner,
             final String name, final String desc, final boolean itf) {
         if (opcode == INVOKEINTERFACE) {
@@ -156,6 +173,7 @@ public class CodeSizeEvaluator extends MethodVisitor implements Opcodes {
         }
     }
 
+    @Impure
     @Override
     public void visitInvokeDynamicInsn(String name, String desc, Handle bsm,
             Object... bsmArgs) {
@@ -166,6 +184,7 @@ public class CodeSizeEvaluator extends MethodVisitor implements Opcodes {
         }
     }
 
+    @Impure
     @Override
     public void visitJumpInsn(final int opcode, final Label label) {
         minSize += 3;
@@ -179,6 +198,7 @@ public class CodeSizeEvaluator extends MethodVisitor implements Opcodes {
         }
     }
 
+    @Impure
     @Override
     public void visitLdcInsn(final Object cst) {
         if (cst instanceof Long || cst instanceof Double) {
@@ -193,6 +213,7 @@ public class CodeSizeEvaluator extends MethodVisitor implements Opcodes {
         }
     }
 
+    @Impure
     @Override
     public void visitIincInsn(final int var, final int increment) {
         if (var > 255 || increment > 127 || increment < -128) {
@@ -207,6 +228,7 @@ public class CodeSizeEvaluator extends MethodVisitor implements Opcodes {
         }
     }
 
+    @Impure
     @Override
     public void visitTableSwitchInsn(final int min, final int max,
             final Label dflt, final Label... labels) {
@@ -217,6 +239,7 @@ public class CodeSizeEvaluator extends MethodVisitor implements Opcodes {
         }
     }
 
+    @Impure
     @Override
     public void visitLookupSwitchInsn(final Label dflt, final int[] keys,
             final Label[] labels) {
@@ -227,6 +250,7 @@ public class CodeSizeEvaluator extends MethodVisitor implements Opcodes {
         }
     }
 
+    @Impure
     @Override
     public void visitMultiANewArrayInsn(final String desc, final int dims) {
         minSize += 4;

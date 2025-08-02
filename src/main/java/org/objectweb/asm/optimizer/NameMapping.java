@@ -29,6 +29,7 @@
  */
 package org1.objectweb.asm.optimizer;
 
+import org.checkerframework.dataflow.qual.Impure;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -50,6 +51,7 @@ public class NameMapping {
 
     public final Set<Object> unused;
 
+    @Impure
     public NameMapping(final String file) throws IOException {
         mapping = new Properties();
         InputStream is = null;
@@ -64,6 +66,7 @@ public class NameMapping {
         }
     }
 
+    @Impure
     public String map(final String name) {
         String s = (String) mapping.get(name);
         if (s == null) {
@@ -84,6 +87,7 @@ public class NameMapping {
         return s;
     }
 
+    @Impure
     public String fix(final String desc) {
         if (desc.startsWith("(")) {
             Type[] arguments = Type.getArgumentTypes(desc);
@@ -98,6 +102,7 @@ public class NameMapping {
         }
     }
 
+    @Impure
     private Type fix(final Type t) {
         if (t.getSort() == Type.OBJECT) {
             return Type.getObjectType(map(t.getInternalName()));

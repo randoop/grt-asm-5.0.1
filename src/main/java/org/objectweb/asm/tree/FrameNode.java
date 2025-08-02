@@ -29,6 +29,9 @@
  */
 package org1.objectweb.asm.tree;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Pure;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -77,6 +80,8 @@ public class FrameNode extends AbstractInsnNode {
      */
     public List<Object> stack;
 
+    @SideEffectFree
+    @Impure
     private FrameNode() {
         super(-1);
     }
@@ -105,6 +110,8 @@ public class FrameNode extends AbstractInsnNode {
      *            LabelNode objects (for primitive, reference and uninitialized
      *            types respectively - see {@link MethodVisitor}).
      */
+    @SideEffectFree
+    @Impure
     public FrameNode(final int type, final int nLocal, final Object[] local,
             final int nStack, final Object[] stack) {
         super(-1);
@@ -129,6 +136,7 @@ public class FrameNode extends AbstractInsnNode {
         }
     }
 
+    @Pure
     @Override
     public int getType() {
         return FRAME;
@@ -140,6 +148,7 @@ public class FrameNode extends AbstractInsnNode {
      * @param mv
      *            a method visitor.
      */
+    @Impure
     @Override
     public void accept(final MethodVisitor mv) {
         switch (type) {
@@ -163,6 +172,7 @@ public class FrameNode extends AbstractInsnNode {
         }
     }
 
+    @Impure
     @Override
     public AbstractInsnNode clone(final Map<LabelNode, LabelNode> labels) {
         FrameNode clone = new FrameNode();
@@ -192,10 +202,12 @@ public class FrameNode extends AbstractInsnNode {
 
     // ------------------------------------------------------------------------
 
+    @SideEffectFree
     private static List<Object> asList(final int n, final Object[] o) {
         return Arrays.asList(o).subList(0, n);
     }
 
+    @Impure
     private static Object[] asArray(final List<Object> l) {
         Object[] objs = new Object[l.size()];
         for (int i = 0; i < objs.length; ++i) {

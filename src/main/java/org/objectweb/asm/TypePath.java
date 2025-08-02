@@ -29,6 +29,9 @@
  */
 
 package org1.objectweb.asm;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
  * The path to a type argument, wildcard bound, array element type, or static
@@ -81,6 +84,7 @@ public class TypePath {
      * @param offset
      *            the offset of the first byte of the type path in 'b'.
      */
+    @SideEffectFree
     TypePath(byte[] b, int offset) {
         this.b = b;
         this.offset = offset;
@@ -91,6 +95,7 @@ public class TypePath {
      * 
      * @return the length of this path.
      */
+    @Pure
     public int getLength() {
         return b[offset];
     }
@@ -104,6 +109,7 @@ public class TypePath {
      *         INNER_TYPE}, {@link #WILDCARD_BOUND WILDCARD_BOUND}, or
      *         {@link #TYPE_ARGUMENT TYPE_ARGUMENT}.
      */
+    @Pure
     public int getStep(int index) {
         return b[offset + 2 * index + 1];
     }
@@ -118,6 +124,7 @@ public class TypePath {
      * @return the index of the type argument that the given step is stepping
      *         into.
      */
+    @Pure
     public int getStepArgument(int index) {
         return b[offset + 2 * index + 2];
     }
@@ -131,6 +138,7 @@ public class TypePath {
      *            {@link #toString()}. May be null or empty.
      * @return the corresponding TypePath object, or null if the path is empty.
      */
+    @Impure
     public static TypePath fromString(final String typePath) {
         if (typePath == null || typePath.length() == 0) {
             return null;
@@ -166,6 +174,7 @@ public class TypePath {
      * with '*' and {@link #TYPE_ARGUMENT TYPE_ARGUMENT} steps with their type
      * argument index in decimal form.
      */
+    @Impure
     @Override
     public String toString() {
         int length = getLength();

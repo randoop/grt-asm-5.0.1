@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.signature;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import org1.objectweb.asm.Opcodes;
 
 /**
@@ -84,6 +86,7 @@ public abstract class SignatureVisitor {
      *            the ASM API version implemented by this visitor. Must be one
      *            of {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
      */
+    @SideEffectFree
     public SignatureVisitor(final int api) {
         if (api != Opcodes.ASM4 && api != Opcodes.ASM5) {
             throw new IllegalArgumentException();
@@ -97,6 +100,7 @@ public abstract class SignatureVisitor {
      * @param name
      *            the name of the formal parameter.
      */
+    @Impure
     public void visitFormalTypeParameter(String name) {
     }
 
@@ -105,6 +109,7 @@ public abstract class SignatureVisitor {
      * 
      * @return a non null visitor to visit the signature of the class bound.
      */
+    @Impure
     public SignatureVisitor visitClassBound() {
         return this;
     }
@@ -114,6 +119,7 @@ public abstract class SignatureVisitor {
      * 
      * @return a non null visitor to visit the signature of the interface bound.
      */
+    @Impure
     public SignatureVisitor visitInterfaceBound() {
         return this;
     }
@@ -124,6 +130,7 @@ public abstract class SignatureVisitor {
      * @return a non null visitor to visit the signature of the super class
      *         type.
      */
+    @Impure
     public SignatureVisitor visitSuperclass() {
         return this;
     }
@@ -133,6 +140,7 @@ public abstract class SignatureVisitor {
      * 
      * @return a non null visitor to visit the signature of the interface type.
      */
+    @Impure
     public SignatureVisitor visitInterface() {
         return this;
     }
@@ -142,6 +150,7 @@ public abstract class SignatureVisitor {
      * 
      * @return a non null visitor to visit the signature of the parameter type.
      */
+    @Impure
     public SignatureVisitor visitParameterType() {
         return this;
     }
@@ -151,6 +160,7 @@ public abstract class SignatureVisitor {
      * 
      * @return a non null visitor to visit the signature of the return type.
      */
+    @Impure
     public SignatureVisitor visitReturnType() {
         return this;
     }
@@ -160,6 +170,7 @@ public abstract class SignatureVisitor {
      * 
      * @return a non null visitor to visit the signature of the exception type.
      */
+    @Impure
     public SignatureVisitor visitExceptionType() {
         return this;
     }
@@ -171,6 +182,7 @@ public abstract class SignatureVisitor {
      *            the descriptor of the primitive type, or 'V' for <tt>void</tt>
      *            .
      */
+    @Impure
     public void visitBaseType(char descriptor) {
     }
 
@@ -180,6 +192,7 @@ public abstract class SignatureVisitor {
      * @param name
      *            the name of the type variable.
      */
+    @Impure
     public void visitTypeVariable(String name) {
     }
 
@@ -189,6 +202,7 @@ public abstract class SignatureVisitor {
      * @return a non null visitor to visit the signature of the array element
      *         type.
      */
+    @Impure
     public SignatureVisitor visitArrayType() {
         return this;
     }
@@ -200,6 +214,7 @@ public abstract class SignatureVisitor {
      * @param name
      *            the internal name of the class or interface.
      */
+    @Impure
     public void visitClassType(String name) {
     }
 
@@ -209,6 +224,7 @@ public abstract class SignatureVisitor {
      * @param name
      *            the local name of the inner class in its enclosing class.
      */
+    @Impure
     public void visitInnerClassType(String name) {
     }
 
@@ -216,6 +232,7 @@ public abstract class SignatureVisitor {
      * Visits an unbounded type argument of the last visited class or inner
      * class type.
      */
+    @Impure
     public void visitTypeArgument() {
     }
 
@@ -226,6 +243,7 @@ public abstract class SignatureVisitor {
      *            '+', '-' or '='.
      * @return a non null visitor to visit the signature of the type argument.
      */
+    @Impure
     public SignatureVisitor visitTypeArgument(char wildcard) {
         return this;
     }
@@ -233,6 +251,7 @@ public abstract class SignatureVisitor {
     /**
      * Ends the visit of a signature corresponding to a class or interface type.
      */
+    @Impure
     public void visitEnd() {
     }
 }

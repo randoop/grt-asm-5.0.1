@@ -29,6 +29,9 @@
  */
 package org1.objectweb.asm.tree;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
 import java.util.Map;
 
 import org1.objectweb.asm.MethodVisitor;
@@ -56,22 +59,27 @@ public class LdcInsnNode extends AbstractInsnNode {
      *            a non null {@link Integer}, a {@link Float}, a {@link Long}, a
      *            {@link Double} or a {@link String}.
      */
+    @SideEffectFree
+    @Impure
     public LdcInsnNode(final Object cst) {
         super(Opcodes.LDC);
         this.cst = cst;
     }
 
+    @Pure
     @Override
     public int getType() {
         return LDC_INSN;
     }
 
+    @Impure
     @Override
     public void accept(final MethodVisitor mv) {
         mv.visitLdcInsn(cst);
         acceptAnnotations(mv);
     }
 
+    @Impure
     @Override
     public AbstractInsnNode clone(final Map<LabelNode, LabelNode> labels) {
         return new LdcInsnNode(cst).cloneAnnotations(this);

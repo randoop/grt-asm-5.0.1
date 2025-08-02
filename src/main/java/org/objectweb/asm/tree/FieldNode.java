@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.tree;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -142,6 +144,8 @@ public class FieldNode extends FieldVisitor {
      * @throws IllegalStateException
      *             If a subclass calls this constructor.
      */
+    @SideEffectFree
+    @Impure
     public FieldNode(final int access, final String name, final String desc,
             final String signature, final Object value) {
         this(Opcodes.ASM5, access, name, desc, signature, value);
@@ -174,6 +178,8 @@ public class FieldNode extends FieldVisitor {
      *            must be an {@link Integer}, a {@link Float}, a {@link Long}, a
      *            {@link Double} or a {@link String}.
      */
+    @SideEffectFree
+    @Impure
     public FieldNode(final int api, final int access, final String name,
             final String desc, final String signature, final Object value) {
         super(api);
@@ -188,6 +194,7 @@ public class FieldNode extends FieldVisitor {
     // Implementation of the FieldVisitor abstract class
     // ------------------------------------------------------------------------
 
+    @Impure
     @Override
     public AnnotationVisitor visitAnnotation(final String desc,
             final boolean visible) {
@@ -206,6 +213,7 @@ public class FieldNode extends FieldVisitor {
         return an;
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitTypeAnnotation(int typeRef,
             TypePath typePath, String desc, boolean visible) {
@@ -224,6 +232,7 @@ public class FieldNode extends FieldVisitor {
         return an;
     }
 
+    @Impure
     @Override
     public void visitAttribute(final Attribute attr) {
         if (attrs == null) {
@@ -232,6 +241,7 @@ public class FieldNode extends FieldVisitor {
         attrs.add(attr);
     }
 
+    @SideEffectFree
     @Override
     public void visitEnd() {
     }
@@ -250,6 +260,7 @@ public class FieldNode extends FieldVisitor {
      *            an ASM API version. Must be one of {@link Opcodes#ASM4} or
      *            {@link Opcodes#ASM5}.
      */
+    @SideEffectFree
     public void check(final int api) {
         if (api == Opcodes.ASM4) {
             if (visibleTypeAnnotations != null
@@ -269,6 +280,7 @@ public class FieldNode extends FieldVisitor {
      * @param cv
      *            a class visitor.
      */
+    @Impure
     public void accept(final ClassVisitor cv) {
         FieldVisitor fv = cv.visitField(access, name, desc, signature, value);
         if (fv == null) {

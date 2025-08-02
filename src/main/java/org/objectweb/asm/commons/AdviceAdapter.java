@@ -29,6 +29,9 @@
  */
 package org1.objectweb.asm.commons;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -93,6 +96,7 @@ public abstract class AdviceAdapter extends GeneratorAdapter implements Opcodes 
      * @param desc
      *            the method's descriptor (see {@link Type Type}).
      */
+    @Impure
     protected AdviceAdapter(final int api, final MethodVisitor mv,
             final int access, final String name, final String desc) {
         super(api, mv, access, name, desc);
@@ -101,6 +105,7 @@ public abstract class AdviceAdapter extends GeneratorAdapter implements Opcodes 
         constructor = "<init>".equals(name);
     }
 
+    @Impure
     @Override
     public void visitCode() {
         mv.visitCode();
@@ -113,6 +118,7 @@ public abstract class AdviceAdapter extends GeneratorAdapter implements Opcodes 
         }
     }
 
+    @Impure
     @Override
     public void visitLabel(final Label label) {
         mv.visitLabel(label);
@@ -125,6 +131,7 @@ public abstract class AdviceAdapter extends GeneratorAdapter implements Opcodes 
         }
     }
 
+    @Impure
     @Override
     public void visitInsn(final int opcode) {
         if (constructor) {
@@ -307,6 +314,7 @@ public abstract class AdviceAdapter extends GeneratorAdapter implements Opcodes 
         mv.visitInsn(opcode);
     }
 
+    @Impure
     @Override
     public void visitVarInsn(final int opcode, final int var) {
         super.visitVarInsn(opcode, var);
@@ -338,6 +346,7 @@ public abstract class AdviceAdapter extends GeneratorAdapter implements Opcodes 
         }
     }
 
+    @Impure
     @Override
     public void visitFieldInsn(final int opcode, final String owner,
             final String name, final String desc) {
@@ -374,6 +383,7 @@ public abstract class AdviceAdapter extends GeneratorAdapter implements Opcodes 
         }
     }
 
+    @Impure
     @Override
     public void visitIntInsn(final int opcode, final int operand) {
         mv.visitIntInsn(opcode, operand);
@@ -382,6 +392,7 @@ public abstract class AdviceAdapter extends GeneratorAdapter implements Opcodes 
         }
     }
 
+    @Impure
     @Override
     public void visitLdcInsn(final Object cst) {
         mv.visitLdcInsn(cst);
@@ -393,6 +404,7 @@ public abstract class AdviceAdapter extends GeneratorAdapter implements Opcodes 
         }
     }
 
+    @Impure
     @Override
     public void visitMultiANewArrayInsn(final String desc, final int dims) {
         mv.visitMultiANewArrayInsn(desc, dims);
@@ -404,6 +416,7 @@ public abstract class AdviceAdapter extends GeneratorAdapter implements Opcodes 
         }
     }
 
+    @Impure
     @Override
     public void visitTypeInsn(final int opcode, final String type) {
         mv.visitTypeInsn(opcode, type);
@@ -413,6 +426,7 @@ public abstract class AdviceAdapter extends GeneratorAdapter implements Opcodes 
         }
     }
 
+    @Impure
     @Deprecated
     @Override
     public void visitMethodInsn(final int opcode, final String owner,
@@ -425,6 +439,7 @@ public abstract class AdviceAdapter extends GeneratorAdapter implements Opcodes 
                 opcode == Opcodes.INVOKEINTERFACE);
     }
 
+    @Impure
     @Override
     public void visitMethodInsn(final int opcode, final String owner,
             final String name, final String desc, final boolean itf) {
@@ -435,6 +450,7 @@ public abstract class AdviceAdapter extends GeneratorAdapter implements Opcodes 
         doVisitMethodInsn(opcode, owner, name, desc, itf);
     }
 
+    @Impure
     private void doVisitMethodInsn(int opcode, final String owner,
             final String name, final String desc, final boolean itf) {
         mv.visitMethodInsn(opcode, owner, name, desc, itf);
@@ -475,6 +491,7 @@ public abstract class AdviceAdapter extends GeneratorAdapter implements Opcodes 
         }
     }
 
+    @Impure
     @Override
     public void visitInvokeDynamicInsn(String name, String desc, Handle bsm,
             Object... bsmArgs) {
@@ -498,6 +515,7 @@ public abstract class AdviceAdapter extends GeneratorAdapter implements Opcodes 
         }
     }
 
+    @Impure
     @Override
     public void visitJumpInsn(final int opcode, final Label label) {
         mv.visitJumpInsn(opcode, label);
@@ -532,6 +550,7 @@ public abstract class AdviceAdapter extends GeneratorAdapter implements Opcodes 
         }
     }
 
+    @Impure
     @Override
     public void visitLookupSwitchInsn(final Label dflt, final int[] keys,
             final Label[] labels) {
@@ -542,6 +561,7 @@ public abstract class AdviceAdapter extends GeneratorAdapter implements Opcodes 
         }
     }
 
+    @Impure
     @Override
     public void visitTableSwitchInsn(final int min, final int max,
             final Label dflt, final Label... labels) {
@@ -552,6 +572,7 @@ public abstract class AdviceAdapter extends GeneratorAdapter implements Opcodes 
         }
     }
 
+    @Impure
     @Override
     public void visitTryCatchBlock(Label start, Label end, Label handler,
             String type) {
@@ -563,6 +584,7 @@ public abstract class AdviceAdapter extends GeneratorAdapter implements Opcodes 
         }
     }
 
+    @Impure
     private void addBranches(final Label dflt, final Label[] labels) {
         addBranch(dflt);
         for (int i = 0; i < labels.length; i++) {
@@ -570,6 +592,7 @@ public abstract class AdviceAdapter extends GeneratorAdapter implements Opcodes 
         }
     }
 
+    @Impure
     private void addBranch(final Label label) {
         if (branches.containsKey(label)) {
             return;
@@ -577,14 +600,17 @@ public abstract class AdviceAdapter extends GeneratorAdapter implements Opcodes 
         branches.put(label, new ArrayList<Object>(stackFrame));
     }
 
+    @Impure
     private Object popValue() {
         return stackFrame.remove(stackFrame.size() - 1);
     }
 
+    @Pure
     private Object peekValue() {
         return stackFrame.get(stackFrame.size() - 1);
     }
 
+    @Impure
     private void pushValue(final Object o) {
         stackFrame.add(o);
     }
@@ -597,6 +623,7 @@ public abstract class AdviceAdapter extends GeneratorAdapter implements Opcodes 
      * <i>Custom code can use or change all the local variables, but should not
      * change state of the stack.</i>
      */
+    @SideEffectFree
     protected void onMethodEnter() {
     }
 
@@ -639,6 +666,7 @@ public abstract class AdviceAdapter extends GeneratorAdapter implements Opcodes 
      *            or ATHROW
      * 
      */
+    @SideEffectFree
     protected void onMethodExit(int opcode) {
     }
 

@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.tree;
 
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -191,6 +193,8 @@ public class ClassNode extends ClassVisitor {
      * @throws IllegalStateException
      *             If a subclass calls this constructor.
      */
+    @SideEffectFree
+    @Impure
     public ClassNode() {
         this(Opcodes.ASM5);
         if (getClass() != ClassNode.class) {
@@ -205,6 +209,8 @@ public class ClassNode extends ClassVisitor {
      *            the ASM API version implemented by this visitor. Must be one
      *            of {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
      */
+    @SideEffectFree
+    @Impure
     public ClassNode(final int api) {
         super(api);
         this.interfaces = new ArrayList<String>();
@@ -217,6 +223,7 @@ public class ClassNode extends ClassVisitor {
     // Implementation of the ClassVisitor abstract class
     // ------------------------------------------------------------------------
 
+    @Impure
     @Override
     public void visit(final int version, final int access, final String name,
             final String signature, final String superName,
@@ -231,12 +238,14 @@ public class ClassNode extends ClassVisitor {
         }
     }
 
+    @Impure
     @Override
     public void visitSource(final String file, final String debug) {
         sourceFile = file;
         sourceDebug = debug;
     }
 
+    @Impure
     @Override
     public void visitOuterClass(final String owner, final String name,
             final String desc) {
@@ -245,6 +254,7 @@ public class ClassNode extends ClassVisitor {
         outerMethodDesc = desc;
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitAnnotation(final String desc,
             final boolean visible) {
@@ -263,6 +273,7 @@ public class ClassNode extends ClassVisitor {
         return an;
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitTypeAnnotation(int typeRef,
             TypePath typePath, String desc, boolean visible) {
@@ -281,6 +292,7 @@ public class ClassNode extends ClassVisitor {
         return an;
     }
 
+    @Impure
     @Override
     public void visitAttribute(final Attribute attr) {
         if (attrs == null) {
@@ -289,6 +301,7 @@ public class ClassNode extends ClassVisitor {
         attrs.add(attr);
     }
 
+    @Impure
     @Override
     public void visitInnerClass(final String name, final String outerName,
             final String innerName, final int access) {
@@ -297,6 +310,7 @@ public class ClassNode extends ClassVisitor {
         innerClasses.add(icn);
     }
 
+    @Impure
     @Override
     public FieldVisitor visitField(final int access, final String name,
             final String desc, final String signature, final Object value) {
@@ -305,6 +319,7 @@ public class ClassNode extends ClassVisitor {
         return fn;
     }
 
+    @Impure
     @Override
     public MethodVisitor visitMethod(final int access, final String name,
             final String desc, final String signature, final String[] exceptions) {
@@ -314,6 +329,7 @@ public class ClassNode extends ClassVisitor {
         return mn;
     }
 
+    @SideEffectFree
     @Override
     public void visitEnd() {
     }
@@ -332,6 +348,7 @@ public class ClassNode extends ClassVisitor {
      *            an ASM API version. Must be one of {@link Opcodes#ASM4} or
      *            {@link Opcodes#ASM5}.
      */
+    @Impure
     public void check(final int api) {
         if (api == Opcodes.ASM4) {
             if (visibleTypeAnnotations != null
@@ -357,6 +374,7 @@ public class ClassNode extends ClassVisitor {
      * @param cv
      *            a class visitor.
      */
+    @Impure
     public void accept(final ClassVisitor cv) {
         // visits header
         String[] interfaces = new String[this.interfaces.size()];

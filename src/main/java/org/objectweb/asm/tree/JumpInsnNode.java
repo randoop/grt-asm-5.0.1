@@ -29,6 +29,9 @@
  */
 package org1.objectweb.asm.tree;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.Pure;
 import java.util.Map;
 
 import org1.objectweb.asm.MethodVisitor;
@@ -60,6 +63,8 @@ public class JumpInsnNode extends AbstractInsnNode {
      *            is a label that designates the instruction to which the jump
      *            instruction may jump.
      */
+    @SideEffectFree
+    @Impure
     public JumpInsnNode(final int opcode, final LabelNode label) {
         super(opcode);
         this.label = label;
@@ -74,21 +79,25 @@ public class JumpInsnNode extends AbstractInsnNode {
      *            IF_ICMPGE, IF_ICMPGT, IF_ICMPLE, IF_ACMPEQ, IF_ACMPNE, GOTO,
      *            JSR, IFNULL or IFNONNULL.
      */
+    @Impure
     public void setOpcode(final int opcode) {
         this.opcode = opcode;
     }
 
+    @Pure
     @Override
     public int getType() {
         return JUMP_INSN;
     }
 
+    @Impure
     @Override
     public void accept(final MethodVisitor mv) {
         mv.visitJumpInsn(opcode, label.getLabel());
         acceptAnnotations(mv);
     }
 
+    @Impure
     @Override
     public AbstractInsnNode clone(final Map<LabelNode, LabelNode> labels) {
         return new JumpInsnNode(opcode, clone(label, labels))

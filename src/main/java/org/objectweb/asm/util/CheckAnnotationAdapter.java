@@ -29,6 +29,8 @@
  */
 package org1.objectweb.asm.util;
 
+import org.checkerframework.dataflow.qual.SideEffectFree;
+import org.checkerframework.dataflow.qual.Impure;
 import org1.objectweb.asm.AnnotationVisitor;
 import org1.objectweb.asm.Opcodes;
 import org1.objectweb.asm.Type;
@@ -44,15 +46,20 @@ public class CheckAnnotationAdapter extends AnnotationVisitor {
 
     private boolean end;
 
+    @SideEffectFree
+    @Impure
     public CheckAnnotationAdapter(final AnnotationVisitor av) {
         this(av, true);
     }
 
+    @SideEffectFree
+    @Impure
     CheckAnnotationAdapter(final AnnotationVisitor av, final boolean named) {
         super(Opcodes.ASM5, av);
         this.named = named;
     }
 
+    @Impure
     @Override
     public void visit(final String name, final Object value) {
         checkEnd();
@@ -79,6 +86,7 @@ public class CheckAnnotationAdapter extends AnnotationVisitor {
         }
     }
 
+    @Impure
     @Override
     public void visitEnum(final String name, final String desc,
             final String value) {
@@ -93,6 +101,7 @@ public class CheckAnnotationAdapter extends AnnotationVisitor {
         }
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitAnnotation(final String name,
             final String desc) {
@@ -103,6 +112,7 @@ public class CheckAnnotationAdapter extends AnnotationVisitor {
                 : av.visitAnnotation(name, desc));
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitArray(final String name) {
         checkEnd();
@@ -111,6 +121,7 @@ public class CheckAnnotationAdapter extends AnnotationVisitor {
                 : av.visitArray(name), false);
     }
 
+    @Impure
     @Override
     public void visitEnd() {
         checkEnd();
@@ -120,6 +131,7 @@ public class CheckAnnotationAdapter extends AnnotationVisitor {
         }
     }
 
+    @SideEffectFree
     private void checkEnd() {
         if (end) {
             throw new IllegalStateException(
@@ -127,6 +139,7 @@ public class CheckAnnotationAdapter extends AnnotationVisitor {
         }
     }
 
+    @SideEffectFree
     private void checkName(final String name) {
         if (named && name == null) {
             throw new IllegalArgumentException(

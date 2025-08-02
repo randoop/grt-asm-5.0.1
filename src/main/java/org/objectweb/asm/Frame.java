@@ -28,6 +28,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org1.objectweb.asm;
+import org.checkerframework.dataflow.qual.Impure;
 
 /**
  * Information about the input and output stack map frames of a basic block.
@@ -527,6 +528,7 @@ final class Frame {
      *            the index of the local that must be returned.
      * @return the output frame local variable type at the given index.
      */
+    @Impure
     private int get(final int local) {
         if (outputLocals == null || local >= outputLocals.length) {
             // this local has never been assigned in this basic block,
@@ -551,6 +553,7 @@ final class Frame {
      * @param type
      *            the value of the local that must be set.
      */
+    @Impure
     private void set(final int local, final int type) {
         // creates and/or resizes the output local variables array if necessary
         if (outputLocals == null) {
@@ -572,6 +575,7 @@ final class Frame {
      * @param type
      *            the type that must be pushed.
      */
+    @Impure
     private void push(final int type) {
         // creates and/or resizes the output stack array if necessary
         if (outputStack == null) {
@@ -602,6 +606,7 @@ final class Frame {
      *            descriptor (in this case this method pushes its return type
      *            onto the output frame stack).
      */
+    @Impure
     private void push(final ClassWriter cw, final String desc) {
         int type = type(cw, desc);
         if (type != 0) {
@@ -621,6 +626,7 @@ final class Frame {
      *            a type descriptor.
      * @return the int encoding of the given type.
      */
+    @Impure
     private static int type(final ClassWriter cw, final String desc) {
         String t;
         int index = desc.charAt(0) == '(' ? desc.indexOf(')') + 1 : 0;
@@ -691,6 +697,7 @@ final class Frame {
      * 
      * @return the type that has been popped from the output frame stack.
      */
+    @Impure
     private int pop() {
         if (outputStackTop > 0) {
             return outputStack[--outputStackTop];
@@ -706,6 +713,7 @@ final class Frame {
      * @param elements
      *            the number of types that must be popped.
      */
+    @Impure
     private void pop(final int elements) {
         if (outputStackTop >= elements) {
             outputStackTop -= elements;
@@ -726,6 +734,7 @@ final class Frame {
      *            descriptor (in this case this method pops the types
      *            corresponding to the method arguments).
      */
+    @Impure
     private void pop(final String desc) {
         char c = desc.charAt(0);
         if (c == '(') {
@@ -744,6 +753,7 @@ final class Frame {
      * @param var
      *            a type on a which a constructor is invoked.
      */
+    @Impure
     private void init(final int var) {
         // creates and/or resizes the initializations array if necessary
         if (initializations == null) {
@@ -770,6 +780,7 @@ final class Frame {
      * @return t or, if t is one of the types on which a constructor is invoked
      *         in the basic block, the type corresponding to this constructor.
      */
+    @Impure
     private int init(final ClassWriter cw, final int t) {
         int s;
         if (t == UNINITIALIZED_THIS) {
@@ -809,6 +820,7 @@ final class Frame {
      * @param maxLocals
      *            the maximum number of local variables of this method.
      */
+    @Impure
     void initInputFrame(final ClassWriter cw, final int access,
             final Type[] args, final int maxLocals) {
         inputLocals = new int[maxLocals];
@@ -845,6 +857,7 @@ final class Frame {
      * @param item
      *            the operand of the instructions, if any.
      */
+    @Impure
     void execute(final int opcode, final int arg, final ClassWriter cw,
             final Item item) {
         int t1, t2, t3, t4;
@@ -1283,6 +1296,7 @@ final class Frame {
      * @return <tt>true</tt> if the input frame of the given label has been
      *         changed by this operation.
      */
+    @Impure
     boolean merge(final ClassWriter cw, final Frame frame, final int edge) {
         boolean changed = false;
         int i, s, dim, kind, t;
@@ -1392,6 +1406,7 @@ final class Frame {
      * @return <tt>true</tt> if the type array has been modified by this
      *         operation.
      */
+    @Impure
     private static boolean merge(final ClassWriter cw, int t,
             final int[] types, final int index) {
         int u = types[index];

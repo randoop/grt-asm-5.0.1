@@ -29,6 +29,7 @@
  */
 package org1.objectweb.asm.xml;
 
+import org.checkerframework.dataflow.qual.Impure;
 import org1.objectweb.asm.AnnotationVisitor;
 import org1.objectweb.asm.ClassVisitor;
 import org1.objectweb.asm.FieldVisitor;
@@ -80,6 +81,7 @@ public final class SAXClassAdapter extends ClassVisitor {
      *            {@link ContentHandler#startDocument() startDocument()} and
      *            {@link ContentHandler#endDocument() endDocument()} events.
      */
+    @Impure
     public SAXClassAdapter(final ContentHandler h, boolean singleDocument) {
         super(Opcodes.ASM5);
         this.sa = new SAXAdapter(h);
@@ -89,6 +91,7 @@ public final class SAXClassAdapter extends ClassVisitor {
         }
     }
 
+    @Impure
     @Override
     public void visitSource(final String source, final String debug) {
         AttributesImpl att = new AttributesImpl();
@@ -102,6 +105,7 @@ public final class SAXClassAdapter extends ClassVisitor {
         sa.addElement("source", att);
     }
 
+    @Impure
     @Override
     public void visitOuterClass(final String owner, final String name,
             final String desc) {
@@ -117,6 +121,7 @@ public final class SAXClassAdapter extends ClassVisitor {
         sa.addElement("outerclass", att);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitAnnotation(final String desc,
             final boolean visible) {
@@ -124,6 +129,7 @@ public final class SAXClassAdapter extends ClassVisitor {
                 null, desc);
     }
 
+    @Impure
     @Override
     public AnnotationVisitor visitTypeAnnotation(int typeRef,
             TypePath typePath, String desc, boolean visible) {
@@ -131,6 +137,7 @@ public final class SAXClassAdapter extends ClassVisitor {
                 null, desc, typeRef, typePath);
     }
 
+    @Impure
     @Override
     public void visit(final int version, final int access, final String name,
             final String signature, final String superName,
@@ -167,6 +174,7 @@ public final class SAXClassAdapter extends ClassVisitor {
         sa.addEnd("interfaces");
     }
 
+    @Impure
     @Override
     public FieldVisitor visitField(final int access, final String name,
             final String desc, final String signature, final Object value) {
@@ -188,6 +196,7 @@ public final class SAXClassAdapter extends ClassVisitor {
         return new SAXFieldAdapter(sa, att);
     }
 
+    @Impure
     @Override
     public MethodVisitor visitMethod(final int access, final String name,
             final String desc, final String signature, final String[] exceptions) {
@@ -216,6 +225,7 @@ public final class SAXClassAdapter extends ClassVisitor {
         return new SAXCodeAdapter(sa, access);
     }
 
+    @Impure
     @Override
     public final void visitInnerClass(final String name,
             final String outerName, final String innerName, final int access) {
@@ -236,6 +246,7 @@ public final class SAXClassAdapter extends ClassVisitor {
         sa.addElement("innerclass", att);
     }
 
+    @Impure
     @Override
     public final void visitEnd() {
         sa.addEnd("class");
@@ -244,6 +255,7 @@ public final class SAXClassAdapter extends ClassVisitor {
         }
     }
 
+    @Impure
     static final String encode(final String s) {
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < s.length(); i++) {
@@ -267,6 +279,7 @@ public final class SAXClassAdapter extends ClassVisitor {
         return sb.toString();
     }
 
+    @Impure
     static void appendAccess(final int access, final StringBuffer sb) {
         if ((access & Opcodes.ACC_PUBLIC) != 0) {
             sb.append("public ");

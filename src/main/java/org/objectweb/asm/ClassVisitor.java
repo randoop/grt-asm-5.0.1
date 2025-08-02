@@ -28,6 +28,8 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org1.objectweb.asm;
+import org.checkerframework.dataflow.qual.Impure;
+import org.checkerframework.dataflow.qual.SideEffectFree;
 
 /**
  * A visitor to visit a Java class. The methods of this class must be called in
@@ -60,6 +62,8 @@ public abstract class ClassVisitor {
      *            the ASM API version implemented by this visitor. Must be one
      *            of {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
      */
+    @SideEffectFree
+    @Impure
     public ClassVisitor(final int api) {
         this(api, null);
     }
@@ -74,6 +78,7 @@ public abstract class ClassVisitor {
      *            the class visitor to which this visitor must delegate method
      *            calls. May be null.
      */
+    @SideEffectFree
     public ClassVisitor(final int api, final ClassVisitor cv) {
         if (api != Opcodes.ASM4 && api != Opcodes.ASM5) {
             throw new IllegalArgumentException();
@@ -107,6 +112,7 @@ public abstract class ClassVisitor {
      *            {@link Type#getInternalName() getInternalName}). May be
      *            <tt>null</tt>.
      */
+    @Impure
     public void visit(int version, int access, String name, String signature,
             String superName, String[] interfaces) {
         if (cv != null) {
@@ -125,6 +131,7 @@ public abstract class ClassVisitor {
      *            between source and compiled elements of the class. May be
      *            <tt>null</tt>.
      */
+    @Impure
     public void visitSource(String source, String debug) {
         if (cv != null) {
             cv.visitSource(source, debug);
@@ -146,6 +153,7 @@ public abstract class ClassVisitor {
      *            <tt>null</tt> if the class is not enclosed in a method of its
      *            enclosing class.
      */
+    @Impure
     public void visitOuterClass(String owner, String name, String desc) {
         if (cv != null) {
             cv.visitOuterClass(owner, name, desc);
@@ -162,6 +170,7 @@ public abstract class ClassVisitor {
      * @return a visitor to visit the annotation values, or <tt>null</tt> if
      *         this visitor is not interested in visiting this annotation.
      */
+    @Impure
     public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
         if (cv != null) {
             return cv.visitAnnotation(desc, visible);
@@ -191,6 +200,7 @@ public abstract class ClassVisitor {
      * @return a visitor to visit the annotation values, or <tt>null</tt> if
      *         this visitor is not interested in visiting this annotation.
      */
+    @Impure
     public AnnotationVisitor visitTypeAnnotation(int typeRef,
             TypePath typePath, String desc, boolean visible) {
         if (api < Opcodes.ASM5) {
@@ -208,6 +218,7 @@ public abstract class ClassVisitor {
      * @param attr
      *            an attribute.
      */
+    @Impure
     public void visitAttribute(Attribute attr) {
         if (cv != null) {
             cv.visitAttribute(attr);
@@ -232,6 +243,7 @@ public abstract class ClassVisitor {
      *            the access flags of the inner class as originally declared in
      *            the enclosing class.
      */
+    @Impure
     public void visitInnerClass(String name, String outerName,
             String innerName, int access) {
         if (cv != null) {
@@ -266,6 +278,7 @@ public abstract class ClassVisitor {
      *         <tt>null</tt> if this class visitor is not interested in visiting
      *         these annotations and attributes.
      */
+    @Impure
     public FieldVisitor visitField(int access, String name, String desc,
             String signature, Object value) {
         if (cv != null) {
@@ -299,6 +312,7 @@ public abstract class ClassVisitor {
      *         if this class visitor is not interested in visiting the code of
      *         this method.
      */
+    @Impure
     public MethodVisitor visitMethod(int access, String name, String desc,
             String signature, String[] exceptions) {
         if (cv != null) {
@@ -312,6 +326,7 @@ public abstract class ClassVisitor {
      * called, is used to inform the visitor that all the fields and methods of
      * the class have been visited.
      */
+    @Impure
     public void visitEnd() {
         if (cv != null) {
             cv.visitEnd();
